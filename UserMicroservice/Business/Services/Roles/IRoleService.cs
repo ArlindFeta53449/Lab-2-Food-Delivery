@@ -11,5 +11,13 @@ namespace Business.Services.Roles
     public interface IRoleService
     {
         IList<RoleDto> GetAll();
+
+        RoleDto GetRole(int id);
+
+        void DeleteRole(int id);
+
+        RoleDto CreateRole(RoleCreateDto role);
+
+        RoleDto EditRole(RoleDto role);
     }
 }

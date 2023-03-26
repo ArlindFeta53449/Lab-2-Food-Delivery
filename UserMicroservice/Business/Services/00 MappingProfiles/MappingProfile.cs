@@ -13,9 +13,10 @@ namespace Business.Services._00_MappingProfiles
     {
         public MappingProfile()
         {
-            CreateMap<Role, Role>();
             CreateMap<Role, RoleDto>();
             CreateMap<RoleDto, Role>();
+            CreateMap<Role, RoleCreateDto>();
+            CreateMap<RoleCreateDto, Role>();
             
         }
     }
