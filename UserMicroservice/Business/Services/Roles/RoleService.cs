@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Data.DTOs;
+using Data.DTOs.Roles;
 using Data.Entities;
 using Repositories.Repositories.Roles;
 using System;

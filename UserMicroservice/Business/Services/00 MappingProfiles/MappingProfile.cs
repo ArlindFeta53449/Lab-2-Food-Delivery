@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using Data.DTOs;
+using Data.DTOs.Roles;
+using Data.DTOs.Users;
 using Data.Entities;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,11 @@ namespace Business.Services._00_MappingProfiles
             CreateMap<RoleDto, Role>();
             CreateMap<Role, RoleCreateDto>();
             CreateMap<RoleCreateDto, Role>();
+
+            CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>();
+            CreateMap<UserCreateDto, User>();   
+            CreateMap<User, UserCreateDto>();
             
         }
     }

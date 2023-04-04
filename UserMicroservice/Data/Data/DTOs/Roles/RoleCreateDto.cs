@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data.DTOs
+namespace Data.DTOs.Roles
 {
-    public class RoleDto
+    public class RoleCreateDto
     {
-        public int Id { get; set; }
         public string Name { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Data.DTOs;
+﻿using Data.DTOs.Roles;
 using Repositories.Repositories.Roles;
 using System;
 using System.Collections.Generic;

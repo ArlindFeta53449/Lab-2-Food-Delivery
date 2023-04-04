@@ -1,11 +1,11 @@
 ﻿using Business.Services.Roles;
-using Data.DTOs;
+using Data.DTOs.Roles;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace UserMicroservice.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class RoleController : ControllerBase
     {
@@ -20,7 +20,7 @@ namespace UserMicroservice.Controllers
 
         public IActionResult GetAllRoles()
         {
-            var roles = _roleService.GetAll();
+            var roles =  _roleService.GetAll();
             return Ok(roles);
         }
 
@@ -31,15 +31,15 @@ namespace UserMicroservice.Controllers
             return Ok(role);
         }
         [HttpDelete("{id}")]
-        public IActionResult DeleteRole(int id)
+        public  IActionResult DeleteRole(int id)
         {
-           _roleService.DeleteRole(id);
+            _roleService.DeleteRole(id);
             return Ok("Roli u fshi me sukses");
         }
         [HttpPost]
         public IActionResult CreateRole(RoleCreateDto role)
         {
-            var result = _roleService.CreateRole(role);
+            var result =  _roleService.CreateRole(role);
             return Ok(result);
         }
         [HttpPut]

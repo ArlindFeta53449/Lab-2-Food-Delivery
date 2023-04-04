@@ -1,15 +1,13 @@
 ﻿using Data.Enums;
-using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data.Entities
+namespace Data.DTOs.Users
 {
-    public class User: IdentityUser
+    public class UserCreateDto
     {
 
         public string Name { get; set; }
@@ -18,7 +16,7 @@ namespace Data.Entities
 
         public int Age { get; set; }
 
-        public Gender Gender { get;set; }
+        public Gender Gender { get; set; }
 
         public string Email { get; set; }
 
@@ -27,8 +25,5 @@ namespace Data.Entities
         public int RoleId { get; set; }
 
         public bool IsEmailVerified { get; set; }
-
-        public Role Role { get; set; }
-        
     }
 }

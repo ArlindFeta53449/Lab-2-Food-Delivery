@@ -50,10 +50,11 @@ namespace Repositories.Repositories.GenericRepository
             return Context.Set<TEntity>().SingleOrDefault(predicate);
         }
 
-        public void Add(TEntity entity)
+        public bool Add(TEntity entity)
         {
             Context.Set<TEntity>().Add(entity);
             Context.SaveChanges();
+            return true;
         }
 
         public void AddRange(IEnumerable<TEntity> entities)
@@ -61,15 +62,17 @@ namespace Repositories.Repositories.GenericRepository
             Context.Set<TEntity>().AddRange(entities);
             Context.SaveChanges();
         }
-        public void Update(TEntity entity)
+        public bool Update(TEntity entity)
         {
             Context.Set<TEntity>().Update(entity);
             Context.SaveChanges();
+            return true;
         }
-        public void Remove(TEntity entity)
+        public bool Remove(TEntity entity)
         {
             Context.Set<TEntity>().Remove(entity);
             Context.SaveChanges();
+            return true;
         }
 
         public void RemoveRange(IEnumerable<TEntity> entities)
