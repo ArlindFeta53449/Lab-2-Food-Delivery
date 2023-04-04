@@ -38,9 +38,18 @@ namespace Business.Services.Users
         }
         public UserDto EditUser(UserDto user)
         {
-                var mappedUser = _mapper.Map<User>(user);
-                _userRepository.Update(mappedUser);
-                return _mapper.Map<UserDto>(mappedUser);
+            var userInDb = _userRepository.GetUserById(user.Id);
+            if(userInDb != null)
+            {
+                _mapper.Map(user,userInDb);
+                _userRepository.Update(userInDb);
+                return _mapper.Map<UserDto>(userInDb);
+            }
+            else
+            {
+                return null;
+            }
+            
         }
         public bool DeleteUser(string id)
         {
