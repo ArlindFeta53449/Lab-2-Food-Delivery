@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Business.Services._01_Mailing;
 using Business.Services.Token;
 using Data.DTOs.Users;
 using Data.Entities;
@@ -18,12 +19,13 @@ namespace Business.Services.Users
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
-
-        public UserService(IUserRepository userRepository, IMapper mapper, ITokenService tokenService)
+        private readonly IMailService _mailService;
+        public UserService(IUserRepository userRepository, IMapper mapper, ITokenService tokenService, IMailService mailService)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _tokenService = tokenService;
+            _mailService = mailService;
         }
         public IList<UserDto> GetAll()
         {
@@ -50,6 +52,25 @@ namespace Business.Services.Users
                 return null;
             }
             
+        }
+        public bool ForgotPassword(ForgetPasswordDto forgetPassword)
+        {
+            var userInDb = _userRepository.GetUserById(forgetPassword.UserId);
+            if(userInDb != null)
+            {
+                if(forgetPassword.NewPassword == forgetPassword.RepeatPassword)
+                {
+                    userInDb.Password = HashPassword(forgetPassword.NewPassword);
+                    return _userRepository.Update(userInDb);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else { 
+                return false;
+            }
         }
         public bool DeleteUser(string id)
         {
@@ -95,6 +116,7 @@ namespace Business.Services.Users
             mappedUser.Password = HashPassword(mappedUser.Password);
             if (_userRepository.Add(mappedUser))
             {
+                _mailService.SendVerifyAccountEmail(user);
                 return _mapper.Map<UserDto>(mappedUser);
             }
             else
@@ -102,7 +124,20 @@ namespace Business.Services.Users
                 return null;
             }
         }
-
+        public string SendForgotPasswordEmail(string email)
+        {
+            var userInDb = _userRepository.GetUserByEmail(email);
+            if(userInDb != null)
+            {
+                _mailService.SendForgotPasswordEmail(email);
+                return "The email was sent to the user";
+                
+            }
+            else
+            {
+                return "A link was sent to the email given";
+            }
+        }
         public UserLoginResponseDto LogIn(UserLoginDto user)
         {
             var userExists = _userRepository.GetUserByEmail(user.Email);
@@ -128,5 +163,53 @@ namespace Business.Services.Users
                 return null;
             }
         }
+        public bool VerifyEmail(string id)
+        {
+            var userInDb = _userRepository.GetUserById(id);
+            if (userInDb != null)
+            {
+                userInDb.IsEmailVerified = true;
+                if (_userRepository.Update(userInDb))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool ChangePassword(ChangePasswordDto changePassword)
+        {
+            var userInDb = _userRepository.GetUserById(changePassword.UserId);
+            if (userInDb != null)
+            {
+                if (changePassword.NewPassword == changePassword.RepeatPassword) { 
+                    if (userInDb.Password == HashPassword(changePassword.CurrentPassword))
+                    {
+                        userInDb.Password = HashPassword(changePassword.NewPassword);
+                        var result = _userRepository.Update(userInDb);
+                        return result;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
     }
 }

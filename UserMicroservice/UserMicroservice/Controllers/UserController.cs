@@ -1,5 +1,6 @@
 ﻿using Business.Services.Users;
 using Data.DTOs.Users;
+using Data.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -89,6 +90,57 @@ namespace UserMicroservice.Controllers
                 return BadRequest("The credentials are wrong");
             }
         }
+        [HttpPut]
+        public IActionResult ForgotPassword(ForgetPasswordDto forgotPassowrdDto) {
+            var result = _userService.ForgotPassword(forgotPassowrdDto);
+            if (result != null)
 
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+        [HttpPut("{id}")]
+        public IActionResult VerifyEmail(string id)
+        {
+            var result = _userService.VerifyEmail(id);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+        [HttpPut]
+        public IActionResult ChangePassword(ChangePasswordDto changePassword)
+        {
+            var result = _userService.ChangePassword(changePassword);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+        [HttpPost]
+        public IActionResult SendForgotPasswordEmail(string email)
+        {
+            var result = _userService.SendForgotPasswordEmail(email);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Data.Entities;
+﻿using Data.DTOs.Users;
+using Data.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -35,6 +36,56 @@ namespace Business.Services.Token
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = creds
+
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var token = tokenHandler.CreateToken(tokenDecriptor);
+
+            return tokenHandler.WriteToken(token);
+        }
+        public string CreatePasswordToken(string userEmail)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Email,userEmail)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["PasswordTokenKey"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var tokenDecriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddHours(1),
+                SigningCredentials = creds
+
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var token = tokenHandler.CreateToken(tokenDecriptor);
+
+            return tokenHandler.WriteToken(token);
+        }
+        public string CreateVerifyAccountToken(UserCreateDto user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Name),
+                new Claim(ClaimTypes.GivenName,user.Surname),
+                new Claim(ClaimTypes.Email,user.Email)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["PasswordTokenKey"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var tokenDecriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddHours(1),
                 SigningCredentials = creds
 
             };

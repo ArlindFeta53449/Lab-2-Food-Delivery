@@ -1,4 +1,5 @@
-﻿using Data.Entities;
+﻿using Data.DTOs.Users;
+using Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,9 @@ namespace Business.Services._01_Mailing
     public interface IMailService
     {
         Task SendEmailAsync(MailRequest mailRequest);
+
+        Task SendForgotPasswordEmail(string userEmail);
+
+        Task SendVerifyAccountEmail(UserCreateDto user);
     }
 }

@@ -15,5 +15,10 @@ namespace Business.Services.Users
         UserLoginResponseDto LogIn(UserLoginDto user);
         UserDto EditUser(UserDto user);
         bool DeleteUser(string id);
+        bool ForgotPassword(ForgetPasswordDto forgetPassword);
+        bool VerifyEmail(string id);
+
+        bool ChangePassword(ChangePasswordDto changePassword);
+        string SendForgotPasswordEmail(string email);
     }
 }
