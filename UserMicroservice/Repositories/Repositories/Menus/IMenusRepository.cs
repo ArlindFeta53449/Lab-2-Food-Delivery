@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.Repositories.Menus
+namespace Repositories.Repositories.Menus
 {
-    public interface IMenusItemRepository:IRepository<MenuItem>
+    public interface IMenusRepository : IRepository<Menu>
     {
 
     }

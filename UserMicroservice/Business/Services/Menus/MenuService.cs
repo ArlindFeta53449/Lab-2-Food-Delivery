@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Data.Entities;
-using Repository.Repositories.MenusItems;
+using Repositories.Repositories.Menus;
 
 namespace Business.Services.Menus
 {

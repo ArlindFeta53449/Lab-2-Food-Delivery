@@ -1,7 +1,7 @@
 ﻿using Data.Entities;
 using Repositories;
 using Repositories.Repositories.GenericRepository;
-using Repository.Repositories.Menus;
+using Repositories.Repositories.MenusItems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +17,22 @@ namespace Repository.Repositories.MenusItems
         {
 
         }
+
+        public IList<MenuItem> SearchMenuItems(string menuitem)
+        {
+            var menuItems = Context.Set<MenuItem>().Where(m => m.Name.ToLower().Contains(menuitem.ToLower())).ToList();
+            return menuItems;
+        }
+
+        /*
+        public IList<MenuItem> GetMostPopularMenuItems(int count)
+        {
+            var menuItems = Context.Set<MenuItem>()
+                .OrderByDescending(m => m)
+                .Take(count)
+                .ToList();
+            return menuItems;      
+        }
+        */
     }
 }

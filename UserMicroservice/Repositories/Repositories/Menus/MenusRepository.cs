@@ -1,6 +1,5 @@
 ﻿using Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using Repositories;
 using Repositories.Repositories.GenericRepository;
 using Repository.Repositories.MenusItems;
 using System;
@@ -9,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.Repositories.Menus
+namespace Repositories.Repositories.Menus
 {
     public class MenusRepository : Repository<Menu>, IMenusRepository
     {

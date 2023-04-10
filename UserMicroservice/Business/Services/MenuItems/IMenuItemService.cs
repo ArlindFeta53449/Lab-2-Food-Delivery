@@ -14,5 +14,10 @@ namespace Business.Services.MenuItems
         MenuItemDto EditMenuItem(MenuItemDto menuItem);
         MenuItemDto CreateMenuItem(MenuItemCreateDto menuItem);
         void DeleteMenuItem(int id);
+
+        IList<MenuItemDto> SearchMenuItems(string menuitem);
+        /*
+        IList<MenuItemDto> GetMostPopularMenuItems(int count);
+        */
     }
 }

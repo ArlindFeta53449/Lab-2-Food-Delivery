@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Menu.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class MenuItemController : ControllerBase
     {
@@ -53,5 +53,30 @@ namespace Menu.Controllers
             var result = _menuItemService.EditMenuItem(menuItem);
             return Ok(result);
         }
+
+        [HttpGet]
+
+        public IActionResult SearchMenuItems(string searchItem)
+        {
+            try
+            {
+                var menuItems = _menuItemService.SearchMenuItems(searchItem);
+                return Ok(menuItems);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        /*
+        [HttpGet]
+        public IActionResult<IList<MenuItemDto>> GetMostPopularMenuItems()
+        {
+            var popularMenuItems = _menuItemService.GetMostPopularMenuItems();
+            return Ok(popularMenuItems);
+        } 
+        */
     }
 }

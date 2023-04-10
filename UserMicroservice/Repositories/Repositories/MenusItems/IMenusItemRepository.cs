@@ -6,10 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.Repositories.MenusItems
+namespace Repositories.Repositories.MenusItems
 {
-    public interface IMenusRepository : IRepository<Menu>
+    public interface IMenusItemRepository : IRepository<MenuItem>
     {
-
+        IList<MenuItem> SearchMenuItems(string menuitem);
     }
 }

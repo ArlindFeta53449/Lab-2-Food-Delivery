@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Data.DTOs;
 using Data.Entities;
-using Repository.Repositories.Menus;
+using Repositories.Repositories.MenusItems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,5 +52,24 @@ namespace Business.Services.MenuItems
             _menusItemRepository.Update(mappedMenuItem);
             return _mapper.Map<MenuItemDto>(mappedMenuItem);
         }
+
+        /* Metoda e cila ben match se a eshte menuItem qe po kerkohet nga konsumatori*/
+        public IList<MenuItemDto> SearchMenuItems(string menuitem)
+        {
+            var menuItems = _menusItemRepository.SearchMenuItems(menuitem);
+            return _mapper.Map<IList<MenuItemDto>>(menuItems);
+        }
+
+
+        /*
+   public IList<MenuItemDto> GetMostPopularMenuItems(int count)
+   {
+       var menuItems = _menusItemRepository.MenuItems
+           .OrderByDescending(m => m.Orders.Count())
+           .Take(count)
+           .ToList();
+       return _mapper.Map<IList<MenuItemDto>>(menuItems);
+   }
+   */
     }
 }
