@@ -1,5 +1,7 @@
 ﻿using Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Repositories;
+using Repositories.Repositories.GenericRepository;
 using Repository.Repositories.MenusItems;
 using System;
 using System.Collections.Generic;

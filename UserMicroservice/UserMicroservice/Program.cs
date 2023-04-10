@@ -1,4 +1,8 @@
 using Business.Services._01_Mailing;
+using Business.Services.MenuItems;
+using Business.Services.Menus;
+using Business.Services.Offers;
+using Business.Services.Restaurants;
 using Business.Services.Roles;
 using Business.Services.Token;
 using Business.Services.Users;
@@ -8,6 +12,10 @@ using Microsoft.Extensions.Configuration;
 using Repositories;
 using Repositories.Repositories.Roles;
 using Repositories.Repositories.Users;
+using Repository.Repositories.Menus;
+using Repository.Repositories.MenusItems;
+using Repository.Repositories.Offers;
+using Repository.Repositories.Restaurants;
 
 var builder = WebApplication.CreateBuilder(args);
 

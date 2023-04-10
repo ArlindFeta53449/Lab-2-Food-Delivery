@@ -1,5 +1,7 @@
 ﻿using Data.DTOs;
 using Data.Entities;
+using Repositories;
+using Repositories.Repositories.GenericRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;

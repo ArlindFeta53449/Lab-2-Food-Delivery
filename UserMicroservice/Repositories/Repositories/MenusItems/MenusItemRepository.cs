@@ -1,4 +1,6 @@
 ﻿using Data.Entities;
+using Repositories;
+using Repositories.Repositories.GenericRepository;
 using Repository.Repositories.Menus;
 using System;
 using System.Collections.Generic;
