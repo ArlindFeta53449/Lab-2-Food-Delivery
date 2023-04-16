@@ -21,7 +21,11 @@ namespace Repositories.Repositories.Users
         }
         public User GetUserByEmail(string email)
         {
-            return Context.Set<User>().FirstOrDefault(x => x.Email == email);
+            return Context.Set<User>().Include(x=>x.Role).FirstOrDefault(x => x.Email == email);
+        }
+        public User GetUserByVerificationToken(string token)
+        {
+            return Context.Set<User>().FirstOrDefault(x => x.AccountVerificationToken == token);
         }
 
     }

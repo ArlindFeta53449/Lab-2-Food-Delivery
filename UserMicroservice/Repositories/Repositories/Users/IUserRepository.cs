@@ -13,5 +13,7 @@ namespace Repositories.Repositories.Users
         User GetUserByEmail(string email);
 
         User GetUserById(string id);
+
+        User GetUserByVerificationToken(string token);
     }
 }

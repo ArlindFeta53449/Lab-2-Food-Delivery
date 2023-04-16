@@ -16,7 +16,7 @@ namespace Business.Services.Users
         UserDto EditUser(UserDto user);
         bool DeleteUser(string id);
         bool ForgotPassword(ForgetPasswordDto forgetPassword);
-        bool VerifyEmail(string id);
+        bool VerifyEmail(string token);
 
         bool ChangePassword(ChangePasswordDto changePassword);
         string SendForgotPasswordEmail(string email);

@@ -19,8 +19,8 @@ namespace Repositories.EntityConfigurations
                 .IsRequired();
             builder.Property(c=>c.Surname)
                 .IsRequired();
-            builder.Property(c=>c.Age)
-                .IsRequired();
+            builder.Property(c=>c.IsEmailVerified)
+                .HasDefaultValue(false);
         }
     }
 }
