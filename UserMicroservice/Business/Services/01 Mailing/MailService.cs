@@ -71,7 +71,7 @@ namespace Business.Services._01_Mailing
             email.To.Add(MailboxAddress.Parse(user.Email));
             email.Subject = "Verify your email!";
             var builder = new BodyBuilder();
-            var token = _tokenService.CreateVerifyAccountToken(user);
+            var token = user.AccountVerificationToken;
             var link = "http://localhost:5000/verifyAccount/" + token;
             builder.HtmlBody = "Click the link below to verify your account \n " + link;
             email.Body = builder.ToMessageBody();

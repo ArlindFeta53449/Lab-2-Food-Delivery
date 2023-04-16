@@ -13,7 +13,7 @@ namespace Data.DTOs.Users
 
         public string Email { get; set; }
 
-        public int RoleId { get; set; }
+        public string Role { get; set; }
 
         public string Token { get; set; }
     }

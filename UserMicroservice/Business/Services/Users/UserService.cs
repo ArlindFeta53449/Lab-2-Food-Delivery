@@ -114,6 +114,7 @@ namespace Business.Services.Users
         {
             var mappedUser = _mapper.Map<User>(user);
             mappedUser.Password = HashPassword(mappedUser.Password);
+            mappedUser.AccountVerificationToken = _tokenService.CreateVerifyAccountToken(user);
             if (_userRepository.Add(mappedUser))
             {
                 _mailService.SendVerifyAccountEmail(user);
@@ -148,7 +149,7 @@ namespace Business.Services.Users
                     return new UserLoginResponseDto()
                     {
                         Id = userExists.Id,
-                        RoleId = userExists.RoleId,
+                        Role = userExists.Role.Name,
                         Email = userExists.Email,
                         Token = _tokenService.CreateToken(userExists)
                     };
@@ -163,12 +164,13 @@ namespace Business.Services.Users
                 return null;
             }
         }
-        public bool VerifyEmail(string id)
+        public bool VerifyEmail(string token)
         {
-            var userInDb = _userRepository.GetUserById(id);
+            var userInDb = _userRepository.GetUserByVerificationToken(token);
             if (userInDb != null)
             {
                 userInDb.IsEmailVerified = true;
+                userInDb.AccountVerificationToken = "";
                 if (_userRepository.Update(userInDb))
                 {
                     return true;

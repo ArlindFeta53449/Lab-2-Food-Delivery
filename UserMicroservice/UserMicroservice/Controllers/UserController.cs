@@ -63,7 +63,7 @@ namespace UserMicroservice.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public IActionResult DeleteUser(string id)
         {
             var result = _userService.DeleteUser(id);
@@ -103,10 +103,10 @@ namespace UserMicroservice.Controllers
                 return BadRequest();
             }
         }
-        [HttpPut("{id}")]
-        public IActionResult VerifyEmail(string id)
+        [HttpPut("{token}")]
+        public IActionResult VerifyEmail(string token)
         {
-            var result = _userService.VerifyEmail(id);
+            var result = _userService.VerifyEmail(token);
             if (result != null)
             {
                 return Ok(result);
