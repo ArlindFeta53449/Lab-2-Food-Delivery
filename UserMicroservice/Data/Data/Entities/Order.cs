@@ -16,6 +16,9 @@ namespace Data.Entities
 
         public float Total { get; set; }
 
+        public User User { get; set; }
+
+
 
         // public string PaymentIntentId { get; set; }
 
