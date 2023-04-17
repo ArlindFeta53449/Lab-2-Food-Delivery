@@ -45,6 +45,11 @@ namespace Business.Services._00_MappingProfiles
             CreateMap<OrderItem, OrderItemCreateDto>();
             CreateMap<OrderItemCreateDto, OrderItem>();
 
+            CreateMap<Order, OrderDto>();
+            CreateMap<OrderDto, Order>();
+            CreateMap<Order, OrderCreateDto>();
+            CreateMap<OrderCreateDto, Order>();
+
             CreateMap<Offer, OfferDto>();
             CreateMap<OfferDto, Offer>();
             CreateMap<Offer, OfferCreateDto>();

@@ -7,6 +7,7 @@ using Business.Services.Roles;
 using Business.Services.Token;
 using Business.Services.Users;
 using Business.Services.OrderItems;
+using Business.Services.Orders;
 
 using Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,8 @@ using Repository.Repositories.MenusItems;
 using Repository.Repositories.Offers;
 using Repository.Repositories.Restaurants;
 using Repository.Repositories.OrderItems;
+using Repository.Repositories.Orders;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +55,9 @@ builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 
 builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
 builder.Services.AddScoped<IOrderItemService, OrderItemService>();
+
+builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddScoped<IOfferRepository, OfferRepository>();
 builder.Services.AddScoped<IOfferService, OfferService>();

@@ -1,6 +1,6 @@
 ﻿namespace Data.DTOs
 {
-    internal class OrderCreateDto
+    public class OrderCreateDto
     {
         public string UserId { get; set; }
 
