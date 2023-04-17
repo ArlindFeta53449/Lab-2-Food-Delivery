@@ -24,18 +24,27 @@ namespace Business.Services._00_MappingProfiles
             CreateMap<UserDto, User>();
             CreateMap<UserCreateDto, User>();   
             CreateMap<User, UserCreateDto>();
+
             CreateMap<Menu, MenuDto>();
             CreateMap<MenuDto, Menu>();
             CreateMap<Menu, MenuCreateDto>();
             CreateMap<MenuCreateDto, Menu>();
+
             CreateMap<MenuItem, MenuItemDto>();
             CreateMap<MenuItemDto, MenuItem>();
             CreateMap<MenuItem, MenuItemCreateDto>();
             CreateMap<MenuItemCreateDto, MenuItem>();
+
             CreateMap<Restaurant, RestaurantDto>();
             CreateMap<RestaurantDto, Restaurant>();
             CreateMap<Restaurant, RestaurantCreateDto>();
             CreateMap<RestaurantCreateDto, Restaurant>();
+
+            CreateMap<OrderItem, OrderItemDto>();
+            CreateMap<OrderItemDto, OrderItem>();
+            CreateMap<OrderItem, OrderItemCreateDto>();
+            CreateMap<OrderItemCreateDto, OrderItem>();
+
             CreateMap<Offer, OfferDto>();
             CreateMap<OfferDto, Offer>();
             CreateMap<Offer, OfferCreateDto>();

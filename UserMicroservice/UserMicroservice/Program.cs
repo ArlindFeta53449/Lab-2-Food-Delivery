@@ -6,6 +6,8 @@ using Business.Services.Restaurants;
 using Business.Services.Roles;
 using Business.Services.Token;
 using Business.Services.Users;
+using Business.Services.OrderItems;
+
 using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +20,7 @@ using Repositories.Repositories.Users;
 using Repository.Repositories.MenusItems;
 using Repository.Repositories.Offers;
 using Repository.Repositories.Restaurants;
+using Repository.Repositories.OrderItems;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +49,10 @@ builder.Services.AddScoped<IMenusItemRepository, MenusItemRepository>();
 builder.Services.AddScoped<IMenuItemService, MenuItemService>();
 builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+
+builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+builder.Services.AddScoped<IOrderItemService, OrderItemService>();
+
 builder.Services.AddScoped<IOfferRepository, OfferRepository>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
