@@ -12,7 +12,8 @@ namespace Repositories.EntityConfigurations
     {
         public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<Order> builder)
         {
-            builder.Property(x => x.UserId)
+            builder.HasOne(x => x.User)
+                .WithMany(x => x.Orders)
                 .IsRequired();
         }
     }

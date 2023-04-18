@@ -8,7 +8,7 @@ namespace Data.Entities
 {
     public class OrderItem
     {
-        public int OrderItemId { get; set; }
+        public int Id { get; set; }
 
         public int MenuItemId { get; set; }
 

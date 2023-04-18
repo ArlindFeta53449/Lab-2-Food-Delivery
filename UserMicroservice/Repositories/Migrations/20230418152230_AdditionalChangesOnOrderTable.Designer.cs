@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repositories;
 
@@ -11,9 +12,10 @@ using Repositories;
 namespace Repositories.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230418152230_AdditionalChangesOnOrderTable")]
+    partial class AdditionalChangesOnOrderTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,7 +51,7 @@ namespace Repositories.Migrations
 
                     b.HasIndex("RestaurantId");
 
-                    b.ToTable("Menus", (string)null);
+                    b.ToTable("Menus");
                 });
 
             modelBuilder.Entity("Data.Entities.MenuItem", b =>
@@ -82,7 +84,7 @@ namespace Repositories.Migrations
 
                     b.HasIndex("MenuId");
 
-                    b.ToTable("MenuItems", (string)null);
+                    b.ToTable("MenuItems");
                 });
 
             modelBuilder.Entity("Data.Entities.Offer", b =>
@@ -121,7 +123,7 @@ namespace Repositories.Migrations
 
                     b.HasIndex("MenuId");
 
-                    b.ToTable("Offers", (string)null);
+                    b.ToTable("Offers");
                 });
 
             modelBuilder.Entity("Data.Entities.Order", b =>
@@ -143,7 +145,7 @@ namespace Repositories.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Order", (string)null);
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("Data.Entities.OrderItem", b =>
@@ -169,7 +171,7 @@ namespace Repositories.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItems", (string)null);
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("Data.Entities.Restaurant", b =>
@@ -194,7 +196,7 @@ namespace Repositories.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Restaurants", (string)null);
+                    b.ToTable("Restaurants");
                 });
 
             modelBuilder.Entity("Data.Entities.Role", b =>
@@ -211,7 +213,7 @@ namespace Repositories.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("Data.Entities.User", b =>

@@ -27,6 +27,8 @@ namespace Data.Entities
         public string AccountVerificationToken { get; set; }
 
         public Role Role { get; set; }
+
+        public IList<Order> Orders { get; set; }
         
     }
 }
