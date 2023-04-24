@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Data.DTOs;
-using Data.DTOs.OrderItem;
 using Data.DTOs.Roles;
 using Data.DTOs.Users;
 using Data.Entities;
@@ -55,8 +54,7 @@ namespace Business.Services._00_MappingProfiles
             CreateMap<OrderDto, Order>();
             CreateMap<Order, OrderCreateDto>();
             CreateMap<OrderCreateDto, Order>();
-            CreateMap<OrderItemForOrderDto, OrderItem>().ForMember(x => x.Id, m => m.MapFrom(x => x.OrderItemId));
-            CreateMap<OrderItem, OrderItemForOrderDto>().ForMember(x => x.OrderItemId, m => m.MapFrom(x => x.Id));
+            
 
             CreateMap<Offer, OfferDto>();
             CreateMap<OfferDto, Offer>();

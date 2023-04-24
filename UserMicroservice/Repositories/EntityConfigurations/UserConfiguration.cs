@@ -22,7 +22,8 @@ namespace Repositories.EntityConfigurations
             builder.Property(c=>c.IsEmailVerified)
                 .HasDefaultValue(false);
             builder.HasMany(x => x.Orders)
-                .WithOne(x => x.User);
+                .WithOne(x => x.User)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

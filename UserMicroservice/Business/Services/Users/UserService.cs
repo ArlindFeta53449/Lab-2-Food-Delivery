@@ -119,6 +119,7 @@ namespace Business.Services.Users
             var mappedUser = _mapper.Map<User>(user);
             mappedUser.Password = HashPassword(mappedUser.Password);
             mappedUser.AccountVerificationToken = _tokenService.CreateVerifyAccountToken(user);
+            user.AccountVerificationToken = mappedUser.AccountVerificationToken;
             if (_userRepository.Add(mappedUser))
             {
                 _mailService.SendVerifyAccountEmail(user);
