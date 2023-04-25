@@ -14,7 +14,10 @@ namespace Repositories.EntityConfigurations
         {
             builder.HasOne(x => x.User)
                 .WithMany(x => x.Orders)
+                .HasForeignKey(x => x.UserId)
                 .IsRequired();
+            builder.HasMany(x => x.OrderItems)
+                .WithOne(x => x.Order);
         }
     }
 }

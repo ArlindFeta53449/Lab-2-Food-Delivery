@@ -23,7 +23,7 @@ namespace Repositories.EntityConfigurations
                 .HasDefaultValue(false);
             builder.HasMany(x => x.Orders)
                 .WithOne(x => x.User)
-                .OnDelete(DeleteBehavior.NoAction);
+                .HasForeignKey(x=>x.UserId);
         }
     }
 }

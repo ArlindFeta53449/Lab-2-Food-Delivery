@@ -15,6 +15,9 @@ namespace Repositories.EntityConfigurations
         {
             builder.Property(x => x.MenuItemId)
                 .IsRequired();
+            builder.HasOne(x => x.Order)
+                .WithMany(x => x.OrderItems)
+                .HasForeignKey(x => x.OrderId);
         }
     }
 }

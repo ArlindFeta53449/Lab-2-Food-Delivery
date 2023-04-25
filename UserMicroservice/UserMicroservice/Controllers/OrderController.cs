@@ -20,7 +20,7 @@ namespace UserMicroservice.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var orders = _orderService.GetAllOrders();
+            var orders = _orderService.GetAllOrdersWithOrderItems();
             return Ok(orders);
         }
 

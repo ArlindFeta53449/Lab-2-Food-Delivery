@@ -1,4 +1,6 @@
-﻿namespace Data.DTOs
+﻿using Data.DTOs.OrderItem;
+
+namespace Data.DTOs
 {
     public class OrderDto
     {
@@ -6,7 +8,7 @@
 
         public string UserId { get; set; }
 
-        public IList<OrderItemDto> OrderItems { get; set; }
+        public IList<OrderItemForOrderDisplayDto> OrderItems { get; set; }
 
         public float Total { get; set; }
     }

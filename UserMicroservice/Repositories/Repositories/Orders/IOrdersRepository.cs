@@ -1,4 +1,5 @@
-﻿using Data.Entities;
+﻿using Data.DTOs.Order;
+using Data.Entities;
 using Repositories.Repositories.GenericRepository;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace Repository.Repositories.Orders
 {
     public interface IOrdersRepository : IRepository<Order>
     {
+        IList<OrderForDisplayDto> getAllOrdersWithOrderItems();
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Data.DTOs;
+using Data.DTOs.Order;
 using Data.Entities;
 using Repository.Repositories.OrderItems;
 using Repository.Repositories.Orders;
@@ -58,6 +59,10 @@ namespace Business.Services.Orders
             var order = _ordersRepository.Get(id);
             return _ordersRepository.Remove(order);
         }
-
+        public IList<OrderForDisplayDto> GetAllOrdersWithOrderItems()
+        {
+            return _ordersRepository.getAllOrdersWithOrderItems();
+            
+        }
     }
 }

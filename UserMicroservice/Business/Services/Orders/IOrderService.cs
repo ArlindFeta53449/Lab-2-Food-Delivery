@@ -1,4 +1,5 @@
 ﻿using Data.DTOs;
+using Data.DTOs.Order;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,6 @@ namespace Business.Services.Orders
         bool CreateOrder(OrderCreateDto orderDto);
         bool UpdateOrder(OrderDto orderDto);
         bool DeleteOrder(int id);
+        IList<OrderForDisplayDto> GetAllOrdersWithOrderItems();
     }
 }
