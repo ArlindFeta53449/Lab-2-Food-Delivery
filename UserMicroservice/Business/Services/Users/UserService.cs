@@ -114,7 +114,7 @@ namespace Business.Services.Users
                 return sb.ToString();
             }
         }
-        public UserDto SignUp(UserCreateDto user)
+        public string SignUp(UserCreateDto user)
         {
             var mappedUser = _mapper.Map<User>(user);
             mappedUser.Password = HashPassword(mappedUser.Password);
@@ -123,7 +123,7 @@ namespace Business.Services.Users
             if (_userRepository.Add(mappedUser))
             {
                 _mailService.SendVerifyAccountEmail(user);
-                return _mapper.Map<UserDto>(mappedUser);
+                return mappedUser.AccountVerificationToken;
             }
             else
             {
