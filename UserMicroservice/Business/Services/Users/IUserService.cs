@@ -11,7 +11,7 @@ namespace Business.Services.Users
     {
         IList<UserDto> GetAll();
         UserDto GetUser(string id);
-        UserDto SignUp(UserCreateDto user);
+        string SignUp(UserCreateDto user);
         UserLoginResponseDto LogIn(UserLoginDto user);
         UserDto EditUser(UserDto user);
         bool DeleteUser(string id);

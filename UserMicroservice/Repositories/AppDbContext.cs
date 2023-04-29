@@ -18,5 +18,8 @@ namespace Repositories
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<Offer> Offers { get; set; }
            
+        public DbSet<OrderItem> OrderItems { get; set; }
+
+        public DbSet<Order> Order { get; set; }
     }
 }

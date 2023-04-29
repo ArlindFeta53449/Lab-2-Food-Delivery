@@ -21,6 +21,9 @@ namespace Repositories.EntityConfigurations
                 .IsRequired();
             builder.Property(c=>c.IsEmailVerified)
                 .HasDefaultValue(false);
+            builder.HasMany(x => x.Orders)
+                .WithOne(x => x.User)
+                .HasForeignKey(x=>x.UserId);
         }
     }
 }

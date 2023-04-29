@@ -17,4 +17,8 @@
     <PackageReference Include="MimeKit" Version="3.6.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\01 Mailing\HTMLTemplates\" />
+  </ItemGroup>
+
 </Project>

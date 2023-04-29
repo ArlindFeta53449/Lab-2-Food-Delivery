@@ -1,8 +1,11 @@
-﻿using Business.Services.Users;
+﻿using Business.Services.Token;
+using Business.Services.Users;
 using Data.DTOs.Users;
 using Data.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace UserMicroservice.Controllers
 {
@@ -11,6 +14,7 @@ namespace UserMicroservice.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+
 
         public UserController(IUserService userService)
         {
@@ -142,5 +146,6 @@ namespace UserMicroservice.Controllers
                 return BadRequest();
             }
         }
+
     }
 }

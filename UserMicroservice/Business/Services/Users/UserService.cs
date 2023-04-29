@@ -3,11 +3,13 @@ using Business.Services._01_Mailing;
 using Business.Services.Token;
 using Data.DTOs.Users;
 using Data.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Repositories.Repositories.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,12 +22,14 @@ namespace Business.Services.Users
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
         private readonly IMailService _mailService;
+
         public UserService(IUserRepository userRepository, IMapper mapper, ITokenService tokenService, IMailService mailService)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _tokenService = tokenService;
             _mailService = mailService;
+  
         }
         public IList<UserDto> GetAll()
         {
@@ -110,15 +114,16 @@ namespace Business.Services.Users
                 return sb.ToString();
             }
         }
-        public UserDto SignUp(UserCreateDto user)
+        public string SignUp(UserCreateDto user)
         {
             var mappedUser = _mapper.Map<User>(user);
             mappedUser.Password = HashPassword(mappedUser.Password);
             mappedUser.AccountVerificationToken = _tokenService.CreateVerifyAccountToken(user);
+            user.AccountVerificationToken = mappedUser.AccountVerificationToken;
             if (_userRepository.Add(mappedUser))
             {
                 _mailService.SendVerifyAccountEmail(user);
-                return _mapper.Map<UserDto>(mappedUser);
+                return mappedUser.AccountVerificationToken;
             }
             else
             {
@@ -213,5 +218,6 @@ namespace Business.Services.Users
             }
         }
         
+
     }
 }

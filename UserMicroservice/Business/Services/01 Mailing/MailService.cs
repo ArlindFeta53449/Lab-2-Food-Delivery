@@ -70,16 +70,20 @@ namespace Business.Services._01_Mailing
             email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
             email.To.Add(MailboxAddress.Parse(user.Email));
             email.Subject = "Verify your email!";
+            var filePath = "C:\\Users\\Lenvo\\Documents\\GitHub\\Lab-2-Food-Delivery\\UserMicroservice\\Business\\Services\\01 Mailing\\HTMLTemplates\\VerifyEmailTemplate.html";
+            var template = File.ReadAllText(filePath);
             var builder = new BodyBuilder();
             var token = user.AccountVerificationToken;
             var link = "http://localhost:5000/verifyAccount/" + token;
-            builder.HtmlBody = "Click the link below to verify your account \n " + link;
-            email.Body = builder.ToMessageBody();
-            using var smtp = new SmtpClient();
-            smtp.Connect(_mailSettings.Host, _mailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
-            smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
-            await smtp.SendAsync(email);
-            smtp.Disconnect(true);
+            var htmlBody = string.Format(template, link);
+                builder.HtmlBody = htmlBody;
+                email.Body = builder.ToMessageBody();
+                using var smtp = new SmtpClient();
+                smtp.Connect(_mailSettings.Host, _mailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
+                smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
+                await smtp.SendAsync(email);
+                smtp.Disconnect(true);
+            
         }
     }
 }

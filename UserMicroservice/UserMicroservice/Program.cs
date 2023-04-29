@@ -6,9 +6,13 @@ using Business.Services.Restaurants;
 using Business.Services.Roles;
 using Business.Services.Token;
 using Business.Services.Users;
+using Business.Services.OrderItems;
+using Business.Services.Orders;
+
 using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using MySql.Data.MySqlClient;
 using Repositories;
 using Repositories.Repositories.Menus;
 using Repositories.Repositories.MenusItems;
@@ -17,12 +21,24 @@ using Repositories.Repositories.Users;
 using Repository.Repositories.MenusItems;
 using Repository.Repositories.Offers;
 using Repository.Repositories.Restaurants;
+using Repository.Repositories.OrderItems;
+using Repository.Repositories.Orders;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//{
+  //  options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+//});
+
+
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IRolesRepository, RolesRepository>();
@@ -36,6 +52,13 @@ builder.Services.AddScoped<IMenusItemRepository, MenusItemRepository>();
 builder.Services.AddScoped<IMenuItemService, MenuItemService>();
 builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+
+builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+builder.Services.AddScoped<IOrderItemService, OrderItemService>();
+
+builder.Services.AddScoped<IOrdersRepository, OrdersRepository>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+
 builder.Services.AddScoped<IOfferRepository, OfferRepository>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
