@@ -12,7 +12,7 @@ namespace Business.Services._01_Mailing
     {
         Task SendEmailAsync(MailRequest mailRequest);
 
-        Task SendForgotPasswordEmail(string userEmail);
+        Task SendForgotPasswordEmail(User user, string token);
 
         Task SendVerifyAccountEmail(UserCreateDto user);
     }

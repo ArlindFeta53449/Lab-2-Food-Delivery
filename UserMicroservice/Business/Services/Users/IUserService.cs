@@ -19,6 +19,6 @@ namespace Business.Services.Users
         bool VerifyEmail(string token);
 
         bool ChangePassword(ChangePasswordDto changePassword);
-        string SendForgotPasswordEmail(string email);
+        ForgotPsswordSuccesEmailDto SendForgotPasswordEmail(EmailSendDto email);
     }
 }

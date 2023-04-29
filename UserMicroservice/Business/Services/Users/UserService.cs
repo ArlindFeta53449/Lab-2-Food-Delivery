@@ -130,18 +130,25 @@ namespace Business.Services.Users
                 return null;
             }
         }
-        public string SendForgotPasswordEmail(string email)
+        public ForgotPsswordSuccesEmailDto SendForgotPasswordEmail(EmailSendDto email)
         {
-            var userInDb = _userRepository.GetUserByEmail(email);
+            var userInDb = _userRepository.GetUserByEmail(email.Email);
+            
             if(userInDb != null)
             {
-                _mailService.SendForgotPasswordEmail(email);
-                return "The email was sent to the user";
+                var token = _tokenService.CreatePasswordToken(userInDb.Email);
+               _mailService.SendForgotPasswordEmail(userInDb,token);
+
+                return new ForgotPsswordSuccesEmailDto
+                {
+                    Id = userInDb.Id,
+                    token = token
+                };
                 
             }
             else
             {
-                return "A link was sent to the email given";
+                return null;
             }
         }
         public UserLoginResponseDto LogIn(UserLoginDto user)

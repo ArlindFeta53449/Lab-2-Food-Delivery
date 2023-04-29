@@ -134,7 +134,7 @@ namespace UserMicroservice.Controllers
             }
         }
         [HttpPost]
-        public IActionResult SendForgotPasswordEmail(string email)
+        public IActionResult SendForgotPasswordEmail(EmailSendDto email)
         {
             var result = _userService.SendForgotPasswordEmail(email);
             if (result != null)
