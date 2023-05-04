@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Business.Services._01_Mailing;
+using Business.Services.Authentification;
 using Business.Services.Token;
+using Data.DTOs.Authentification;
 using Data.DTOs.Users;
 using Data.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using Repositories.Repositories.Users;
 using System;
@@ -22,13 +25,15 @@ namespace Business.Services.Users
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
         private readonly IMailService _mailService;
-
-        public UserService(IUserRepository userRepository, IMapper mapper, ITokenService tokenService, IMailService mailService)
+        private readonly IAuthentificationService _authentificationService;
+        
+        public UserService(IUserRepository userRepository, IMapper mapper, ITokenService tokenService, IMailService mailService, IAuthentificationService authentificationService)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _tokenService = tokenService;
             _mailService = mailService;
+            _authentificationService = authentificationService;
   
         }
         public IList<UserDto> GetAll()
@@ -130,19 +135,24 @@ namespace Business.Services.Users
                 return null;
             }
         }
-        public ForgotPsswordSuccesEmailDto SendForgotPasswordEmail(EmailSendDto email)
+        public ForgotPasswordEmailResponseDTO SendForgotPasswordEmail(EmailSendDto email)
         {
             var userInDb = _userRepository.GetUserByEmail(email.Email);
             
             if(userInDb != null)
             {
                 var token = _tokenService.CreatePasswordToken(userInDb.Email);
+                var key = generateRandomKeyNumber();
+                var iv = generateRandomIvNumber();
+                var encryptedToken = _authentificationService.EncryptString(token,key,iv);
                _mailService.SendForgotPasswordEmail(userInDb,token);
 
-                return new ForgotPsswordSuccesEmailDto
-                {
-                    Id = userInDb.Id,
-                    token = token
+                return new
+                ForgotPasswordEmailResponseDTO{
+                    EncryptedToken = encryptedToken,
+                    Key = key,
+                    Iv = iv,
+                    UserId = userInDb.Id,
                 };
                 
             }
@@ -151,9 +161,30 @@ namespace Business.Services.Users
                 return null;
             }
         }
+       private static byte[] generateRandomKeyNumber()
+        {
+            byte[] key = new byte[32];
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(key);
+            }
+            
+            return key;
+            
+        }
+        private static byte[] generateRandomIvNumber()
+        {
+            byte[] iv = new byte[16];
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(iv);
+            }
+
+            return iv;
+        }
         public UserLoginResponseDto LogIn(UserLoginDto user)
         {
-            var userExists = _userRepository.GetUserByEmail(user.Email);
+            var userExists = _userRepository.GetUserByEmailAndIsVerified(user.Email);
             if(userExists != null)
             {
                 if (userExists.Password.Equals(HashPassword(user.Password)))

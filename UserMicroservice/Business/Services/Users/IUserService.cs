@@ -1,4 +1,5 @@
-﻿using Data.DTOs.Users;
+﻿using Data.DTOs.Authentification;
+using Data.DTOs.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,6 @@ namespace Business.Services.Users
         bool VerifyEmail(string token);
 
         bool ChangePassword(ChangePasswordDto changePassword);
-        ForgotPsswordSuccesEmailDto SendForgotPasswordEmail(EmailSendDto email);
+        ForgotPasswordEmailResponseDTO SendForgotPasswordEmail(EmailSendDto email);
     }
 }

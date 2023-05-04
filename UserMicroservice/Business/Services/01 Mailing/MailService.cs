@@ -52,8 +52,8 @@ namespace Business.Services._01_Mailing
             email.To.Add(MailboxAddress.Parse(user.Email));
             email.Subject = "Reset Forgoten Password!";
             var builder = new BodyBuilder();
-            var link = "http://localhost:3000/forgotPassword/"+token+"/"+user.Id;
-            var filePath = "C:\\Users\\Lenvo\\Documents\\GitHub\\Lab-2-Food-Delivery\\UserMicroservice\\Business\\Services\\01 Mailing\\HTMLTemplates\\ChangePasswordTemplate.html";
+            var link = "http://localhost:3000/forgotPassword/"+token;
+            var filePath = "C:\\Users\\lkrasniqi\\Desktop\\Lab-2-Food-Delivery\\UserMicroservice\\Business\\Services\\01 Mailing\\HTMLTemplates\\ChangePasswordTemplate.html";
             var template = File.ReadAllText(filePath);
             var htmlBody = template.Replace("{user_name}", user.Name).Replace("{link}",link);
             builder.HtmlBody = htmlBody;
@@ -70,7 +70,7 @@ namespace Business.Services._01_Mailing
             email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
             email.To.Add(MailboxAddress.Parse(user.Email));
             email.Subject = "Verify your email!";
-            var filePath = "C:\\Users\\Lenvo\\Documents\\GitHub\\Lab-2-Food-Delivery\\UserMicroservice\\Business\\Services\\01 Mailing\\HTMLTemplates\\VerifyEmailTemplate.html";
+            var filePath = "C:\\Users\\lkrasniqi\\Desktop\\Lab-2-Food-Delivery\\UserMicroservice\\Business\\Services\\01 Mailing\\HTMLTemplates\\VerifyEmailTemplate.html";
             var template = File.ReadAllText(filePath);
             var builder = new BodyBuilder();
             var token = user.AccountVerificationToken;

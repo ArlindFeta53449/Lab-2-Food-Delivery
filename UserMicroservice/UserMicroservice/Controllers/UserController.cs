@@ -43,7 +43,8 @@ namespace UserMicroservice.Controllers
         public IActionResult SignUp(UserCreateDto user)
         {
             var result = _userService.SignUp(user);
-            if(result != null)
+           
+            if (result != null)
             {
                 return Ok(result);
             }
@@ -97,7 +98,7 @@ namespace UserMicroservice.Controllers
         [HttpPut]
         public IActionResult ForgotPassword(ForgetPasswordDto forgotPassowrdDto) {
             var result = _userService.ForgotPassword(forgotPassowrdDto);
-            if (result != null)
+            if (result != false)
 
             {
                 return Ok(result);
@@ -111,7 +112,7 @@ namespace UserMicroservice.Controllers
         public IActionResult VerifyEmail(string token)
         {
             var result = _userService.VerifyEmail(token);
-            if (result != null)
+            if (result != false)
             {
                 return Ok(result);
             }
@@ -124,7 +125,7 @@ namespace UserMicroservice.Controllers
         public IActionResult ChangePassword(ChangePasswordDto changePassword)
         {
             var result = _userService.ChangePassword(changePassword);
-            if (result != null)
+            if (result != true)
             {
                 return Ok(result);
             }

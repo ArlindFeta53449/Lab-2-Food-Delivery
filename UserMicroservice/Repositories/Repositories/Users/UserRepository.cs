@@ -27,6 +27,10 @@ namespace Repositories.Repositories.Users
         {
             return Context.Set<User>().FirstOrDefault(x => x.AccountVerificationToken == token);
         }
+        public User GetUserByEmailAndIsVerified(string email)
+        {
+            return Context.Set<User>().Include(x => x.Role).Where(x => x.IsEmailVerified == true && x.Email == email).FirstOrDefault();
+        }
 
     }
 }

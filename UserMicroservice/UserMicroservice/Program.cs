@@ -23,7 +23,7 @@ using Repository.Repositories.Offers;
 using Repository.Repositories.Restaurants;
 using Repository.Repositories.OrderItems;
 using Repository.Repositories.Orders;
-
+using Business.Services.Authentification;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +41,7 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectio
 
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IRolesRepository, RolesRepository>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -61,6 +62,8 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddScoped<IOfferRepository, OfferRepository>();
 builder.Services.AddScoped<IOfferService, OfferService>();
+builder.Services.AddScoped<IAuthentificationService, AuthentificationService>();
+//builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddTransient<IMailService,MailService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -70,9 +73,10 @@ builder.Services.AddCors(opt =>
 {
     opt.AddPolicy("CorsPolicy", policy =>
     {
-        policy.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
+        policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000").AllowCredentials();
     });
 });
+
 
 var app = builder.Build();
 

@@ -24,6 +24,8 @@ namespace Repositories.EntityConfigurations
             builder.HasMany(x => x.Orders)
                 .WithOne(x => x.User)
                 .HasForeignKey(x=>x.UserId);
+            builder.HasIndex(x => x.Email)
+                .IsUnique();
         }
     }
 }

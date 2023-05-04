@@ -15,5 +15,6 @@ namespace Repositories.Repositories.Users
         User GetUserById(string id);
 
         User GetUserByVerificationToken(string token);
+        User GetUserByEmailAndIsVerified(string email);
     }
 }
