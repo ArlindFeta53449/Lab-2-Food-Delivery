@@ -1,4 +1,5 @@
-﻿using Data.Entities;
+﻿using Data.DTOs.Users;
+using Data.Entities;
 using Repositories.Repositories.GenericRepository;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,7 @@ namespace Repositories.Repositories.Users
 
         User GetUserByVerificationToken(string token);
         User GetUserByEmailAndIsVerified(string email);
+
+        IList<UserDto> GetAllUsersForAdminDashboardDisplay();
     }
 }

@@ -19,14 +19,14 @@ using System.Threading.Tasks;
 
 namespace Business.Services.Users
 {
-    public class UserService:IUserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly ITokenService _tokenService;
         private readonly IMailService _mailService;
         private readonly IAuthentificationService _authentificationService;
-        
+
         public UserService(IUserRepository userRepository, IMapper mapper, ITokenService tokenService, IMailService mailService, IAuthentificationService authentificationService)
         {
             _userRepository = userRepository;
@@ -34,7 +34,7 @@ namespace Business.Services.Users
             _tokenService = tokenService;
             _mailService = mailService;
             _authentificationService = authentificationService;
-  
+
         }
         public IList<UserDto> GetAll()
         {
@@ -45,14 +45,14 @@ namespace Business.Services.Users
         public UserDto GetUser(string id)
         {
             var user = _userRepository.GetUserById(id);
-            return _mapper.Map<UserDto>(user);  
+            return _mapper.Map<UserDto>(user);
         }
         public UserDto EditUser(UserDto user)
         {
             var userInDb = _userRepository.GetUserById(user.Id);
-            if(userInDb != null)
+            if (userInDb != null)
             {
-                _mapper.Map(user,userInDb);
+                _mapper.Map(user, userInDb);
                 _userRepository.Update(userInDb);
                 return _mapper.Map<UserDto>(userInDb);
             }
@@ -60,14 +60,14 @@ namespace Business.Services.Users
             {
                 return null;
             }
-            
+
         }
         public bool ForgotPassword(ForgetPasswordDto forgetPassword)
         {
             var userInDb = _userRepository.GetUserById(forgetPassword.UserId);
-            if(userInDb != null)
+            if (userInDb != null)
             {
-                if(forgetPassword.NewPassword == forgetPassword.RepeatPassword)
+                if (forgetPassword.NewPassword == forgetPassword.RepeatPassword)
                 {
                     userInDb.Password = HashPassword(forgetPassword.NewPassword);
                     return _userRepository.Update(userInDb);
@@ -77,14 +77,14 @@ namespace Business.Services.Users
                     return false;
                 }
             }
-            else { 
+            else {
                 return false;
             }
         }
         public bool DeleteUser(string id)
         {
             var user = _userRepository.GetUserById(id);
-            if(user != null)
+            if (user != null)
             {
                 if (_userRepository.Remove(user))
                 {
@@ -138,39 +138,39 @@ namespace Business.Services.Users
         public ForgotPasswordEmailResponseDTO SendForgotPasswordEmail(EmailSendDto email)
         {
             var userInDb = _userRepository.GetUserByEmail(email.Email);
-            
-            if(userInDb != null)
+
+            if (userInDb != null)
             {
                 var token = _tokenService.CreatePasswordToken(userInDb.Email);
                 var key = generateRandomKeyNumber();
                 var iv = generateRandomIvNumber();
-                var encryptedToken = _authentificationService.EncryptString(token,key,iv);
-               _mailService.SendForgotPasswordEmail(userInDb,token);
+                var encryptedToken = _authentificationService.EncryptString(token, key, iv);
+                _mailService.SendForgotPasswordEmail(userInDb, token);
 
                 return new
-                ForgotPasswordEmailResponseDTO{
+                ForgotPasswordEmailResponseDTO {
                     EncryptedToken = encryptedToken,
                     Key = key,
                     Iv = iv,
                     UserId = userInDb.Id,
                 };
-                
+
             }
             else
             {
                 return null;
             }
         }
-       private static byte[] generateRandomKeyNumber()
+        private static byte[] generateRandomKeyNumber()
         {
             byte[] key = new byte[32];
             using (var rng = new RNGCryptoServiceProvider())
             {
                 rng.GetBytes(key);
             }
-            
+
             return key;
-            
+
         }
         private static byte[] generateRandomIvNumber()
         {
@@ -185,7 +185,7 @@ namespace Business.Services.Users
         public UserLoginResponseDto LogIn(UserLoginDto user)
         {
             var userExists = _userRepository.GetUserByEmailAndIsVerified(user.Email);
-            if(userExists != null)
+            if (userExists != null)
             {
                 if (userExists.Password.Equals(HashPassword(user.Password)))
                 {
@@ -233,7 +233,7 @@ namespace Business.Services.Users
             var userInDb = _userRepository.GetUserById(changePassword.UserId);
             if (userInDb != null)
             {
-                if (changePassword.NewPassword == changePassword.RepeatPassword) { 
+                if (changePassword.NewPassword == changePassword.RepeatPassword) {
                     if (userInDb.Password == HashPassword(changePassword.CurrentPassword))
                     {
                         userInDb.Password = HashPassword(changePassword.NewPassword);
@@ -255,7 +255,10 @@ namespace Business.Services.Users
                 return false;
             }
         }
-        
+        public IList<UserDto> GetAllUsersForAdminDashboardDisplay()
+        {
+            return _userRepository.GetAllUsersForAdminDashboardDisplay();
+        }
 
     }
 }

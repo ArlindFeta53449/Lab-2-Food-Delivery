@@ -21,5 +21,7 @@ namespace Business.Services.Users
 
         bool ChangePassword(ChangePasswordDto changePassword);
         ForgotPasswordEmailResponseDTO SendForgotPasswordEmail(EmailSendDto email);
+
+        IList<UserDto> GetAllUsersForAdminDashboardDisplay();
     }
 }

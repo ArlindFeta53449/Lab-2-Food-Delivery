@@ -147,6 +147,19 @@ namespace UserMicroservice.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet]
+        public IActionResult GetAllUsersForAdminDashboardDisplay()
+        {
+            var result = _userService.GetAllUsersForAdminDashboardDisplay();
+            if(result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
 
     }
 }
