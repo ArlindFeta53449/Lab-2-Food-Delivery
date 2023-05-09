@@ -19,5 +19,7 @@ namespace Repositories.Repositories.Users
         User GetUserByEmailAndIsVerified(string email);
 
         IList<UserDto> GetAllUsersForAdminDashboardDisplay();
+
+        UserEditDto GetUserByIdForEdit(string id);
     }
 }

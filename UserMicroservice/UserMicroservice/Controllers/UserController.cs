@@ -38,7 +38,20 @@ namespace UserMicroservice.Controllers
                 return NotFound();
             }
         }
+        [HttpGet("{id}")]
 
+        public IActionResult GetUserForEdit(string id)
+        {
+            var user = _userService.GetUserByIdForEdit(id);
+            if (user != null)
+            {
+                return Ok(user);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
         [HttpPost]
         public IActionResult SignUp(UserCreateDto user)
         {
@@ -55,7 +68,7 @@ namespace UserMicroservice.Controllers
         }
 
         [HttpPut]
-        public IActionResult EditUser(UserDto user) {
+        public IActionResult EditUser(UserEditDto user) {
             var result = _userService.EditUser(user);
             if(result != null)
 

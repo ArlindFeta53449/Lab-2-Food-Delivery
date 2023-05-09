@@ -47,7 +47,7 @@ namespace Business.Services.Users
             var user = _userRepository.GetUserById(id);
             return _mapper.Map<UserDto>(user);
         }
-        public UserDto EditUser(UserDto user)
+        public UserDto EditUser(UserEditDto user)
         {
             var userInDb = _userRepository.GetUserById(user.Id);
             if (userInDb != null)
@@ -61,6 +61,19 @@ namespace Business.Services.Users
                 return null;
             }
 
+        }
+        
+        public UserEditDto GetUserByIdForEdit(string id)
+        {
+            var user = _userRepository.GetUserByIdForEdit(id);
+            if(user != null)
+            {
+                return user;
+            }
+            else
+            {
+                return null;
+            }
         }
         public bool ForgotPassword(ForgetPasswordDto forgetPassword)
         {

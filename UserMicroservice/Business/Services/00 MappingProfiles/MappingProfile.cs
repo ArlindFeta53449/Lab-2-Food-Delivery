@@ -30,6 +30,9 @@ namespace Business.Services._00_MappingProfiles
             CreateMap<User, UserLoginResponseDto>();
             CreateMap<UserLoginResponseDto, User>();
 
+            CreateMap<User, UserEditDto>();
+            CreateMap<UserEditDto, User>();
+
             CreateMap<Menu, MenuDto>();
             CreateMap<MenuDto, Menu>();
             CreateMap<Menu, MenuCreateDto>();

@@ -14,7 +14,7 @@ namespace Business.Services.Users
         UserDto GetUser(string id);
         string SignUp(UserCreateDto user);
         UserLoginResponseDto LogIn(UserLoginDto user);
-        UserDto EditUser(UserDto user);
+        UserDto EditUser(UserEditDto user);
         bool DeleteUser(string id);
         bool ForgotPassword(ForgetPasswordDto forgetPassword);
         bool VerifyEmail(string token);
@@ -23,5 +23,7 @@ namespace Business.Services.Users
         ForgotPasswordEmailResponseDTO SendForgotPasswordEmail(EmailSendDto email);
 
         IList<UserDto> GetAllUsersForAdminDashboardDisplay();
+
+        UserEditDto GetUserByIdForEdit(string id);
     }
 }

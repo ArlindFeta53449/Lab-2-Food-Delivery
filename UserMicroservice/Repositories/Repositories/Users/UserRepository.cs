@@ -46,6 +46,19 @@ namespace Repositories.Repositories.Users
                     IsEmailVerified = x.IsEmailVerified
                 }).ToList();
         }
+        public UserEditDto GetUserByIdForEdit(string id)
+        {
+            return Context.Set<User>().Include(x => x.Role)
+                .Select(x => new UserEditDto()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Surname = x.Surname,
+                    Email = x.Email,
+                    RoleId = x.RoleId,
+                    IsEmailVerified = x.IsEmailVerified
 
+                }).FirstOrDefault(x => x.Id == id);
+        }
     }
 }
