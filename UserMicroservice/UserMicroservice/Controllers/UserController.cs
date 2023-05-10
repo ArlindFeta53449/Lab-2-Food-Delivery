@@ -95,19 +95,13 @@ namespace UserMicroservice.Controllers
             }
         }
         [HttpPost]
-
         public IActionResult LogIn(UserLoginDto user)
         {
-            var result = _userService.LogIn(user);
-            if(result != null)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return BadRequest("The credentials are wrong");
-            }
+            var response = _userService.LogIn(user);
+
+            return StatusCode((int)response.StatusCode, response);
         }
+
         [HttpPut]
         public IActionResult ForgotPassword(ForgetPasswordDto forgotPassowrdDto) {
             var result = _userService.ForgotPassword(forgotPassowrdDto);

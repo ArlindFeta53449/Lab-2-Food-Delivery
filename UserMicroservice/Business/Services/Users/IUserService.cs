@@ -1,5 +1,6 @@
 ﻿using Data.DTOs.Authentification;
 using Data.DTOs.Users;
+using Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Business.Services.Users
         IList<UserDto> GetAll();
         UserDto GetUser(string id);
         string SignUp(UserCreateDto user);
-        UserLoginResponseDto LogIn(UserLoginDto user);
+        ApiResponse<UserLoginResponseDto> LogIn(UserLoginDto user);
         UserDto EditUser(UserEditDto user);
         bool DeleteUser(string id);
         bool ForgotPassword(ForgetPasswordDto forgetPassword);

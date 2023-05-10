@@ -11,8 +11,6 @@ using Business.Services.Orders;
 
 using Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using MySql.Data.MySqlClient;
 using Repositories;
 using Repositories.Repositories.Menus;
 using Repositories.Repositories.MenusItems;
@@ -25,6 +23,7 @@ using Repository.Repositories.OrderItems;
 using Repository.Repositories.Orders;
 using Business.Services.Authentification;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -35,10 +34,11 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectio
 //var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 //builder.Services.AddDbContext<AppDbContext>(options =>
 //{
-  //  options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+//  options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 //});
 
-
+builder.Logging.ClearProviders();
+builder.Logging.AddFile("C:\\Users\\lkrasniqi\\Desktop\\Lab-2-Food-Delivery\\UserMicroservice\\UserMicroservice\\Logs\\file.txt");
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddHttpContextAccessor();

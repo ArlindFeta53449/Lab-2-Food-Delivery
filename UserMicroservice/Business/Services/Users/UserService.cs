@@ -7,15 +7,17 @@ using Data.DTOs.Users;
 using Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Repositories.Repositories.Users;
+using Serilog;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+
+using System.Net;
+
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Business.Services.Users
 {
@@ -27,7 +29,14 @@ namespace Business.Services.Users
         private readonly IMailService _mailService;
         private readonly IAuthentificationService _authentificationService;
 
-        public UserService(IUserRepository userRepository, IMapper mapper, ITokenService tokenService, IMailService mailService, IAuthentificationService authentificationService)
+
+
+        public UserService(IUserRepository userRepository, 
+                            IMapper mapper, 
+                            ITokenService tokenService, 
+                            IMailService mailService, 
+                            IAuthentificationService authentificationService,
+                            ILogger<UserService> logger)
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -195,29 +204,45 @@ namespace Business.Services.Users
 
             return iv;
         }
-        public UserLoginResponseDto LogIn(UserLoginDto user)
+        public ApiResponse<UserLoginResponseDto> LogIn(UserLoginDto user)
         {
-            var userExists = _userRepository.GetUserByEmailAndIsVerified(user.Email);
-            if (userExists != null)
+            try
             {
-                if (userExists.Password.Equals(HashPassword(user.Password)))
+                var userExists = _userRepository.GetUserByEmailAndIsVerified(user.Email);
+                if (userExists != null && userExists.Password.Equals(HashPassword(user.Password)))
                 {
-                    return new UserLoginResponseDto()
+
+                    return new ApiResponse<UserLoginResponseDto>()
                     {
-                        Id = userExists.Id,
-                        Role = userExists.Role.Name,
-                        Email = userExists.Email,
-                        Token = _tokenService.CreateToken(userExists)
+                        StatusCode = HttpStatusCode.OK,
+                        Data = new UserLoginResponseDto
+                        {
+                            Id = userExists.Id,
+                            Role = userExists.Role.Name,
+                            Email = userExists.Email,
+                            Token = _tokenService.CreateToken(userExists)
+                        }
+
                     };
                 }
                 else
                 {
-                    return null;
+                    return new ApiResponse<UserLoginResponseDto>
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string>() { "The credentials are wrong" }
+                    };
                 }
             }
-            else
+            catch(Exception ex)
             {
-                return null;
+                Log.Information("This is an informational message");
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<UserLoginResponseDto>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
             }
         }
         public bool VerifyEmail(string token)
