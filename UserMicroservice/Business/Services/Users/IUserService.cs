@@ -11,20 +11,17 @@ namespace Business.Services.Users
 {
     public interface IUserService
     {
-        IList<UserDto> GetAll();
-        UserDto GetUser(string id);
-        string SignUp(UserCreateDto user);
+        ApiResponse<IList<UserDto>> GetAll();
+        ApiResponse<UserDto> GetUser(string id);
+        ApiResponse<string> SignUp(UserCreateDto user);
         ApiResponse<UserLoginResponseDto> LogIn(UserLoginDto user);
-        UserDto EditUser(UserEditDto user);
-        bool DeleteUser(string id);
-        bool ForgotPassword(ForgetPasswordDto forgetPassword);
-        bool VerifyEmail(string token);
-
-        bool ChangePassword(ChangePasswordDto changePassword);
-        ForgotPasswordEmailResponseDTO SendForgotPasswordEmail(EmailSendDto email);
-
-        IList<UserDto> GetAllUsersForAdminDashboardDisplay();
-
-        UserEditDto GetUserByIdForEdit(string id);
+        ApiResponse<UserDto> EditUser(UserEditDto user);
+        ApiResponse<string> DeleteUser(string id);
+        ApiResponse<string> ForgotPassword(ForgetPasswordDto forgetPassword);
+        ApiResponse<string> VerifyEmail(string token);
+        ApiResponse<string> ChangePassword(ChangePasswordDto changePassword);
+        ApiResponse<ForgotPasswordEmailResponseDTO> SendForgotPasswordEmail(EmailSendDto email);
+        ApiResponse<IList<UserDto>> GetAllUsersForAdminDashboardDisplay();
+        ApiResponse<UserEditDto> GetUserByIdForEdit(string id);
     }
 }

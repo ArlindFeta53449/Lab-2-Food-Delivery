@@ -12,7 +12,6 @@ using Microsoft.IdentityModel.Tokens;
 using Repositories.Repositories.Users;
 using Serilog;
 using System;
-
 using System.Net;
 
 using System.Security.Cryptography;
@@ -45,81 +44,207 @@ namespace Business.Services.Users
             _authentificationService = authentificationService;
 
         }
-        public IList<UserDto> GetAll()
+        public ApiResponse<IList<UserDto>> GetAll()
         {
-            var users = _userRepository.GetAll();
-            return _mapper.Map<IList<UserDto>>(users);
+            try
+            {
+                var users = _userRepository.GetAll();
+                return new ApiResponse<IList<UserDto>>
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Data = _mapper.Map<IList<UserDto>>(users)
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<IList<UserDto>>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
         }
 
-        public UserDto GetUser(string id)
+        public ApiResponse<UserDto> GetUser(string id)
         {
+            try { 
             var user = _userRepository.GetUserById(id);
-            return _mapper.Map<UserDto>(user);
-        }
-        public UserDto EditUser(UserEditDto user)
-        {
-            var userInDb = _userRepository.GetUserById(user.Id);
-            if (userInDb != null)
-            {
-                _mapper.Map(user, userInDb);
-                _userRepository.Update(userInDb);
-                return _mapper.Map<UserDto>(userInDb);
+                if(user == null)
+                {
+                    return new ApiResponse<UserDto>()
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string>() { "The user does not exist" }
+                    };
+                }
+                return new ApiResponse<UserDto>()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Data = _mapper.Map<UserDto>(user)
+                };
             }
-            else
+            catch (Exception ex)
             {
-                return null;
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<UserDto>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+         }
+        public ApiResponse<UserDto> EditUser(UserEditDto user)
+        {
+            try
+            {
+                var userInDb = _userRepository.GetUserById(user.Id);
+                if (userInDb == null)
+                {
+                    return new ApiResponse<UserDto>()
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string>() { "The user does not exist" }
+                    };
+                }
+
+                    _mapper.Map(user, userInDb);
+                if (_userRepository.Update(userInDb))
+                {
+                    return new ApiResponse<UserDto>()
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        Data = _mapper.Map<UserDto>(userInDb)
+                    };
+                }
+                return new ApiResponse<UserDto>()
+                {
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Errors = new List<string>() { "Something went wrong while updating the user" }
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<UserDto>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
             }
 
         }
         
-        public UserEditDto GetUserByIdForEdit(string id)
+        public ApiResponse<UserEditDto> GetUserByIdForEdit(string id)
         {
-            var user = _userRepository.GetUserByIdForEdit(id);
-            if(user != null)
+            try
             {
-                return user;
+                var user = _userRepository.GetUserByIdForEdit(id);
+                if (user == null)
+                {
+                    return new ApiResponse<UserEditDto>()
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string>() { "The user does not exist" }
+                    };
+                }
+                return new ApiResponse<UserEditDto>()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Data = user
+                };
             }
-            else
+            catch (Exception ex)
             {
-                return null;
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<UserEditDto>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
             }
         }
-        public bool ForgotPassword(ForgetPasswordDto forgetPassword)
+        public ApiResponse<string> ForgotPassword(ForgetPasswordDto forgetPassword)
         {
-            var userInDb = _userRepository.GetUserById(forgetPassword.UserId);
-            if (userInDb != null)
+            try
             {
-                if (forgetPassword.NewPassword == forgetPassword.RepeatPassword)
+                var userInDb = _userRepository.GetUserById(forgetPassword.UserId);
+                if (userInDb == null)
                 {
-                    userInDb.Password = HashPassword(forgetPassword.NewPassword);
-                    return _userRepository.Update(userInDb);
+                    return new ApiResponse<string>()
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string>() { "The user does not exist" }
+                    };
                 }
-                else
-                {
-                    return false;
-                }
+
+                 if (forgetPassword.NewPassword == forgetPassword.RepeatPassword)
+                 {
+                      userInDb.Password = HashPassword(forgetPassword.NewPassword);
+                 if (_userRepository.Update(userInDb))
+                 {
+                     return new ApiResponse<string>() { 
+                     StatusCode = HttpStatusCode.OK,
+                     Message = "The password was changed successfully"
+                     };
+                 }
+                    return new ApiResponse<string>()
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Message = "Something went wrong while updating the data"
+                    };
+                    }
+                    return new ApiResponse<string>()
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string>() { "The passwords do not match" }
+                    };
             }
-            else {
-                return false;
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<string>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
             }
         }
-        public bool DeleteUser(string id)
+        public ApiResponse<string> DeleteUser(string id)
         {
-            var user = _userRepository.GetUserById(id);
-            if (user != null)
+            try
             {
+                var user = _userRepository.GetUserById(id);
+                if (user == null)
+                {
+                    return new ApiResponse<string>()
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string>() { "The user does not exist" }
+                    };
+                }
                 if (_userRepository.Remove(user))
                 {
-                    return true;
+                    return new ApiResponse<string>()
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        Message = "The user was deleted successfully"
+                    };
                 }
-                else
+                return new ApiResponse<string>()
                 {
-                    return false;
-                }
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Errors = new List<string>() { "Something went wrong while deleting the user" }
+                };
             }
-            else
+            catch (Exception ex)
             {
-                return false;
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<string>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
             }
         }
         private string HashPassword(string password)
@@ -141,46 +266,78 @@ namespace Business.Services.Users
                 return sb.ToString();
             }
         }
-        public string SignUp(UserCreateDto user)
+        public ApiResponse<string> SignUp(UserCreateDto user)
         {
-            var mappedUser = _mapper.Map<User>(user);
-            mappedUser.Password = HashPassword(mappedUser.Password);
-            mappedUser.AccountVerificationToken = _tokenService.CreateVerifyAccountToken(user);
-            user.AccountVerificationToken = mappedUser.AccountVerificationToken;
-            if (_userRepository.Add(mappedUser))
+            try
             {
-                _mailService.SendVerifyAccountEmail(user);
-                return mappedUser.AccountVerificationToken;
-            }
-            else
-            {
-                return null;
-            }
-        }
-        public ForgotPasswordEmailResponseDTO SendForgotPasswordEmail(EmailSendDto email)
-        {
-            var userInDb = _userRepository.GetUserByEmail(email.Email);
-
-            if (userInDb != null)
-            {
-                var token = _tokenService.CreatePasswordToken(userInDb.Email);
-                var key = generateRandomKeyNumber();
-                var iv = generateRandomIvNumber();
-                var encryptedToken = _authentificationService.EncryptString(token, key, iv);
-                _mailService.SendForgotPasswordEmail(userInDb, token);
-
-                return new
-                ForgotPasswordEmailResponseDTO {
-                    EncryptedToken = encryptedToken,
-                    Key = key,
-                    Iv = iv,
-                    UserId = userInDb.Id,
+                var mappedUser = _mapper.Map<User>(user);
+                mappedUser.Password = HashPassword(mappedUser.Password);
+                mappedUser.AccountVerificationToken = _tokenService.CreateVerifyAccountToken(user);
+                user.AccountVerificationToken = mappedUser.AccountVerificationToken;
+                if (_userRepository.Add(mappedUser))
+                {
+                    _mailService.SendVerifyAccountEmail(user);
+                    return new ApiResponse<string>() { 
+                    StatusCode = HttpStatusCode.OK,
+                    Data = mappedUser.AccountVerificationToken
+                    };
+                }
+                return new ApiResponse<string>()
+                {
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Errors = new List<string>() { "Something went wrong while registering the user" }
                 };
-
             }
-            else
+            catch (Exception ex)
             {
-                return null;
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<string>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+
+        }
+        public ApiResponse<ForgotPasswordEmailResponseDTO> SendForgotPasswordEmail(EmailSendDto email)
+        {
+            try
+            {
+                var userInDb = _userRepository.GetUserByEmail(email.Email);
+
+                if (userInDb != null)
+                {
+                    var token = _tokenService.CreatePasswordToken(userInDb.Email);
+                    var key = generateRandomKeyNumber();
+                    var iv = generateRandomIvNumber();
+                    var encryptedToken = _authentificationService.EncryptString(token, key, iv);
+                    _mailService.SendForgotPasswordEmail(userInDb, token);
+
+                    return new ApiResponse<ForgotPasswordEmailResponseDTO>() {
+                    StatusCode = HttpStatusCode.OK,
+                    Data = new ForgotPasswordEmailResponseDTO()
+                                {
+                                    EncryptedToken = encryptedToken,
+                                    Key = key,
+                                    Iv = iv,
+                                    UserId = userInDb.Id,
+                                }
+                    };
+                }
+                return new ApiResponse<ForgotPasswordEmailResponseDTO>()
+                {
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Errors = new List<string>() { "Something went wrong when sending the email" }
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<ForgotPasswordEmailResponseDTO>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
             }
         }
         private static byte[] generateRandomKeyNumber()
@@ -245,57 +402,129 @@ namespace Business.Services.Users
                 };
             }
         }
-        public bool VerifyEmail(string token)
+        public ApiResponse<string> VerifyEmail(string token)
         {
-            var userInDb = _userRepository.GetUserByVerificationToken(token);
-            if (userInDb != null)
+            try
             {
-                userInDb.IsEmailVerified = true;
-                userInDb.AccountVerificationToken = "";
-                if (_userRepository.Update(userInDb))
+                var userInDb = _userRepository.GetUserByVerificationToken(token);
+                if (userInDb != null)
                 {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
-        public bool ChangePassword(ChangePasswordDto changePassword)
-        {
-            var userInDb = _userRepository.GetUserById(changePassword.UserId);
-            if (userInDb != null)
-            {
-                if (changePassword.NewPassword == changePassword.RepeatPassword) {
-                    if (userInDb.Password == HashPassword(changePassword.CurrentPassword))
+                    userInDb.IsEmailVerified = true;
+                    userInDb.AccountVerificationToken = "";
+                    if (_userRepository.Update(userInDb))
                     {
-                        userInDb.Password = HashPassword(changePassword.NewPassword);
-                        var result = _userRepository.Update(userInDb);
-                        return result;
+                        return new ApiResponse<string>()
+                        {
+                            StatusCode = HttpStatusCode.OK,
+                            Message = "The email was verified successfully"
+                        };
                     }
                     else
                     {
-                        return false;
+                        return new ApiResponse<string>()
+                        {
+                            StatusCode = HttpStatusCode.BadRequest,
+                            Errors = new List<string>() { "The account was not verified" }
+                        };
                     }
                 }
-                else
+                return new ApiResponse<string>()
                 {
-                    return false;
-                }
-            }
-            else
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Errors = new List<string>() { "The account was not verified" }
+                };
+            }catch(Exception ex)
             {
-                return false;
+                Log.Information("This is an informational message");
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<string>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+            
+        }
+        public ApiResponse<string> ChangePassword(ChangePasswordDto changePassword)
+        {
+            try
+            {
+                var userInDb = _userRepository.GetUserById(changePassword.UserId);
+                if (userInDb == null)
+                {
+                    return new ApiResponse<string>()
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string>() { "Something went wrong" }
+                    };
+                }
+
+                if (changePassword.NewPassword != changePassword.RepeatPassword)
+                {
+                    return new ApiResponse<string>()
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string>() { "The passwords do not match" }
+                    };
+                }
+
+                if (userInDb.Password != HashPassword(changePassword.CurrentPassword))
+                {
+                    return new ApiResponse<string>()
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string>() { "Wrong current password" }
+                    };
+                }
+
+                userInDb.Password = HashPassword(changePassword.NewPassword);
+                if (_userRepository.Update(userInDb))
+                {
+                    return new ApiResponse<string>()
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        Message = "The password was changed successfully"
+                    };
+                }
+
+                return new ApiResponse<string>()
+                {
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Errors = new List<string>() { "The password was not verified" }
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "An error occurred while processing the ChangePassword request.");
+
+                return new ApiResponse<string>()
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string>() { "An error occurred while processing your request. Please try again later." }
+                };
             }
         }
-        public IList<UserDto> GetAllUsersForAdminDashboardDisplay()
+        public ApiResponse<IList<UserDto>> GetAllUsersForAdminDashboardDisplay()
         {
-            return _userRepository.GetAllUsersForAdminDashboardDisplay();
+            try
+            {
+                var users = _userRepository.GetAllUsersForAdminDashboardDisplay();
+                return new ApiResponse<IList<UserDto>>()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Data = users
+                };
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex, "An error occurred while processing the GetAllUsersForAdminDashboardDisplay request.");
+
+                return new ApiResponse<IList<UserDto>> ()
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string>() { "An error occurred while processing your request. Please try again later." }
+                };
+            } 
         }
 
     }
