@@ -21,7 +21,7 @@ namespace Data.DTOs.Users
 
         public int RoleId { get; set; }
 
-        public bool IsEmailVerified { get; set; }
+        public bool IsEmailVerified { get; set; } = false;
 
         public string AccountVerificationToken { get; set; }
     }

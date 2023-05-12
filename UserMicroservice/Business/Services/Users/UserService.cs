@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Repositories.Repositories.Roles;
 using Repositories.Repositories.Users;
 using Serilog;
 using System;
@@ -27,6 +28,7 @@ namespace Business.Services.Users
         private readonly ITokenService _tokenService;
         private readonly IMailService _mailService;
         private readonly IAuthentificationService _authentificationService;
+        private readonly IRolesRepository _rolesRepository;
 
 
 
@@ -35,13 +37,15 @@ namespace Business.Services.Users
                             ITokenService tokenService, 
                             IMailService mailService, 
                             IAuthentificationService authentificationService,
-                            ILogger<UserService> logger)
+                            ILogger<UserService> logger,
+                            IRolesRepository rolesRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _tokenService = tokenService;
             _mailService = mailService;
             _authentificationService = authentificationService;
+            _rolesRepository = rolesRepository;
 
         }
         public ApiResponse<IList<UserDto>> GetAll()
@@ -274,6 +278,7 @@ namespace Business.Services.Users
                 mappedUser.Password = HashPassword(mappedUser.Password);
                 mappedUser.AccountVerificationToken = _tokenService.CreateVerifyAccountToken(user);
                 user.AccountVerificationToken = mappedUser.AccountVerificationToken;
+                mappedUser.RoleId = _rolesRepository.FindDefaultCustomerRole();
                 if (_userRepository.Add(mappedUser))
                 {
                     _mailService.SendVerifyAccountEmail(user);

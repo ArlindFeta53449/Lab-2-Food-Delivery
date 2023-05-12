@@ -22,7 +22,7 @@ using Repository.Repositories.Restaurants;
 using Repository.Repositories.OrderItems;
 using Repository.Repositories.Orders;
 using Business.Services.Authentification;
-
+using Business.Services.FileHandling;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,12 +63,14 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOfferRepository, OfferRepository>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IAuthentificationService, AuthentificationService>();
+builder.Services.AddScoped<IFileHandlingService, FileHandlingService>();
 //builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddTransient<IMailService,MailService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddCors(opt =>
 {
     opt.AddPolicy("CorsPolicy", policy =>

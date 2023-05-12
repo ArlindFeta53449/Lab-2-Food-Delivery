@@ -2,9 +2,11 @@
 using Data.DTOs.Roles;
 using Data.Entities;
 using Repositories.Repositories.Roles;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,33 +23,143 @@ namespace Business.Services.Roles
             _mapper = mapper;
         }
 
-        public IList<RoleDto> GetAll()
+        public ApiResponse<IList<RoleDto>> GetAll()
         {
-            var roles = _rolesRepository.GetAll();
-            return _mapper.Map<IList<RoleDto>>(roles);
+            try
+            {
+                var roles = _rolesRepository.GetAll();
+                return new ApiResponse<IList<RoleDto>>()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Data = _mapper.Map<IList<RoleDto>>(roles)
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<IList<RoleDto>>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+            
         }
 
-        public RoleDto GetRole(int id)
+        public ApiResponse<RoleDto> GetRole(int id)
         {
-            var role = _rolesRepository.Get(id);
-            return _mapper.Map<RoleDto>(role);
+            try
+            {
+                var role = _rolesRepository.Get(id);
+                if (role == null)
+                {
+                    return new ApiResponse<RoleDto>()
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string>() { "The role does not exist" }
+                    };
+
+                }
+                return new ApiResponse<RoleDto>()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Data = _mapper.Map<RoleDto>(role)
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<RoleDto>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+            
         }
-        public void DeleteRole(int id)
+        public ApiResponse<string> DeleteRole(int id)
         {
-            var role = _rolesRepository.Get(id);
-           _rolesRepository.Remove(role);
+            try
+            {
+
+                var role = _rolesRepository.Get(id);
+                if (role == null)
+                {
+                    return new ApiResponse<string>()
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string>() { "The role does not exist" }
+                    };
+
+                }
+                _rolesRepository.Remove(role);
+                
+                 return new ApiResponse<string>()
+                 {
+                    StatusCode = HttpStatusCode.OK,
+                    Message = "The role was deleted successfully"
+                 };
+                
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<string>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+
         }
-        public RoleDto CreateRole(RoleCreateDto role)
+        public ApiResponse<RoleDto> CreateRole(RoleCreateDto role)
         {
-            var mappedRole = _mapper.Map<Role>(role);
-            _rolesRepository.Add(mappedRole);
-            return _mapper.Map<RoleDto>(mappedRole);
+            try
+            {
+                var mappedRole = _mapper.Map<Role>(role);
+                _rolesRepository.Add(mappedRole);
+                return new ApiResponse<RoleDto>()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Data = _mapper.Map<RoleDto>(mappedRole)
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<RoleDto>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> {"An error occurred while processing your request. Please try again later." }
+                };
+            }
+
+
         }
-        public RoleDto EditRole(RoleDto role)
+        public ApiResponse<RoleDto> EditRole(RoleDto role)
         {
-            var mappedRole = _mapper.Map<Role>(role);
-            _rolesRepository.Update(mappedRole);
-            return _mapper.Map<RoleDto>(mappedRole);
+            try
+            {
+                var mappedRole = _mapper.Map<Role>(role);
+                _rolesRepository.Update(mappedRole);
+                
+                    return new ApiResponse<RoleDto>()
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        Data = _mapper.Map<RoleDto>(mappedRole)
+                    };
+               
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<RoleDto>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+
         }
     }
 }

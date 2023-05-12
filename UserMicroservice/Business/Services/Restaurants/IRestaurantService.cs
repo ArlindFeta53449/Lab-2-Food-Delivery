@@ -1,4 +1,5 @@
 ﻿using Data.DTOs;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace Business.Services.Restaurants
         IList<RestaurantDto> GetAll();
         RestaurantDto GetRestaurant(int id);
         void DeleteRestaurant(int id);
-        RestaurantDto CreateRestaurant(RestaurantCreateDto restaurant);
+        RestaurantDto CreateRestaurant(RestaurantCreateDto restaurant, string path, IFormFile file);
         RestaurantDto EditRestaurant(RestaurantDto restaurant);
     }
 }

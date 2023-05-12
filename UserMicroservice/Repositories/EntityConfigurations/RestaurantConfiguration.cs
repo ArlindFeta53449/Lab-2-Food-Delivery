@@ -19,6 +19,7 @@ namespace Repository.EntityConfiguration
                 .IsRequired();
             builder.Property(x => x.PhoneNumber)
                 .IsRequired();
+            builder.Property(x => x.Image).IsRequired(false);
         }
     }
 }

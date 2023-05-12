@@ -26,6 +26,8 @@ namespace Repositories.EntityConfigurations
                 .HasForeignKey(x=>x.UserId);
             builder.HasIndex(x => x.Email)
                 .IsUnique();
+            builder.Property(x => x.Email)
+                .IsRequired();
         }
     }
 }

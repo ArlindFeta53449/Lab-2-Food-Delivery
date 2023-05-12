@@ -1,6 +1,8 @@
 ﻿using Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Repositories.EntityConfigurations;
+using Repository.EntityConfiguration;
 
 namespace Repositories
 {
@@ -10,6 +12,19 @@ namespace Repositories
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
 
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new RestaurantConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderItemConfigurations());
+            modelBuilder.ApplyConfiguration(new OrderConfigurations());
+            modelBuilder.ApplyConfiguration(new OfferConfiguration());
+            modelBuilder.ApplyConfiguration(new MenuItemConfiguration());
+            modelBuilder.ApplyConfiguration(new MenuConfiguration());
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
