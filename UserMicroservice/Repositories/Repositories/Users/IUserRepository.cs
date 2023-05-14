@@ -21,5 +21,6 @@ namespace Repositories.Repositories.Users
         IList<UserDto> GetAllUsersForAdminDashboardDisplay();
 
         UserEditDto GetUserByIdForEdit(string id);
+        UserDto GetUserByIdIncludeRole(string id);
     }
 }

@@ -19,10 +19,10 @@ namespace Data.DTOs.Users
 
         public string Password { get; set; }
 
-        public int RoleId { get; set; }
+        public int? RoleId { get; set; }
 
-        public bool IsEmailVerified { get; set; } = false;
+        public bool? IsEmailVerified { get; set; } = false;
 
-        public string AccountVerificationToken { get; set; }
+        public string? AccountVerificationToken { get; set; }
     }
 }

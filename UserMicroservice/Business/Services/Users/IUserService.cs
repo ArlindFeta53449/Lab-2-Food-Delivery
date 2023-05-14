@@ -23,5 +23,7 @@ namespace Business.Services.Users
         ApiResponse<ForgotPasswordEmailResponseDTO> SendForgotPasswordEmail(EmailSendDto email);
         ApiResponse<IList<UserDto>> GetAllUsersForAdminDashboardDisplay();
         ApiResponse<UserEditDto> GetUserByIdForEdit(string id);
+        ApiResponse<UserDto> GetCurrentUser(string token);
+
     }
 }

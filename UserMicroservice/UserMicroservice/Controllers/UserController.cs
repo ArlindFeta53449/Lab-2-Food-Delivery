@@ -99,6 +99,12 @@ namespace UserMicroservice.Controllers
             var response = _userService.GetAllUsersForAdminDashboardDisplay();
             return StatusCode((int)response.StatusCode, response);
         }
+        [HttpPost("{token}")]
+        public IActionResult GetCurrentUser(string token)
+        {
+            var response = _userService.GetCurrentUser(token);
+            return StatusCode((int)response.StatusCode, response);
+        }
 
     }
 }

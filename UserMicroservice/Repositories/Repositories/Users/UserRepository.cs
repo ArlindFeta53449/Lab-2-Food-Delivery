@@ -60,5 +60,18 @@ namespace Repositories.Repositories.Users
 
                 }).FirstOrDefault(x => x.Id == id);
         }
+        public UserDto GetUserByIdIncludeRole(string id)
+        {
+            return Context.Set<User>().Include(x => x.Role)
+                .Select(x => new UserDto()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Surname = x.Surname,
+                    Email = x.Email,
+                    Role = x.Role.Name,
+                    IsEmailVerified = x.IsEmailVerified
+                }).FirstOrDefault(x => x.Id == id);
+        }
     }
 }

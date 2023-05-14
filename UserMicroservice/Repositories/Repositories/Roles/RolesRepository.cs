@@ -20,7 +20,7 @@ namespace Repositories.Repositories.Roles
                 Name = "Customer",
             };
             Context.Set<Role>().Add(role);
-
+            Context.SaveChanges();
             return role.Id;
         }
         public int FindDefaultCustomerRole()

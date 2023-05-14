@@ -13,5 +13,6 @@ namespace Business.Services.Token
         string CreateToken(User user);
         string CreatePasswordToken(string userEmail);
         string CreateVerifyAccountToken(UserCreateDto user);
+        string DecodeToken(string token);
     }
 }

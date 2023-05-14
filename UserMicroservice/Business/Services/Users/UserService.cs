@@ -450,6 +450,39 @@ namespace Business.Services.Users
             }
             
         }
+        public ApiResponse<UserDto> GetCurrentUser(string token)
+        {
+            try
+            {
+                var userId = _tokenService.DecodeToken(token);
+                var userInDb = _userRepository.GetUserByIdIncludeRole(userId);
+                if (userInDb == null)
+                {
+                    return new ApiResponse<UserDto>()
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string>() { "Please log in first" }
+                    };
+                }
+                return new ApiResponse<UserDto>() {
+                    StatusCode = HttpStatusCode.OK,
+                    Data = userInDb
+                };
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "An error occurred while processing the ChangePassword request.");
+
+                return new ApiResponse<UserDto>()
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string>() { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+           
+        }
+        
         public ApiResponse<string> ChangePassword(ChangePasswordDto changePassword)
         {
             try
