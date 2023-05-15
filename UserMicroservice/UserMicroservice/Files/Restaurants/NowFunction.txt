@@ -1,0 +1,13 @@
+function onEdit(e) {
+  var sheet = e.source.getActiveSheet();
+  var range = e.range;
+  var column = range.getColumn();
+  var row = range.getRow();
+  var value = e.value;
+
+  if (column == 8 && value.toLowerCase() === 'now') { // 8 is the column number for column H
+    var date = new Date();
+    sheet.getRange(row, column).setValue(date);
+    sheet.getRange(row, column).setNumberFormat("yyyy-MM-dd hh:mm:ss");
+  }
+}

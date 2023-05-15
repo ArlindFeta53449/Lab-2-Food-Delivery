@@ -22,129 +22,88 @@ namespace UserMicroservice.Controllers
         }
         [HttpGet]
         public IActionResult GetAllUsers() {
-            return Ok(_userService.GetAll());
+            var response = _userService.GetAll();
+            return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpGet("{id}")]
 
         public IActionResult GetUser(string id) {
-        var user = _userService.GetUser(id);
-            if(user !=null)
-            {
-                return Ok(user);
-            }
-            else
-            {
-                return NotFound();
-            }
+            var response = _userService.GetUser(id);
+            return StatusCode((int)response.StatusCode, response);
         }
+        [HttpGet("{id}")]
 
+        public IActionResult GetUserForEdit(string id)
+        {
+            var response = _userService.GetUserByIdForEdit(id);
+            return StatusCode((int)response.StatusCode, response);
+        }
         [HttpPost]
         public IActionResult SignUp(UserCreateDto user)
         {
-            var result = _userService.SignUp(user);
-            if(result != null)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return BadRequest("There was a problem during sign up.");
-            }
+            var response = _userService.SignUp(user);
+            return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpPut]
-        public IActionResult EditUser(UserDto user) {
-            var result = _userService.EditUser(user);
-            if(result != null)
-
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return BadRequest();
-            }
+        public IActionResult EditUser(UserEditDto user) {
+            var response = _userService.EditUser(user);
+            return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteUser(string id)
         {
-            var result = _userService.DeleteUser(id);
-            if(result == true)
-            {
-                return Ok("The user was deleted successfuly");
-            }
-            else
-            {
-                return BadRequest($"Unable to delete user: {id}");
-            }
+            var response = _userService.DeleteUser(id);
+            return StatusCode((int)response.StatusCode, response);
         }
         [HttpPost]
-
         public IActionResult LogIn(UserLoginDto user)
         {
-            var result = _userService.LogIn(user);
-            if(result != null)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return BadRequest("The credentials are wrong");
-            }
+            var response = _userService.LogIn(user);
+
+            return StatusCode((int)response.StatusCode, response);
         }
+
         [HttpPut]
         public IActionResult ForgotPassword(ForgetPasswordDto forgotPassowrdDto) {
-            var result = _userService.ForgotPassword(forgotPassowrdDto);
-            if (result != null)
-
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return BadRequest();
-            }
+            var response = _userService.ForgotPassword(forgotPassowrdDto);
+            return StatusCode((int)response.StatusCode, response);
         }
+
         [HttpPut("{token}")]
         public IActionResult VerifyEmail(string token)
         {
-            var result = _userService.VerifyEmail(token);
-            if (result != null)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return BadRequest();
-            }
+            var response = _userService.VerifyEmail(token);
+            return StatusCode((int)response.StatusCode, response);
         }
+
         [HttpPut]
         public IActionResult ChangePassword(ChangePasswordDto changePassword)
         {
-            var result = _userService.ChangePassword(changePassword);
-            if (result != null)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return BadRequest();
-            }
+            var response = _userService.ChangePassword(changePassword);
+            return StatusCode((int)response.StatusCode, response);
         }
+
         [HttpPost]
-        public IActionResult SendForgotPasswordEmail(string email)
+        public IActionResult SendForgotPasswordEmail(EmailSendDto email)
         {
-            var result = _userService.SendForgotPasswordEmail(email);
-            if (result != null)
-            {
-                return Ok(result);
-            }
-            else
-            {
-                return BadRequest();
-            }
+            var response = _userService.SendForgotPasswordEmail(email);
+            return StatusCode((int)response.StatusCode, response);
+
+        }
+        [HttpGet]
+        public IActionResult GetAllUsersForAdminDashboardDisplay()
+        {
+            var response = _userService.GetAllUsersForAdminDashboardDisplay();
+            return StatusCode((int)response.StatusCode, response);
+        }
+        [HttpPost("{token}")]
+        public IActionResult GetCurrentUser(string token)
+        {
+            var response = _userService.GetCurrentUser(token);
+            return StatusCode((int)response.StatusCode, response);
         }
 
     }

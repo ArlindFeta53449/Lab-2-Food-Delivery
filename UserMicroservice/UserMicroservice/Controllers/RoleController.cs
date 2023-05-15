@@ -20,33 +20,33 @@ namespace UserMicroservice.Controllers
 
         public IActionResult GetAllRoles()
         {
-            var roles =  _roleService.GetAll();
-            return Ok(roles);
+            var response =  _roleService.GetAll();
+            return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetRole(int id)
         {
-            var role = _roleService.GetRole(id);
-            return Ok(role);
+            var response = _roleService.GetRole(id);
+            return StatusCode((int)response.StatusCode, response);
         }
         [HttpDelete("{id}")]
         public  IActionResult DeleteRole(int id)
         {
-            _roleService.DeleteRole(id);
-            return Ok("Roli u fshi me sukses");
+            var response = _roleService.DeleteRole(id);
+            return StatusCode((int)response.StatusCode, response);
         }
         [HttpPost]
         public IActionResult CreateRole(RoleCreateDto role)
         {
-            var result =  _roleService.CreateRole(role);
-            return Ok(result);
+            var response =  _roleService.CreateRole(role);
+            return StatusCode((int)response.StatusCode, response);
         }
         [HttpPut]
         public IActionResult EditRole(RoleDto role)
         {
-            var result = _roleService.EditRole(role);
-            return Ok(result);
+            var response = _roleService.EditRole(role);
+            return StatusCode((int)response.StatusCode, response);
         }
     }
 }

@@ -14,7 +14,26 @@ namespace Repositories.Repositories.Roles
         {
             
         }
-
-        
+        private int CreateDefaultCustomerRole()
+        {
+            var role = new Role() { 
+                Name = "Customer",
+            };
+            Context.Set<Role>().Add(role);
+            Context.SaveChanges();
+            return role.Id;
+        }
+        public int FindDefaultCustomerRole()
+        {
+            var role = Context.Set<Role>().Where(x => x.Name == "Customer").FirstOrDefault();
+            if (role == null)
+            {
+                return this.CreateDefaultCustomerRole();
+            }
+            else
+            {
+                return role.Id;
+            }
+        }
     }
 }

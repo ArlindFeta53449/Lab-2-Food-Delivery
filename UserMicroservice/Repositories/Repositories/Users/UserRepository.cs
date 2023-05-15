@@ -1,4 +1,5 @@
-﻿using Data.Entities;
+﻿using Data.DTOs.Users;
+using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Repositories.GenericRepository;
 using System;
@@ -27,6 +28,50 @@ namespace Repositories.Repositories.Users
         {
             return Context.Set<User>().FirstOrDefault(x => x.AccountVerificationToken == token);
         }
+        public User GetUserByEmailAndIsVerified(string email)
+        {
+            return Context.Set<User>().Include(x => x.Role).Where(x => x.IsEmailVerified == true && x.Email == email).FirstOrDefault();
+        }
 
+        public IList<UserDto> GetAllUsersForAdminDashboardDisplay()
+        {
+            return Context.Set<User>().Include(x => x.Role)
+                .Select(x => new UserDto()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Surname = x.Surname,
+                    Email = x.Email,
+                    Role = x.Role.Name,
+                    IsEmailVerified = x.IsEmailVerified
+                }).ToList();
+        }
+        public UserEditDto GetUserByIdForEdit(string id)
+        {
+            return Context.Set<User>().Include(x => x.Role)
+                .Select(x => new UserEditDto()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Surname = x.Surname,
+                    Email = x.Email,
+                    RoleId = x.RoleId,
+                    IsEmailVerified = x.IsEmailVerified
+
+                }).FirstOrDefault(x => x.Id == id);
+        }
+        public UserDto GetUserByIdIncludeRole(string id)
+        {
+            return Context.Set<User>().Include(x => x.Role)
+                .Select(x => new UserDto()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Surname = x.Surname,
+                    Email = x.Email,
+                    Role = x.Role.Name,
+                    IsEmailVerified = x.IsEmailVerified
+                }).FirstOrDefault(x => x.Id == id);
+        }
     }
 }

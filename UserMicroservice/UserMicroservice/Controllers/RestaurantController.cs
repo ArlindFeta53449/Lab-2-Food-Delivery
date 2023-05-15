@@ -10,10 +10,12 @@ namespace Menu.Controllers
     public class RestaurantController : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public RestaurantController(IRestaurantService restaurantService)
+        public RestaurantController(IRestaurantService restaurantService, IWebHostEnvironment webHostEnvironment)
         {
             _restaurantService = restaurantService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
@@ -38,10 +40,20 @@ namespace Menu.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateRestaurant(RestaurantCreateDto restaurant)
+        public IActionResult CreateRestaurant(IFormFile files,[FromForm]RestaurantCreateDto restaurant)
         {
-            var result = _restaurantService.CreateRestaurant(restaurant);
-            return Ok(result);
+            try
+            {
+                var filePath = Path.Combine(_webHostEnvironment.ContentRootPath,"Files");
+                var result = _restaurantService.CreateRestaurant(restaurant, filePath, files);
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+            
         }
         [HttpPut("{id}")]
         public IActionResult EditRestaurant(RestaurantDto restaurant)

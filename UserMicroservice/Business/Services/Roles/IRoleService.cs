@@ -1,4 +1,5 @@
 ﻿using Data.DTOs.Roles;
+using Data.Entities;
 using Repositories.Repositories.Roles;
 using System;
 using System.Collections.Generic;
@@ -10,14 +11,14 @@ namespace Business.Services.Roles
 {
     public interface IRoleService
     {
-        IList<RoleDto> GetAll();
+        ApiResponse<IList<RoleDto>> GetAll();
 
-        RoleDto GetRole(int id);
+        ApiResponse<RoleDto> GetRole(int id);
 
-        void DeleteRole(int id);
+        ApiResponse<string> DeleteRole(int id);
 
-        RoleDto CreateRole(RoleCreateDto role);
+        ApiResponse<RoleDto> CreateRole(RoleCreateDto role);
 
-        RoleDto EditRole(RoleDto role);
+        ApiResponse<RoleDto> EditRole(RoleDto role);
     }
 }

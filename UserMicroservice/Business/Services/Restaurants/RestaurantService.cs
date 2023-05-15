@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Business.Services.FileHandling;
 using Data.DTOs;
 using Data.Entities;
+using Microsoft.AspNetCore.Http;
 using Repository.Repositories.Restaurants;
 using System;
 using System.Collections.Generic;
@@ -16,16 +18,25 @@ namespace Business.Services.Restaurants
 
         private readonly IRestaurantRepository _restaurantRepository;
         private readonly IMapper _mapper;
+        private readonly IFileHandlingService _fileHandlingService;
 
-        public RestaurantService(IRestaurantRepository restaurantRepository, IMapper mapper)
+        public RestaurantService(IRestaurantRepository restaurantRepository,
+                                 IMapper mapper,
+                                 IFileHandlingService fileHandlingService
+                                 )
         {
             _restaurantRepository = restaurantRepository;
             _mapper = mapper;
+            _fileHandlingService = fileHandlingService; 
         }
 
         public IList<RestaurantDto> GetAll()
         {
             var restaurants = _restaurantRepository.GetAll();
+            foreach(var restaurant in restaurants)
+            {
+                restaurant.ImagePath = _fileHandlingService.ConvertFilePathForImage(restaurant.ImagePath);
+            }
             return _mapper.Map<IList<RestaurantDto>>(restaurants);
         }
 
@@ -41,9 +52,17 @@ namespace Business.Services.Restaurants
             _restaurantRepository.Remove(restaurant);
         }
 
-        public RestaurantDto CreateRestaurant(RestaurantCreateDto restaurant)
+        public RestaurantDto CreateRestaurant(RestaurantCreateDto restaurant,string path,IFormFile file)
         {
             var mappedRestaurant = _mapper.Map<Restaurant>(restaurant);
+
+            if(file !=null && file.Length > 0)
+            {
+                
+                var fileObject = _fileHandlingService.SaveFile(file, "Restaurants", path,new string[] { ".jpeg", ".png" });
+                mappedRestaurant.Image = fileObject.fileName;
+                mappedRestaurant.ImagePath = fileObject.filePath;
+            }
             _restaurantRepository.Add(mappedRestaurant);
             return _mapper.Map<RestaurantDto>(mappedRestaurant);
         }

@@ -45,18 +45,18 @@ namespace Business.Services._01_Mailing
         /*
          Pass the user's info to the token method
          */
-        public async Task SendForgotPasswordEmail(string userEmail)
+        public async Task SendForgotPasswordEmail(User user,string token)
         {
             var email = new MimeMessage();
             email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
-            email.To.Add(MailboxAddress.Parse(userEmail));
+            email.To.Add(MailboxAddress.Parse(user.Email));
             email.Subject = "Reset Forgoten Password!";
             var builder = new BodyBuilder();
-
-            var token = _tokenService.CreatePasswordToken(userEmail);
-            var link = "http://localhost:5000/forgotPassword/"+token;
-            builder.HtmlBody = "Click the link below to reset you password /n " + link;
-
+            var link = "http://localhost:3000/forgotPassword/"+token;
+            var filePath = "C:\\Users\\lkrasniqi\\Desktop\\Lab-2-Food-Delivery\\UserMicroservice\\Business\\Services\\01 Mailing\\HTMLTemplates\\ChangePasswordTemplate.html";
+            var template = File.ReadAllText(filePath);
+            var htmlBody = template.Replace("{user_name}", user.Name).Replace("{link}",link);
+            builder.HtmlBody = htmlBody;
             email.Body = builder.ToMessageBody();
             using var smtp = new SmtpClient();
             smtp.Connect(_mailSettings.Host, _mailSettings.Port, MailKit.Security.SecureSocketOptions.StartTls);
@@ -70,11 +70,11 @@ namespace Business.Services._01_Mailing
             email.Sender = MailboxAddress.Parse(_mailSettings.Mail);
             email.To.Add(MailboxAddress.Parse(user.Email));
             email.Subject = "Verify your email!";
-            var filePath = "C:\\Users\\Lenvo\\Documents\\GitHub\\Lab-2-Food-Delivery\\UserMicroservice\\Business\\Services\\01 Mailing\\HTMLTemplates\\VerifyEmailTemplate.html";
+            var filePath = "C:\\Users\\lkrasniqi\\Desktop\\Lab-2-Food-Delivery\\UserMicroservice\\Business\\Services\\01 Mailing\\HTMLTemplates\\VerifyEmailTemplate.html";
             var template = File.ReadAllText(filePath);
             var builder = new BodyBuilder();
             var token = user.AccountVerificationToken;
-            var link = "http://localhost:5000/verifyAccount/" + token;
+            var link = "http://localhost:3000/verifyAccount/" + token;
             var htmlBody = string.Format(template, link);
                 builder.HtmlBody = htmlBody;
                 email.Body = builder.ToMessageBody();

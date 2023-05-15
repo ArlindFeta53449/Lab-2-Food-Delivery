@@ -10,5 +10,6 @@ namespace Repositories.Repositories.Roles
 {
     public interface IRolesRepository:IRepository<Role>
     {
+        int FindDefaultCustomerRole();
     }
 }
