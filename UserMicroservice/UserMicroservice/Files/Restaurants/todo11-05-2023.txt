@@ -1,4 +1,0 @@
-To do:
-
-Check the is unique rule in the entire application
-Check the dateSmallerThan rule.

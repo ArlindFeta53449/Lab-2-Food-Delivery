@@ -11,5 +11,6 @@ namespace Business.Services.FileHandling
     {
         dynamic SaveFile(IFormFile file, string folder, string path, string[] allowedExtensions);
         string ConvertFilePathForImage(string filePath);
+        dynamic DeleteFile(string filePath);
     }
 }
