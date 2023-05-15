@@ -1,5 +1,6 @@
 ﻿using Business.Services.Restaurants;
 using Data.DTOs;
+using Data.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,45 +22,37 @@ namespace Menu.Controllers
         [HttpGet]
         public IActionResult GetAllRestaurant()
         {
-            var restaurants = _restaurantService.GetAll();
-            return Ok(restaurants);
+            var response = _restaurantService.GetAll();
+            return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetRestaurant(int id)
         {
-            var restaurants = _restaurantService.GetRestaurant(id);
-            return Ok(restaurants);
+            var response = _restaurantService.GetRestaurant(id);
+            return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteRestaurant(int id)
         {
-            _restaurantService.DeleteRestaurant(id);
-            return Ok("Restauranti u fshi me sukses");
+            var response = _restaurantService.DeleteRestaurant(id);
+            return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpPost]
         public IActionResult CreateRestaurant(IFormFile files,[FromForm]RestaurantCreateDto restaurant)
         {
-            try
-            {
-                var filePath = Path.Combine(_webHostEnvironment.ContentRootPath,"Files");
-                var result = _restaurantService.CreateRestaurant(restaurant, filePath, files);
-                return Ok(result);
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-            
+            var filePath = Path.Combine(_webHostEnvironment.ContentRootPath,"Files");
+            var response = _restaurantService.CreateRestaurant(restaurant, filePath, files);
+            return StatusCode((int)response.StatusCode, response);
         }
-        [HttpPut("{id}")]
-        public IActionResult EditRestaurant(RestaurantDto restaurant)
+        [HttpPut]
+        public IActionResult EditRestaurant(IFormFile? files,[FromForm]RestaurantDto restaurant)
         {
-            var result = _restaurantService.EditRestaurant(restaurant);
-            return Ok(result);
+            var filePath = Path.Combine(_webHostEnvironment.ContentRootPath, "Files");
+            var response = _restaurantService.EditRestaurant(restaurant,filePath,files);
+            return StatusCode((int)response.StatusCode, response);
         }
  
     }

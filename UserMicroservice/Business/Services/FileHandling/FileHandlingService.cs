@@ -21,7 +21,7 @@ namespace Business.Services.FileHandling
             string fileExtension = Path.GetExtension(fileName);
             if (!allowedExtensions.Contains(fileExtension.ToLower()))
             {
-                throw new ArgumentException("Invalid file type.");
+                return null;
             }
 
             string relativeFilePath = Path.Combine(folder, fileName);
@@ -35,10 +35,19 @@ namespace Business.Services.FileHandling
             return new
             {
                 fileName = fileName,
-                filePath = relativeFilePath,
+                filePath = filePath,
             };
         }
+        public dynamic DeleteFile(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+                return new { message = "File deleted successfully" };
+            }
 
+            return null;
+        }
         public string ConvertFilePathForImage(string filePath)
         {
 

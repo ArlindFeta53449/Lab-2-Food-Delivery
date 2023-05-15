@@ -1,4 +1,5 @@
 ﻿using Data.DTOs;
+using Data.Entities;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,10 @@ namespace Business.Services.Restaurants
 {
     public interface IRestaurantService
     {
-        IList<RestaurantDto> GetAll();
-        RestaurantDto GetRestaurant(int id);
-        void DeleteRestaurant(int id);
-        RestaurantDto CreateRestaurant(RestaurantCreateDto restaurant, string path, IFormFile file);
-        RestaurantDto EditRestaurant(RestaurantDto restaurant);
+        ApiResponse<IList<RestaurantDto>> GetAll();
+        ApiResponse<RestaurantDto> GetRestaurant(int id);
+        ApiResponse<string> DeleteRestaurant(int id);
+        ApiResponse<RestaurantDto> CreateRestaurant(RestaurantCreateDto restaurant, string path, IFormFile file);
+        ApiResponse<RestaurantDto> EditRestaurant(RestaurantDto restaurant, string path, IFormFile file);
     }
 }
