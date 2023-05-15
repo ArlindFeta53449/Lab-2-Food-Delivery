@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Menu.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class RestaurantController : ControllerBase
     {
@@ -52,6 +52,13 @@ namespace Menu.Controllers
         {
             var filePath = Path.Combine(_webHostEnvironment.ContentRootPath, "Files");
             var response = _restaurantService.EditRestaurant(restaurant,filePath,files);
+            return StatusCode((int)response.StatusCode, response);
+        }
+
+        [HttpGet]
+        public IActionResult GetRestaurantsForSelect()
+        {
+            var response = _restaurantService.GetRestaurantsForSelect();
             return StatusCode((int)response.StatusCode, response);
         }
  
