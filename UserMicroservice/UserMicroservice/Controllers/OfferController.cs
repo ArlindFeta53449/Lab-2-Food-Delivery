@@ -5,54 +5,58 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Menu.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class OfferController : ControllerBase
     {
-        private readonly IOfferService _offerService;
+        private readonly IOfferService _offerService; 
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public OfferController(IOfferService offerService)
+        public OfferController(IOfferService offerService, IWebHostEnvironment webHostEnvironment)
         {
             _offerService = offerService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
 
         [HttpGet]
         public IActionResult GetAllOffers()
         {
-            var offers = _offerService.GetAll();
-            return Ok(offers);
+            var response = _offerService.GetOffersForDisplay();
+            return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetOffer(int id)
         {
-            var offers = _offerService.GetOffer(id);
-            return Ok(offers);
+            var response = _offerService.GetOffer(id);
+            return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpDelete("{id}")]
 
         public IActionResult DeleteOffer(int id)
         {
-            _offerService.DeleteOffer(id);
-            return Ok();
+            var response = _offerService.DeleteOffer(id);
+            return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpPost]
 
-        public IActionResult CreateOffer(OfferCreateDto offer)
+        public IActionResult CreateOffer(IFormFile files, [FromForm] OfferCreateDto offer)
         {
-            var result = _offerService.CreateOffer(offer);
-            return Ok(result);
+            var filePath = Path.Combine(_webHostEnvironment.ContentRootPath, "Files");
+            var response = _offerService.CreateOffer(offer, filePath, files);
+            return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpPut]
 
-        public IActionResult EditOffer(OfferDto offer)
+        public IActionResult EditOffer(IFormFile? files, [FromForm] OfferDto offer)
         {
-            var result = _offerService.EditOffer(offer);
-            return Ok(result);
+            var filePath = Path.Combine(_webHostEnvironment.ContentRootPath, "Files");
+            var response = _offerService.EditOffer(offer, filePath, files);
+            return StatusCode((int)response.StatusCode, response);
         }
 
 

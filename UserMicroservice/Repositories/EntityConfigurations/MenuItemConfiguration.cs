@@ -15,6 +15,8 @@ namespace Repository.EntityConfiguration
         {
             builder.Property(x => x.Name)
                 .IsRequired();
+            builder.Property(x => x.Image).IsRequired(false);
+            builder.Property(x => x.ImagePath).IsRequired(false);
         }
     }
 }

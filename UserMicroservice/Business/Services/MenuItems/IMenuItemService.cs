@@ -1,4 +1,7 @@
 ﻿using Data.DTOs;
+using Data.DTOs.MenuItem;
+using Data.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +12,12 @@ namespace Business.Services.MenuItems
 {
     public interface IMenuItemService
     {
-        IList<MenuItemDto> GetAll();
-        MenuItemDto GetMenuItem(int id);
-        MenuItemDto EditMenuItem(MenuItemDto menuItem);
-        MenuItemDto CreateMenuItem(MenuItemCreateDto menuItem);
-        void DeleteMenuItem(int id);
-
+        ApiResponse<IList<MenuItemDto>> GetAll();
+        ApiResponse<IList<MenuItemForDisplayDto>> GetMenuItemsForDisplay();
+        ApiResponse<MenuItemDto> GetMenuItem(int id);
+        ApiResponse<MenuItemDto> EditMenuItem(MenuItemDto menuItem, string path, IFormFile file);
+        ApiResponse<MenuItemDto> CreateMenuItem(MenuItemCreateDto menuItem, string path, IFormFile file);
+        ApiResponse<string> DeleteMenuItem(int id);
         IList<MenuItemDto> SearchMenuItems(string menuitem);
         /*
         IList<MenuItemDto> GetMostPopularMenuItems(int count);

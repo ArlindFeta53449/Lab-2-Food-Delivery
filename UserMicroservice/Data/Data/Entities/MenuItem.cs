@@ -13,6 +13,7 @@ namespace Data.Entities
         public string Description { get; set; }
         public double Price { get; set; }
         public string Image { get; set; }
+        public string ImagePath { get; set; }
         public int MenuId { get; set; }
         public Menu Menu { get; set; }
 

@@ -1,4 +1,5 @@
-﻿using Data.Entities;
+﻿using Data.DTOs.Offer;
+using Data.Entities;
 using Repositories.Repositories.GenericRepository;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace Repository.Repositories.Offers
 {
     public interface IOfferRepository : IRepository<Offer>
     {
+        IList<OfferForDisplayDto> GetOffersIncludeRestaurants();
 
     }
 }

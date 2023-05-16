@@ -18,6 +18,7 @@ namespace Repositories.EntityConfigurations
             builder.HasOne(x => x.Order)
                 .WithMany(x => x.OrderItems)
                 .HasForeignKey(x => x.OrderId);
+
         }
     }
 }

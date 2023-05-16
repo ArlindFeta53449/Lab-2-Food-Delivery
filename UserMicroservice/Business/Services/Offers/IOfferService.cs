@@ -1,4 +1,7 @@
 ﻿using Data.DTOs;
+using Data.DTOs.Offer;
+using Data.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +12,12 @@ namespace Business.Services.Offers
 {
     public interface IOfferService
     {
-        IList<OfferDto> GetAll();
-        OfferDto CreateOffer(OfferCreateDto offer);
-        void DeleteOffer(int id);
-        OfferDto GetOffer(int id);
-        OfferDto EditOffer(OfferDto offer);
+        ApiResponse<IList<OfferDto>> GetAll();
+        ApiResponse<OfferDto> CreateOffer(OfferCreateDto offer, string path, IFormFile file);
+        ApiResponse<string> DeleteOffer(int id);
+        ApiResponse<OfferDto> GetOffer(int id);
+        ApiResponse<OfferDto> EditOffer(OfferDto offer, string path, IFormFile file);
+        ApiResponse<IList<OfferForDisplayDto>> GetOffersForDisplay();
 
     }
 }
