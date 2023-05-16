@@ -1,4 +1,7 @@
-﻿using Data.Entities;
+﻿using Data.DTOs.Menu;
+using Data.DTOs.MenuItem;
+using Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using Repositories;
 using Repositories.Repositories.GenericRepository;
 using Repositories.Repositories.MenusItems;
@@ -22,6 +25,19 @@ namespace Repository.Repositories.MenusItems
         {
             var menuItems = Context.Set<MenuItem>().Where(m => m.Name.ToLower().Contains(menuitem.ToLower())).ToList();
             return menuItems;
+        }
+        public IList<MenuItemForDisplayDto> GetMenusIncludeMenus()
+        {
+            return Context.Set<MenuItem>().Include(x => x.Menu).Select(
+                x => new MenuItemForDisplayDto()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Description = x.Description,
+                    Image = x.Image,
+                    ImagePath = x.ImagePath,
+                    Menu = x.Menu.Name
+                }).ToList();
         }
 
         /*

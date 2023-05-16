@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Business.Services.FileHandling;
 using Data.DTOs;
+using Data.DTOs.Restaurant;
 using Data.Entities;
 using Microsoft.AspNetCore.Http;
 using Repository.Repositories.Restaurants;
@@ -29,7 +30,7 @@ namespace Business.Services.Restaurants
         {
             _restaurantRepository = restaurantRepository;
             _mapper = mapper;
-            _fileHandlingService = fileHandlingService; 
+            _fileHandlingService = fileHandlingService;
         }
 
         public ApiResponse<IList<RestaurantDto>> GetAll()
@@ -102,7 +103,7 @@ namespace Business.Services.Restaurants
                     {
                         StatusCode = HttpStatusCode.BadRequest,
                         Errors = new List<string>() { "The restaurant does not exist" }
-                    }; 
+                    };
                 }
                 if (_restaurantRepository.Remove(restaurant))
                 {
@@ -131,7 +132,7 @@ namespace Business.Services.Restaurants
 
         }
 
-        public ApiResponse<RestaurantDto> CreateRestaurant(RestaurantCreateDto restaurant,string path,IFormFile file)
+        public ApiResponse<RestaurantDto> CreateRestaurant(RestaurantCreateDto restaurant, string path, IFormFile file)
         {
             try
             {
@@ -140,13 +141,13 @@ namespace Business.Services.Restaurants
                 if (file != null && file.Length > 0)
                 {
 
-                    var fileObject = _fileHandlingService.SaveFile(file, "Restaurants", path, new string[] { ".jpeg", ".png",".jpg" });
-                    if(fileObject == null)
+                    var fileObject = _fileHandlingService.SaveFile(file, "Restaurants", path, new string[] { ".jpeg", ".png", ".jpg" });
+                    if (fileObject == null)
                     {
                         return new ApiResponse<RestaurantDto>()
                         {
                             StatusCode = HttpStatusCode.BadRequest,
-                            Errors = new List<string>() {"The file type is not correct"}
+                            Errors = new List<string>() { "The file type is not correct" }
                         };
                     }
                     mappedRestaurant.Image = fileObject.fileName;
@@ -164,7 +165,7 @@ namespace Business.Services.Restaurants
                 return new ApiResponse<RestaurantDto>()
                 {
                     StatusCode = HttpStatusCode.BadRequest,
-                    Errors = new List<string>() { "There was a problem while saving the restaurant.Please try again."}
+                    Errors = new List<string>() { "There was a problem while saving the restaurant.Please try again." }
                 };
             }
             catch (Exception ex)
@@ -177,7 +178,30 @@ namespace Business.Services.Restaurants
                 };
             }
         }
+        public ApiResponse<IList<RestaurantForSelectDto>> GetRestaurantsForSelect(){
+            try
+            {
+                var restaurants = _restaurantRepository.RestaurantForSelectDto();
+                foreach (var restaurant in restaurants)
+                {
+                    restaurant.ImagePath = _fileHandlingService.ConvertFilePathForImage(restaurant.ImagePath);
+                }
+                return new ApiResponse<IList<RestaurantForSelectDto>>() {
+                    StatusCode = HttpStatusCode.OK,
+                    Data = restaurants
+                };
 
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<IList<RestaurantForSelectDto>>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+        }
         public ApiResponse<RestaurantDto> EditRestaurant(RestaurantDto restaurant, string path, IFormFile file)
         {
             try
@@ -206,17 +230,18 @@ namespace Business.Services.Restaurants
                             Errors = new List<string>() { "The file type is not correct" }
                         };
                     }
-                    _fileHandlingService.DeleteFile(restaurantInDb.ImagePath);
+                    _fileHandlingService.DeleteFile(imagePath);
                     restaurantInDb.Image = fileObject.fileName;
                     restaurantInDb.ImagePath = fileObject.filePath;
                 }
+                if (restaurantInDb.ImagePath == null && restaurantInDb.Image == null)
+                {
+                    restaurantInDb.ImagePath = imagePath;
+                    restaurantInDb.Image = image;
+                }
                 if (_restaurantRepository.Update(restaurantInDb))
                 {
-                    if (restaurantInDb.ImagePath==null && restaurantInDb.Image == null)
-                    {
-                        restaurantInDb.ImagePath = imagePath;
-                        restaurantInDb.Image = image;
-                    }
+                   
                     restaurantInDb.ImagePath = _fileHandlingService.ConvertFilePathForImage(restaurantInDb.ImagePath);
                     return new ApiResponse<RestaurantDto>()
                     {

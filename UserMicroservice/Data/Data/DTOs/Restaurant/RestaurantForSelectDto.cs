@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data.DTOs
+namespace Data.DTOs.Restaurant
 {
-    public class MenuCreateDto
+    public class RestaurantForSelectDto
     {
+        public int Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
         public string? Image { get; set; }
-        public int RestaurantId { get; set; }
         public string? ImagePath { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Data.Entities;
+﻿using Data.DTOs.MenuItem;
+using Data.Entities;
 using Repositories.Repositories.GenericRepository;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,6 @@ namespace Repositories.Repositories.MenusItems
     public interface IMenusItemRepository : IRepository<MenuItem>
     {
         IList<MenuItem> SearchMenuItems(string menuitem);
+        IList<MenuItemForDisplayDto> GetMenusIncludeMenus();
     }
 }

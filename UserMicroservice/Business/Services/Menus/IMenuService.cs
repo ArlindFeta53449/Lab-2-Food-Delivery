@@ -1,4 +1,7 @@
 ﻿using Data.DTOs;
+using Data.DTOs.Menu;
+using Data.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +12,13 @@ namespace Business.Services.Menus
 {
     public interface IMenuService
     {
-        IList<MenuDto> GetAll();
+        ApiResponse<IList<MenuDto>> GetAll();
 
-        MenuDto GetMenu(int id);
-        void DeleteMenu(int id);
-        MenuDto CreateMenu(MenuCreateDto menu);
-        MenuDto EditMenu(MenuDto menu);
+        ApiResponse<MenuDto> GetMenu(int id);
+        ApiResponse<string> DeleteMenu(int id);
+        ApiResponse<MenuDto> CreateMenu(MenuCreateDto menu, string path, IFormFile file);
+        ApiResponse<MenuDto> EditMenu(MenuDto menu, string path, IFormFile file);
+        ApiResponse<IList<MenuForDisplayDto>> GetMenusForDisplay();
 
     }
 }

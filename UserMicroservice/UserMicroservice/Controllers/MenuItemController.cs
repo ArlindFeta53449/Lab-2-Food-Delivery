@@ -1,5 +1,6 @@
 ﻿using Business.Services.MenuItems;
 using Data.DTOs;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,48 +11,52 @@ namespace Menu.Controllers
     public class MenuItemController : ControllerBase
     {
         private readonly IMenuItemService _menuItemService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public MenuItemController(IMenuItemService menuItemService)
+        public MenuItemController(IMenuItemService menuItemService, IWebHostEnvironment webHostEnvironment)
         {
             _menuItemService = menuItemService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
 
         public IActionResult GetAllMenuItem()
         {
-            var menusItem = _menuItemService.GetAll();
-            return Ok(menusItem);
+            var response = _menuItemService.GetMenuItemsForDisplay();
+            return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetMenuItem(int id)
         {
-            var menusItem = _menuItemService.GetMenuItem(id);
-            return Ok(menusItem);
+            var response = _menuItemService.GetMenuItem(id);
+            return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteMenu(int id)
         {
-            _menuItemService.DeleteMenuItem(id);
-            return Ok();
+            var response = _menuItemService.DeleteMenuItem(id);
+            return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpPost]
 
-        public IActionResult CreateMenuItem(MenuItemCreateDto menuItem)
+        public IActionResult CreateMenuItem(IFormFile files, [FromForm] MenuItemCreateDto menuItem)
         {
-            var result = _menuItemService.CreateMenuItem(menuItem);
-            return Ok(result);
+            var filePath = Path.Combine(_webHostEnvironment.ContentRootPath, "Files");
+            var response = _menuItemService.CreateMenuItem(menuItem,filePath,files);
+            return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpPut]
 
-        public IActionResult EditMenuItem(MenuItemDto menuItem)
+        public IActionResult EditMenuItem(IFormFile? files, [FromForm] MenuItemDto menuItem)
         {
-            var result = _menuItemService.EditMenuItem(menuItem);
-            return Ok(result);
+            var filePath = Path.Combine(_webHostEnvironment.ContentRootPath, "Files");
+            var response = _menuItemService.EditMenuItem(menuItem,filePath,files);
+            return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpGet]

@@ -23,6 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Files\Menus\" />
+    <Folder Include="Files\MenuItems\" />
+    <Folder Include="Files\Offers\" />
     <Folder Include="Files\Restaurants\" />
     <Folder Include="Logs\" />
   </ItemGroup>

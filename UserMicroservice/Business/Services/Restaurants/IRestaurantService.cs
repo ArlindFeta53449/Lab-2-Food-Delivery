@@ -1,4 +1,5 @@
 ﻿using Data.DTOs;
+using Data.DTOs.Restaurant;
 using Data.Entities;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -16,5 +17,6 @@ namespace Business.Services.Restaurants
         ApiResponse<string> DeleteRestaurant(int id);
         ApiResponse<RestaurantDto> CreateRestaurant(RestaurantCreateDto restaurant, string path, IFormFile file);
         ApiResponse<RestaurantDto> EditRestaurant(RestaurantDto restaurant, string path, IFormFile file);
+        ApiResponse<IList<RestaurantForSelectDto>> GetRestaurantsForSelect();
     }
 }
