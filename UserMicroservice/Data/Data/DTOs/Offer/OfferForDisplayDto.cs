@@ -18,5 +18,6 @@ namespace Data.DTOs.Offer
         public float Price { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public int RestaurantId { get; set; }
     }
 }

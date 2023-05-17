@@ -17,6 +17,10 @@ namespace Repository.EntityConfiguration
                 .IsRequired();
             builder.Property(x => x.Image).IsRequired(false);
             builder.Property(x => x.ImagePath).IsRequired(false);
+
+            builder.HasMany(x => x.MenuItemOffers)
+                .WithOne(x => x.MenuItem)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

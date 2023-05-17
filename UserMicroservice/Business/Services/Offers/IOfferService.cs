@@ -13,7 +13,7 @@ namespace Business.Services.Offers
     public interface IOfferService
     {
         ApiResponse<IList<OfferDto>> GetAll();
-        ApiResponse<OfferDto> CreateOffer(OfferCreateDto offer, string path, IFormFile file);
+        ApiResponse<OfferDto> CreateOffer(OfferCreateDto offer, string path, IFormFile file,string menuItemOffersJson);
         ApiResponse<string> DeleteOffer(int id);
         ApiResponse<OfferDto> GetOffer(int id);
         ApiResponse<OfferDto> EditOffer(OfferDto offer, string path, IFormFile file);

@@ -63,6 +63,15 @@ namespace Business.Services._00_MappingProfiles
             CreateMap<OfferDto, Offer>();
             CreateMap<Offer, OfferCreateDto>();
             CreateMap<OfferCreateDto, Offer>();
+
+            CreateMap<MenuItemOffer, MenuItemOfferDto>();
+            CreateMap<MenuItemOfferDto, MenuItemOffer>();
+
+            CreateMap<MenuItemOfferCreateDto, MenuItemOffer>();
+            CreateMap<MenuItemOffer, MenuItemOfferCreateDto>();
+            CreateMap<MenuItemOfferDto, MenuItemOfferCreateDto>();
+            CreateMap<MenuItemOfferCreateDto, MenuItemOfferDto>();
+
         }
     }
 }

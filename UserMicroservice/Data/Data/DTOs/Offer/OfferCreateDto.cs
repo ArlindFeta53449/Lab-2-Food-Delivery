@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Data.DTOs.MenuItem;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,5 +18,6 @@ namespace Data.DTOs
         public int DiscountPercent { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public IList<MenuItemOfferCreateDto>? MenuItemOffers { get; set; } 
     }
 }

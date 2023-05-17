@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Business.Services.Offers
@@ -150,13 +151,16 @@ namespace Business.Services.Offers
             }
         }
 
-        public ApiResponse<OfferDto> CreateOffer(OfferCreateDto offer, string path, IFormFile file)
+        public ApiResponse<OfferDto> CreateOffer(OfferCreateDto offer, string path, IFormFile file,string menuItemOffersJson)
         {
             try
             {
+                
+                var menuItemOffers = JsonSerializer.Deserialize<List<MenuItemOfferCreateDto>>(menuItemOffersJson);
+                offer.MenuItemOffers = menuItemOffers;
                 var mappedOffer = _mapper.Map<Offer>(offer);
 
-                if (file != null && file.Length > 0)
+               if (file != null && file.Length > 0)
                 {
 
                     var fileObject = _fileHandlingService.SaveFile(file, "Offers", path, new string[] { ".jpeg", ".png", ".jpg" });

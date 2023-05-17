@@ -79,14 +79,42 @@ namespace Repositories.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<float>("Price")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MenuId");
 
                     b.ToTable("MenuItems");
+                });
+
+            modelBuilder.Entity("Data.Entities.MenuItemOffer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("MenuItemId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OfferId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MenuItemId");
+
+                    b.HasIndex("OfferId");
+
+                    b.ToTable("MenuItemOffers");
                 });
 
             modelBuilder.Entity("Data.Entities.Offer", b =>
@@ -482,6 +510,25 @@ namespace Repositories.Migrations
                     b.Navigation("Menu");
                 });
 
+            modelBuilder.Entity("Data.Entities.MenuItemOffer", b =>
+                {
+                    b.HasOne("Data.Entities.MenuItem", "MenuItem")
+                        .WithMany("MenuItemOffers")
+                        .HasForeignKey("MenuItemId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Data.Entities.Offer", "Offer")
+                        .WithMany("MenuItemOffers")
+                        .HasForeignKey("OfferId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("MenuItem");
+
+                    b.Navigation("Offer");
+                });
+
             modelBuilder.Entity("Data.Entities.Offer", b =>
                 {
                     b.HasOne("Data.Entities.Restaurant", "Restaurant")
@@ -583,6 +630,16 @@ namespace Repositories.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Data.Entities.MenuItem", b =>
+                {
+                    b.Navigation("MenuItemOffers");
+                });
+
+            modelBuilder.Entity("Data.Entities.Offer", b =>
+                {
+                    b.Navigation("MenuItemOffers");
                 });
 
             modelBuilder.Entity("Data.Entities.Order", b =>
