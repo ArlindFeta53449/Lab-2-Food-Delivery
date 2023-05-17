@@ -12,8 +12,8 @@ using Repositories;
 namespace Repositories.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230515111433_ChangesOnRestaurantEntity")]
-    partial class ChangesOnRestaurantEntity
+    [Migration("20230517114904_ChangesByArlind")]
+    partial class ChangesByArlind
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,7 +37,9 @@ namespace Repositories.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -67,7 +69,9 @@ namespace Repositories.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImagePath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MenuId")
@@ -77,14 +81,42 @@ namespace Repositories.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<float>("Price")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MenuId");
 
                     b.ToTable("MenuItems");
+                });
+
+            modelBuilder.Entity("Data.Entities.MenuItemOffer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("MenuItemId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OfferId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MenuItemId");
+
+                    b.HasIndex("OfferId");
+
+                    b.ToTable("MenuItemOffer");
                 });
 
             modelBuilder.Entity("Data.Entities.Offer", b =>
@@ -106,22 +138,27 @@ namespace Repositories.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MenuId")
-                        .HasColumnType("int");
+                    b.Property<string>("ImagePath")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("Price")
+                        .HasColumnType("real");
+
+                    b.Property<int>("RestaurantId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MenuId");
+                    b.HasIndex("RestaurantId");
 
                     b.ToTable("Offers");
                 });
@@ -475,15 +512,34 @@ namespace Repositories.Migrations
                     b.Navigation("Menu");
                 });
 
+            modelBuilder.Entity("Data.Entities.MenuItemOffer", b =>
+                {
+                    b.HasOne("Data.Entities.MenuItem", "MenuItem")
+                        .WithMany("MenuItemOffers")
+                        .HasForeignKey("MenuItemId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Data.Entities.Offer", "Offer")
+                        .WithMany("MenuItemOffers")
+                        .HasForeignKey("OfferId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("MenuItem");
+
+                    b.Navigation("Offer");
+                });
+
             modelBuilder.Entity("Data.Entities.Offer", b =>
                 {
-                    b.HasOne("Data.Entities.Menu", "Menu")
+                    b.HasOne("Data.Entities.Restaurant", "Restaurant")
                         .WithMany()
-                        .HasForeignKey("MenuId")
+                        .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Menu");
+                    b.Navigation("Restaurant");
                 });
 
             modelBuilder.Entity("Data.Entities.Order", b =>
@@ -576,6 +632,16 @@ namespace Repositories.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Data.Entities.MenuItem", b =>
+                {
+                    b.Navigation("MenuItemOffers");
+                });
+
+            modelBuilder.Entity("Data.Entities.Offer", b =>
+                {
+                    b.Navigation("MenuItemOffers");
                 });
 
             modelBuilder.Entity("Data.Entities.Order", b =>

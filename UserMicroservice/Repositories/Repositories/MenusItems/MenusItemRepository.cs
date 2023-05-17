@@ -36,7 +36,9 @@ namespace Repository.Repositories.MenusItems
                     Description = x.Description,
                     Image = x.Image,
                     ImagePath = x.ImagePath,
-                    Menu = x.Menu.Name
+                    Menu = x.Menu.Name,
+                    Price = x.Price,
+                    MenuId= x.MenuId
                 }).ToList();
         }
 

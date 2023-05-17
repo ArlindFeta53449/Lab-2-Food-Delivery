@@ -1,5 +1,6 @@
 ﻿using Business.Services.Offers;
 using Data.DTOs;
+using Data.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -43,10 +44,10 @@ namespace Menu.Controllers
 
         [HttpPost]
 
-        public IActionResult CreateOffer(IFormFile files, [FromForm] OfferCreateDto offer)
+        public IActionResult CreateOffer(IFormFile files, [FromForm] OfferCreateDto offer, [FromForm] string menuItemOffersJson)
         {
             var filePath = Path.Combine(_webHostEnvironment.ContentRootPath, "Files");
-            var response = _offerService.CreateOffer(offer, filePath, files);
+            var response = _offerService.CreateOffer(offer, filePath, files, menuItemOffersJson);
             return StatusCode((int)response.StatusCode, response);
         }
 

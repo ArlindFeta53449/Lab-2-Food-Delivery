@@ -34,7 +34,9 @@ namespace Repository.Repositories.Offers
                     EndDate = x.EndDate,
                     Image = x.Image,
                     ImagePath = x.ImagePath,
-                    Restaurant = x.Restaurant.Name
+                    Restaurant = x.Restaurant.Name,
+                    RestaurantId = x.RestaurantId
+
                 }).ToList();
         }
     }

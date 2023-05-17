@@ -25,6 +25,7 @@ namespace Repositories
             modelBuilder.ApplyConfiguration(new OfferConfiguration());
             modelBuilder.ApplyConfiguration(new MenuItemConfiguration());
             modelBuilder.ApplyConfiguration(new MenuConfiguration());
+            modelBuilder.ApplyConfiguration(new MenuItemOfferConfiguration());
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -36,5 +37,7 @@ namespace Repositories
         public DbSet<OrderItem> OrderItems { get; set; }
 
         public DbSet<Order> Order { get; set; }
+
+        public DbSet<MenuItemOffer> MenuItemOffers { get; set; }
     }
 }
