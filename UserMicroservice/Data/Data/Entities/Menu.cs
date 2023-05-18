@@ -15,5 +15,7 @@ namespace Data.Entities
         public string ImagePath { get; set; }
         public int RestaurantId { get; set; }
         public Restaurant Restaurant { get; set; }
+
+        public IList<MenuItem> MenuItems { get; set; }
     }
 }

@@ -13,5 +13,7 @@ namespace Repositories.Repositories.MenusItems
     {
         IList<MenuItem> SearchMenuItems(string menuitem);
         IList<MenuItemForDisplayDto> GetMenusIncludeMenus();
+        IList<MenuItemForDisplayDto> GetMenuItemsByMenuId(int menuId);
+        void RemoveMenuItemsByMenuId(int menuId);
     }
 }

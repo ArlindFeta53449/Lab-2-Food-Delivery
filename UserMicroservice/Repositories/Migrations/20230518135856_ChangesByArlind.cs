@@ -291,7 +291,7 @@ namespace Repositories.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MenuItemOffer",
+                name: "MenuItemOffers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -302,14 +302,15 @@ namespace Repositories.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MenuItemOffer", x => x.Id);
+                    table.PrimaryKey("PK_MenuItemOffers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MenuItemOffer_MenuItems_MenuItemId",
+                        name: "FK_MenuItemOffers_MenuItems_MenuItemId",
                         column: x => x.MenuItemId,
                         principalTable: "MenuItems",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MenuItemOffer_Offers_OfferId",
+                        name: "FK_MenuItemOffers_Offers_OfferId",
                         column: x => x.OfferId,
                         principalTable: "Offers",
                         principalColumn: "Id");
@@ -393,13 +394,13 @@ namespace Repositories.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MenuItemOffer_MenuItemId",
-                table: "MenuItemOffer",
+                name: "IX_MenuItemOffers_MenuItemId",
+                table: "MenuItemOffers",
                 column: "MenuItemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MenuItemOffer_OfferId",
-                table: "MenuItemOffer",
+                name: "IX_MenuItemOffers_OfferId",
+                table: "MenuItemOffers",
                 column: "OfferId");
 
             migrationBuilder.CreateIndex(
@@ -457,7 +458,7 @@ namespace Repositories.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "MenuItemOffer");
+                name: "MenuItemOffers");
 
             migrationBuilder.DropTable(
                 name: "OrderItems");

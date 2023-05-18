@@ -14,5 +14,7 @@ namespace Data.DTOs.Menu
         public string? Image { get; set; }
         public string? ImagePath { get; set; }
         public string Restaurant { get; set; }
+
+        public int RestaurantId { get; set; }
     }
 }

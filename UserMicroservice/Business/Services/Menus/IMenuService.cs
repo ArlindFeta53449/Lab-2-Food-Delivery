@@ -19,6 +19,7 @@ namespace Business.Services.Menus
         ApiResponse<MenuDto> CreateMenu(MenuCreateDto menu, string path, IFormFile file);
         ApiResponse<MenuDto> EditMenu(MenuDto menu, string path, IFormFile file);
         ApiResponse<IList<MenuForDisplayDto>> GetMenusForDisplay();
+        ApiResponse<IList<MenuForDisplayDto>> GetMenusByRestaurantId(int restaurantId);
 
     }
 }

@@ -110,7 +110,39 @@ namespace Business.Services.MenuItems
                 };
             }
         }
-
+        public ApiResponse<IList<MenuItemForDisplayDto>> GetMenuItemsByMenuId(int menuId)
+        {
+            try
+            {
+                var menuItems = _menusItemRepository.GetMenuItemsByMenuId(menuId);
+                if (menuItems == null)
+                {
+                    return new ApiResponse<IList<MenuItemForDisplayDto>>()
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string>() { "The Menu does not have any items" }
+                    };
+                }
+                foreach (var menuItem in menuItems)
+                {
+                    menuItem.ImagePath = _fileHandlingService.ConvertFilePathForImage(menuItem.ImagePath);
+                }
+                return new ApiResponse<IList<MenuItemForDisplayDto>>()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Data = _mapper.Map<IList<MenuItemForDisplayDto>>(menuItems)
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<IList<MenuItemForDisplayDto>>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+        }
         public ApiResponse<string> DeleteMenuItem(int id)
         {
             try
@@ -130,7 +162,7 @@ namespace Business.Services.MenuItems
                     return new ApiResponse<string>()
                     {
                         StatusCode = HttpStatusCode.OK,
-                        Message = "The menu item was deleted successfully"
+                        Message = "The menu item was deleted successfully. Also some offer might be affected."
                     };
                 }
                 return new ApiResponse<string>()

@@ -73,6 +73,12 @@ namespace Menu.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet("{menuId}")]
+        public IActionResult GetMenuItemsByMenuId(int menuId)
+        {
+            var response = _menuItemService.GetMenuItemsByMenuId(menuId);
+            return StatusCode((int)response.StatusCode, response);
+        }
 
 
         /*
