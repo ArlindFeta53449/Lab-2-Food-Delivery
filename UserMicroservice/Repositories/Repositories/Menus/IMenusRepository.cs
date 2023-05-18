@@ -12,5 +12,8 @@ namespace Repositories.Repositories.Menus
     public interface IMenusRepository : IRepository<Menu>
     {
         IList<MenuForDisplayDto> GetMenusIncludeRestaurants();
+
+        IList<MenuForDisplayDto> GetMenusByRestaurantId(int restaurantId);
+        
     }
 }

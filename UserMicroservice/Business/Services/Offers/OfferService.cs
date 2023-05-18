@@ -5,6 +5,7 @@ using Data.DTOs.MenuItem;
 using Data.DTOs.Offer;
 using Data.Entities;
 using Microsoft.AspNetCore.Http;
+using Repositories.Repositories.MenuItemOffers;
 using Repository.Repositories.Offers;
 using Serilog;
 using System;
@@ -23,12 +24,20 @@ namespace Business.Services.Offers
         private readonly IOfferRepository _offerRepository;
         private readonly IMapper _mapper;
         private readonly IFileHandlingService _fileHandlingService;
+        private readonly IMenuItemOffersRepository _menuItemOffersRepository;
 
-        public OfferService(IOfferRepository offerRepository, IMapper mapper, IFileHandlingService fileHandlingService)
+        public OfferService(
+            IOfferRepository offerRepository,
+            IMapper mapper,
+            IFileHandlingService fileHandlingService,
+            IMenuItemOffersRepository menuItemOffersRepository
+            
+            )
         {
             _offerRepository = offerRepository;
             _mapper = mapper;
             _fileHandlingService = fileHandlingService;
+            _menuItemOffersRepository = menuItemOffersRepository;
         }
         public ApiResponse<IList<OfferForDisplayDto>> GetOffersForDisplay()
         {
@@ -125,6 +134,7 @@ namespace Business.Services.Offers
                         Errors = new List<string>() { "The offer does not exist" }
                     };
                 }
+                _menuItemOffersRepository.RemoveMenuItemOffersByOfferId(id);
                 if (_offerRepository.Remove(offer))
                 {
                     var fileDeleted = _fileHandlingService.DeleteFile(offer.ImagePath);

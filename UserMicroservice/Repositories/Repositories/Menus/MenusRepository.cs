@@ -29,5 +29,20 @@ namespace Repositories.Repositories.Menus
                 Restaurant = x.Restaurant.Name
                 }).ToList();
         }
+        public IList<MenuForDisplayDto> GetMenusByRestaurantId(int restaurantId)
+        {
+            return Context.Set<Menu>()
+                .Include(x => x.Restaurant)
+                .Where(x => x.Restaurant.Id == restaurantId)
+                .Select(x => new MenuForDisplayDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    ImagePath = x.ImagePath
+                })
+                .ToList();
+        }
+
+
     }
 }

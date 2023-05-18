@@ -12,6 +12,7 @@ using System.Net;
 using Business.Services.FileHandling;
 using Microsoft.AspNetCore.Http;
 using Data.DTOs.Menu;
+using Repositories.Repositories.MenusItems;
 
 namespace Business.Services.Menus
 {
@@ -20,12 +21,18 @@ namespace Business.Services.Menus
         private readonly IMenusRepository _menusRepository;
         private readonly IMapper _mapper;
         private readonly IFileHandlingService _fileHandlingService;
+        private readonly IMenusItemRepository _menuItemRepository;
 
-        public MenuService(IMenusRepository menusRepository, IMapper mapper, IFileHandlingService fileHandlingService)
+        public MenuService(
+            IMenusRepository menusRepository, 
+            IMapper mapper,
+            IFileHandlingService fileHandlingService,
+            IMenusItemRepository menuItemRepository)
         {
             _menusRepository = menusRepository;
             _mapper = mapper;
             _fileHandlingService = fileHandlingService;
+            _menuItemRepository = menuItemRepository;
         }
 
         public ApiResponse<IList<MenuDto>> GetAll()
@@ -111,7 +118,39 @@ namespace Business.Services.Menus
                 };
             }
         }
-
+        public ApiResponse<IList<MenuForDisplayDto>> GetMenusByRestaurantId(int restaurantId)
+        {
+            try
+            {
+                var menus = _menusRepository.GetMenusByRestaurantId(restaurantId);
+                if (menus == null)
+                {
+                    return new ApiResponse<IList<MenuForDisplayDto>>()
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string>() { "The restaurant does not have any menus" }
+                    };
+                }
+                foreach (var menu in menus)
+                {
+                    menu.ImagePath = _fileHandlingService.ConvertFilePathForImage(menu.ImagePath);
+                }
+                return new ApiResponse<IList<MenuForDisplayDto>>()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Data = _mapper.Map<IList<MenuForDisplayDto>>(menus)
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<IList<MenuForDisplayDto>>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+        }
         public ApiResponse<string> DeleteMenu(int id)
         {
             try
@@ -125,6 +164,7 @@ namespace Business.Services.Menus
                         Errors = new List<string>() { "The menu does not exist" }
                     };
                 }
+                _menuItemRepository.RemoveMenuItemsByMenuId(id);
                 if (_menusRepository.Remove(menu))
                 {
                     var fileDeleted = _fileHandlingService.DeleteFile(menu.ImagePath);

@@ -23,6 +23,7 @@ using Repository.Repositories.OrderItems;
 using Repository.Repositories.Orders;
 using Business.Services.Authentification;
 using Business.Services.FileHandling;
+using Repositories.Repositories.MenuItemOffers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +65,7 @@ builder.Services.AddScoped<IOfferRepository, OfferRepository>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IAuthentificationService, AuthentificationService>();
 builder.Services.AddScoped<IFileHandlingService, FileHandlingService>();
+builder.Services.AddScoped<IMenuItemOffersRepository, MenuItemOffersRepository>();
 //builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddTransient<IMailService,MailService>();

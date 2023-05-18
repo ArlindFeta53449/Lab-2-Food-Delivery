@@ -13,5 +13,9 @@ namespace Data.Entities
 
         public string ImagePath { get; set; }
 
+        public IList<Menu> Menus { get; set; }
+
+        public IList<Offer> Offers { get; set; }
+
     }
 }

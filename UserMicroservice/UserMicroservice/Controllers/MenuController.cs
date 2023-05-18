@@ -1,5 +1,7 @@
 ﻿using Business.Services.Menus;
 using Data.DTOs;
+using Data.DTOs.Menu;
+using Data.Entities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -48,7 +50,7 @@ namespace Menu.Controllers
         public IActionResult CreateMenu(IFormFile files, [FromForm] MenuCreateDto menu)
         {
             var filePath = Path.Combine(_webHostEnvironment.ContentRootPath, "Files");
-            var response = _menuService.CreateMenu(menu,filePath,files);
+            var response = _menuService.CreateMenu(menu, filePath, files);
             return StatusCode((int)response.StatusCode, response);
         }
 
@@ -60,6 +62,11 @@ namespace Menu.Controllers
             var response = _menuService.EditMenu(menu, filePath, files);
             return StatusCode((int)response.StatusCode, response);
         }
-
+        [HttpGet("{restaurantId}")]
+        public IActionResult GetMenusByRestaurantId(int restaurantId)
+        {
+            var response = _menuService.GetMenusByRestaurantId(restaurantId);
+            return StatusCode((int)response.StatusCode, response);
+        }
     }
 }

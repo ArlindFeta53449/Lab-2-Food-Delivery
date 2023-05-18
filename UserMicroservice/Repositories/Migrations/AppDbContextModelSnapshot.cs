@@ -491,7 +491,7 @@ namespace Repositories.Migrations
             modelBuilder.Entity("Data.Entities.Menu", b =>
                 {
                     b.HasOne("Data.Entities.Restaurant", "Restaurant")
-                        .WithMany()
+                        .WithMany("Menus")
                         .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -502,7 +502,7 @@ namespace Repositories.Migrations
             modelBuilder.Entity("Data.Entities.MenuItem", b =>
                 {
                     b.HasOne("Data.Entities.Menu", "Menu")
-                        .WithMany()
+                        .WithMany("MenuItems")
                         .HasForeignKey("MenuId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -515,7 +515,7 @@ namespace Repositories.Migrations
                     b.HasOne("Data.Entities.MenuItem", "MenuItem")
                         .WithMany("MenuItemOffers")
                         .HasForeignKey("MenuItemId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Data.Entities.Offer", "Offer")
@@ -532,7 +532,7 @@ namespace Repositories.Migrations
             modelBuilder.Entity("Data.Entities.Offer", b =>
                 {
                     b.HasOne("Data.Entities.Restaurant", "Restaurant")
-                        .WithMany()
+                        .WithMany("Offers")
                         .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -632,6 +632,11 @@ namespace Repositories.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Data.Entities.Menu", b =>
+                {
+                    b.Navigation("MenuItems");
+                });
+
             modelBuilder.Entity("Data.Entities.MenuItem", b =>
                 {
                     b.Navigation("MenuItemOffers");
@@ -645,6 +650,13 @@ namespace Repositories.Migrations
             modelBuilder.Entity("Data.Entities.Order", b =>
                 {
                     b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("Data.Entities.Restaurant", b =>
+                {
+                    b.Navigation("Menus");
+
+                    b.Navigation("Offers");
                 });
 
             modelBuilder.Entity("Data.Entities.User", b =>

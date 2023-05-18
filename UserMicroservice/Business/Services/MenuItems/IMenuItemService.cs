@@ -19,6 +19,7 @@ namespace Business.Services.MenuItems
         ApiResponse<MenuItemDto> CreateMenuItem(MenuItemCreateDto menuItem, string path, IFormFile file);
         ApiResponse<string> DeleteMenuItem(int id);
         IList<MenuItemDto> SearchMenuItems(string menuitem);
+        ApiResponse<IList<MenuItemForDisplayDto>> GetMenuItemsByMenuId(int menuId);
         /*
         IList<MenuItemDto> GetMostPopularMenuItems(int count);
         */

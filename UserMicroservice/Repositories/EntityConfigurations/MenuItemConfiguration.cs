@@ -20,7 +20,7 @@ namespace Repository.EntityConfiguration
 
             builder.HasMany(x => x.MenuItemOffers)
                 .WithOne(x => x.MenuItem)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -41,7 +41,30 @@ namespace Repository.Repositories.MenusItems
                     MenuId= x.MenuId
                 }).ToList();
         }
+        public IList<MenuItemForDisplayDto> GetMenuItemsByMenuId(int menuId)
+        {
+            return Context.Set<MenuItem>()
+                .Include(x => x.Menu)
+                .Where(x => x.MenuId == menuId)
+                .Select(
+                x => new MenuItemForDisplayDto()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    ImagePath = x.ImagePath,
+                    Price = x.Price,
+                }).ToList();
+        }
+        public void RemoveMenuItemsByMenuId(int menuId)
+        {
+            var menuItems = Context.Set<MenuItem>().Where(x => x.MenuId == menuId).ToList();
 
+            if (menuItems.Any())
+            {
+                Context.Set<MenuItem>().RemoveRange(menuItems);
+                Context.SaveChanges();
+            }
+        }
         /*
         public IList<MenuItem> GetMostPopularMenuItems(int count)
         {

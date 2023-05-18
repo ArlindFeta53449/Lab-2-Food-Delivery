@@ -16,6 +16,11 @@ namespace Repository.EntityConfiguration
                 .IsRequired();
             builder.Property(x => x.Image).IsRequired(false);
             builder.Property(x => x.ImagePath).IsRequired(false);
+
+            builder.HasMany(x=>x.MenuItems)
+                .WithOne(x => x.Menu)
+                .HasForeignKey(x => x.MenuId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
