@@ -217,6 +217,7 @@ namespace Business.Services.Offers
             try
             {
                 var offerInDb = _offerRepository.Get(offer.Id);
+                offer.RestaurantId = offerInDb.RestaurantId;
                 if (offerInDb == null)
                 {
                     return new ApiResponse<OfferDto>()
@@ -262,7 +263,7 @@ namespace Business.Services.Offers
                 return new ApiResponse<OfferDto>()
                 {
                     StatusCode = HttpStatusCode.OK,
-                    Errors = new List<string>() { "The menu item was not updated. Please try again." }
+                    Errors = new List<string>() { "The offer was not updated. Please try again." }
                 };
             }
             catch (Exception ex)
