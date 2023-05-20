@@ -105,6 +105,13 @@ namespace UserMicroservice.Controllers
             var response = _userService.GetCurrentUser(token);
             return StatusCode((int)response.StatusCode, response);
         }
+        [HttpGet]
+        public IActionResult GetUserStatisticsForDashboard()
+        {
+            var response = _userService.GetUserStatisticsForDashboard();
+            return StatusCode((int)response.StatusCode, response);
+        }
+       
 
     }
 }
