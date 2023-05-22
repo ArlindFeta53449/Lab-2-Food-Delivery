@@ -20,5 +20,6 @@ namespace Data.Entities
         public DateTime EndDate { get; set; }
         public Restaurant Restaurant { get; set; }
         public virtual IList<MenuItemOffer> MenuItemOffers { get; set; }
+        public virtual IList<CartOffer> CartOffers { get; set;}
     }
 }

@@ -25,6 +25,9 @@ namespace Repository.EntityConfiguration
             builder.HasMany(x => x.MenuItemOffers)
                 .WithOne(x => x.Offer)
                 .OnDelete(DeleteBehavior.NoAction);
+            builder.HasMany(x=>x.CartOffers)
+                .WithOne(x => x.Offer)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

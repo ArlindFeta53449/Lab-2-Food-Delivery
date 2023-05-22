@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using Data.DTOs;
+using Data.DTOs.Cart;
+using Data.DTOs.MenuItem;
+using Data.DTOs.Offer;
 using Data.DTOs.Roles;
 using Data.DTOs.Users;
 using Data.Entities;
@@ -71,6 +74,30 @@ namespace Business.Services._00_MappingProfiles
             CreateMap<MenuItemOffer, MenuItemOfferCreateDto>();
             CreateMap<MenuItemOfferDto, MenuItemOfferCreateDto>();
             CreateMap<MenuItemOfferCreateDto, MenuItemOfferDto>();
+
+            CreateMap<Cart, CartDto>();
+            CreateMap<CartDto, Cart>();
+
+            CreateMap<MenuItemForCartDto, MenuItem>();
+            CreateMap<MenuItem, MenuItemForCartDto>();
+            CreateMap<OfferForCartDto, Offer>();
+            CreateMap<Offer, OfferForCartDto>();
+
+            CreateMap<Cart, CartCreateDto>();
+            CreateMap<CartCreateDto, Cart>();
+            CreateMap<CartDto, CartCreateDto>();
+            CreateMap<CartCreateDto,CartDto >();
+            CreateMap<OfferForCartCreateDto, Offer>();
+            CreateMap<Offer, OfferForCartCreateDto>();
+            CreateMap<MenuItemForCartCreateDto, CartMenuItem>();
+            CreateMap<CartMenuItem, MenuItemForCartCreateDto>();
+
+
+            CreateMap<MenuItemForCartCreateDto, MenuItem>();
+            CreateMap<MenuItem, MenuItemForCartCreateDto>();
+
+            CreateMap<OfferForCartCreateDto, CartOffer>();
+            CreateMap<CartOffer, OfferForCartCreateDto>();
 
         }
     }
