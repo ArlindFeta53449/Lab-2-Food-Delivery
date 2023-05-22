@@ -22,5 +22,6 @@ namespace Repositories.Repositories.Users
 
         UserEditDto GetUserByIdForEdit(string id);
         UserDto GetUserByIdIncludeRole(string id);
+        UserForDashbooardDto GetUserStatisticsForDashboard();
     }
 }

@@ -73,5 +73,20 @@ namespace Repositories.Repositories.Users
                     IsEmailVerified = x.IsEmailVerified
                 }).FirstOrDefault(x => x.Id == id);
         }
+        public UserForDashbooardDto GetUserStatisticsForDashboard()
+        {
+            var verifiedUsers = Context.Set<User>().Where(x => x.IsEmailVerified == true).Count();
+            var unverifiedUsers = Context.Set<User>().Where(x => x.IsEmailVerified == false).Count();
+            var totalUsers = Context.Set<User>().Count();
+
+            return new UserForDashbooardDto()
+            {
+                VerifiedUsers = verifiedUsers,
+                UnverifiedUsers = unverifiedUsers,
+                TotalUsers = totalUsers
+            };
+
+        }
+
     }
 }

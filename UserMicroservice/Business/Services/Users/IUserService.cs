@@ -25,5 +25,6 @@ namespace Business.Services.Users
         ApiResponse<UserEditDto> GetUserByIdForEdit(string id);
         ApiResponse<UserDto> GetCurrentUser(string token);
 
+        ApiResponse<UserForDashbooardDto> GetUserStatisticsForDashboard();
     }
 }

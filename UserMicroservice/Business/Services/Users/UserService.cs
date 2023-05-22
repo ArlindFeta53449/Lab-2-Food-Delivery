@@ -270,6 +270,28 @@ namespace Business.Services.Users
                 return sb.ToString();
             }
         }
+       
+        public ApiResponse<UserForDashbooardDto> GetUserStatisticsForDashboard()
+        {
+            try
+            {
+                ;
+                return new ApiResponse<UserForDashbooardDto>
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Data = _userRepository.GetUserStatisticsForDashboard()
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<UserForDashbooardDto>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+        }
         public ApiResponse<string> SignUp(UserCreateDto user)
         {
             try
