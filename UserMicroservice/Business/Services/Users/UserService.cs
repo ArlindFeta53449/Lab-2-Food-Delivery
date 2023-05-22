@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Repositories.Repositories.Carts;
 using Repositories.Repositories.Roles;
 using Repositories.Repositories.Users;
 using Serilog;
@@ -29,6 +30,7 @@ namespace Business.Services.Users
         private readonly IMailService _mailService;
         private readonly IAuthentificationService _authentificationService;
         private readonly IRolesRepository _rolesRepository;
+        private readonly ICartRepository _cartRepository;
 
 
 
@@ -38,7 +40,9 @@ namespace Business.Services.Users
                             IMailService mailService, 
                             IAuthentificationService authentificationService,
                             ILogger<UserService> logger,
-                            IRolesRepository rolesRepository)
+                            IRolesRepository rolesRepository,
+                            ICartRepository cartRepository
+                )
         {
             _userRepository = userRepository;
             _mapper = mapper;
@@ -46,6 +50,7 @@ namespace Business.Services.Users
             _mailService = mailService;
             _authentificationService = authentificationService;
             _rolesRepository = rolesRepository;
+            _cartRepository = cartRepository;
 
         }
         public ApiResponse<IList<UserDto>> GetAll()
@@ -229,6 +234,7 @@ namespace Business.Services.Users
                 }
                 if (_userRepository.Remove(user))
                 {
+                    _cartRepository.DeleteCart(id);
                     return new ApiResponse<string>()
                     {
                         StatusCode = HttpStatusCode.OK,
@@ -303,6 +309,7 @@ namespace Business.Services.Users
                 mappedUser.RoleId = _rolesRepository.FindDefaultCustomerRole();
                 if (_userRepository.Add(mappedUser))
                 {
+                    _cartRepository.CreateCart(mappedUser.Id);
                     _mailService.SendVerifyAccountEmail(user);
                     return new ApiResponse<string>() { 
                     StatusCode = HttpStatusCode.OK,

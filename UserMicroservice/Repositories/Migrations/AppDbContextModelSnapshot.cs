@@ -22,6 +22,82 @@ namespace Repositories.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("Data.Entities.Cart", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<float?>("Total")
+                        .HasColumnType("real");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Carts");
+                });
+
+            modelBuilder.Entity("Data.Entities.CartMenuItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("CartId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MenuItemId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId");
+
+                    b.HasIndex("MenuItemId");
+
+                    b.ToTable("CartMenuItems");
+                });
+
+            modelBuilder.Entity("Data.Entities.CartOffer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("CartId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OfferId")
+                        .IsRequired()
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CartId");
+
+                    b.HasIndex("OfferId");
+
+                    b.ToTable("CartOffers");
+                });
+
             modelBuilder.Entity("Data.Entities.Menu", b =>
                 {
                     b.Property<int>("Id")
@@ -488,6 +564,44 @@ namespace Repositories.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Data.Entities.CartMenuItem", b =>
+                {
+                    b.HasOne("Data.Entities.Cart", "Cart")
+                        .WithMany("CartMenuItems")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Data.Entities.MenuItem", "MenuItem")
+                        .WithMany("CartMenuItems")
+                        .HasForeignKey("MenuItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("MenuItem");
+                });
+
+            modelBuilder.Entity("Data.Entities.CartOffer", b =>
+                {
+                    b.HasOne("Data.Entities.Cart", "Cart")
+                        .WithMany("CartOffers")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Data.Entities.Offer", "Offer")
+                        .WithMany("CartOffers")
+                        .HasForeignKey("OfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("Offer");
+                });
+
             modelBuilder.Entity("Data.Entities.Menu", b =>
                 {
                     b.HasOne("Data.Entities.Restaurant", "Restaurant")
@@ -632,6 +746,13 @@ namespace Repositories.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Data.Entities.Cart", b =>
+                {
+                    b.Navigation("CartMenuItems");
+
+                    b.Navigation("CartOffers");
+                });
+
             modelBuilder.Entity("Data.Entities.Menu", b =>
                 {
                     b.Navigation("MenuItems");
@@ -639,11 +760,15 @@ namespace Repositories.Migrations
 
             modelBuilder.Entity("Data.Entities.MenuItem", b =>
                 {
+                    b.Navigation("CartMenuItems");
+
                     b.Navigation("MenuItemOffers");
                 });
 
             modelBuilder.Entity("Data.Entities.Offer", b =>
                 {
+                    b.Navigation("CartOffers");
+
                     b.Navigation("MenuItemOffers");
                 });
 

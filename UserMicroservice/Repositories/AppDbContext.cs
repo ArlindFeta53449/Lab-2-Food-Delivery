@@ -26,6 +26,10 @@ namespace Repositories
             modelBuilder.ApplyConfiguration(new MenuItemConfiguration());
             modelBuilder.ApplyConfiguration(new MenuConfiguration());
             modelBuilder.ApplyConfiguration(new MenuItemOfferConfiguration());
+            modelBuilder.ApplyConfiguration(new CartConfiguration());
+            modelBuilder.ApplyConfiguration(new CartOfferConfiguration());
+            modelBuilder.ApplyConfiguration(new CartMenuItemConfiguration());
+
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -33,11 +37,12 @@ namespace Repositories
         public DbSet<MenuItem> MenuItems { get; set; }
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<Offer> Offers { get; set; }
-           
         public DbSet<OrderItem> OrderItems { get; set; }
-
         public DbSet<Order> Order { get; set; }
-
         public DbSet<MenuItemOffer> MenuItemOffers { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartMenuItem> CartMenuItems { get; set; }
+        public DbSet<CartOffer> CartOffers{ get; set; }
+
     }
 }

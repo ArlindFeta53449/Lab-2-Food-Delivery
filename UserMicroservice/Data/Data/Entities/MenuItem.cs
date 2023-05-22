@@ -17,6 +17,7 @@ namespace Data.Entities
         public int MenuId { get; set; }
         public Menu Menu { get; set; }
         public IList<MenuItemOffer> MenuItemOffers { get; set; } = new List<MenuItemOffer>();
+        public IList<CartMenuItem> CartMenuItems { get; set; } = new List<CartMenuItem>();
 
     }
 }
