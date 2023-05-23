@@ -26,6 +26,8 @@ using Business.Services.FileHandling;
 using Repositories.Repositories.MenuItemOffers;
 using Repositories.Repositories.Carts;
 using Business.Services.Carts;
+using Repositories.Repositories.CartMenuItems;
+using Repositories.Repositories.CartOffers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,6 +69,9 @@ builder.Services.AddScoped<IFileHandlingService, FileHandlingService>();
 builder.Services.AddScoped<IMenuItemOffersRepository, MenuItemOffersRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<ICartMenuItemRepository, CartMenuItemRepository>();
+builder.Services.AddScoped<ICartOfferRepository, CartOfferRepository>();
+
 
 
 //builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
