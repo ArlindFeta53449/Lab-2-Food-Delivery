@@ -1,4 +1,5 @@
-﻿using Data.Enums;
+﻿using Data.Entities.StripeEntities;
+using Data.Enums;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,8 @@ namespace Data.Entities
         public Role Role { get; set; }
 
         public IList<Order> Orders { get; set; }
-        
+
+        public AddStripeCard CreditCard { get; set; }
+
     }
 }

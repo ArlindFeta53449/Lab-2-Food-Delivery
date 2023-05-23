@@ -28,6 +28,9 @@ using Repositories.Repositories.Carts;
 using Business.Services.Carts;
 using Repositories.Repositories.CartMenuItems;
 using Repositories.Repositories.CartOffers;
+using Business.Services.Stripe.Contracts;
+using Stripe;
+using Stripe.TestHelpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,7 +54,7 @@ builder.Services.AddScoped<IRolesRepository, RolesRepository>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ITokenService, Business.Services.Token.TokenService>();
 builder.Services.AddScoped<IMenusRepository, MenusRepository>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<IMenusItemRepository, MenusItemRepository>();
@@ -71,8 +74,12 @@ builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<ICartMenuItemRepository, CartMenuItemRepository>();
 builder.Services.AddScoped<ICartOfferRepository, CartOfferRepository>();
+builder.Services.AddScoped<IStripeService, StripeService>();
+builder.Services.AddScoped<Stripe.CustomerService>();
+builder.Services.AddScoped<ChargeService>();
+builder.Services.AddScoped<Stripe.TokenService>();
 
-
+StripeConfiguration.ApiKey = builder.Configuration.GetValue<string>("StripePrivateKey");
 
 //builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
