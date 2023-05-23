@@ -3,6 +3,8 @@ using Business.Services.FileHandling;
 using Data.DTOs;
 using Data.DTOs.Cart;
 using Data.Entities;
+using Repositories.Repositories.CartMenuItems;
+using Repositories.Repositories.CartOffers;
 using Repositories.Repositories.Carts;
 using Repositories.Repositories.MenusItems;
 using Repository.Repositories.MenusItems;
@@ -22,12 +24,21 @@ namespace Business.Services.Carts
         private readonly ICartRepository _cartRepository;
         private readonly IMapper _mapper;
         private readonly IFileHandlingService _fileHandlingService;
+        private readonly ICartMenuItemRepository _cartMenuItemRepository;
+        private readonly ICartOfferRepository _cartOfferRepository;
 
-        public CartService(ICartRepository cartRepository, IMapper mapper, IFileHandlingService fileHandlingService)
+        public CartService(
+            ICartRepository cartRepository,
+            IMapper mapper,
+            IFileHandlingService fileHandlingService,
+            ICartMenuItemRepository cartMenuItemRepository,
+            ICartOfferRepository cartOfferRepository)
         {
             _cartRepository = cartRepository;
             _mapper = mapper;
             _fileHandlingService = fileHandlingService;
+            _cartMenuItemRepository = cartMenuItemRepository;
+            _cartOfferRepository = cartOfferRepository;
         }
         public ApiResponse<CartDto> GetCartByUserId(string userId)
         {
@@ -60,6 +71,66 @@ namespace Business.Services.Carts
             {
                 Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
                 return new ApiResponse<CartDto>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+        }
+        public ApiResponse<string> RemoveMenuItemFromCart(int cartId,int menuItemId)
+        {
+            try
+            {
+                var menuItem = _cartMenuItemRepository.GetMenuItemInCart(cartId, menuItemId);
+                if (menuItem != null)
+                {
+                    _cartMenuItemRepository.Remove(menuItem);
+                    return new ApiResponse<string>()
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        Message = "The menu item was removed successfully"
+                    };
+                }
+                return new ApiResponse<string>()
+                {
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Errors = new List<string> { "The menu item does not exist" }
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<string>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+        }
+        public ApiResponse<string> RemoveOfferFromCart(int cartId,int offerItemId)
+        {
+            try
+            {
+                var offer = _cartOfferRepository.GetOfferInCart(cartId, offerItemId);
+                if (offer != null)
+                {
+                    _cartOfferRepository.Remove(offer);
+                    return new ApiResponse<string>()
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        Message = "The offer was removed successfully"
+                    };
+                }
+                return new ApiResponse<string>()
+                {
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Errors = new List<string> { "The offer does not exist" }
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<string>
                 {
                     StatusCode = HttpStatusCode.InternalServerError,
                     Errors = new List<string> { "An error occurred while processing your request. Please try again later." }

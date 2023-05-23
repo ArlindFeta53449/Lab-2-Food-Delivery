@@ -29,5 +29,16 @@ namespace UserMicroservice.Controllers
             var response = _cartService.AddToCart(cart);
             return StatusCode((int)response.StatusCode, response);
         }
+        [HttpDelete]
+        public IActionResult RemoveMenuItemFromCart(int cartId,int menuItemId) {
+            var response = _cartService.RemoveMenuItemFromCart(cartId, menuItemId);
+            return StatusCode((int)response.StatusCode, response);
+        }
+        [HttpDelete]
+        public IActionResult RemoveOfferFromCart(int cartId, int offerId)
+        {
+            var response = _cartService.RemoveOfferFromCart(cartId, offerId);
+            return StatusCode((int)response.StatusCode, response);
+        }
     }
 }

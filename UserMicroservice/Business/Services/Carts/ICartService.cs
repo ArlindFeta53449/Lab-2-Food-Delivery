@@ -12,5 +12,7 @@ namespace Business.Services.Carts
     {
         ApiResponse<CartDto> GetCartByUserId(string userId);
         ApiResponse<CartDto> AddToCart(CartCreateDto cart);
+        ApiResponse<string> RemoveOfferFromCart(int cartId, int offerItemId);
+        ApiResponse<string> RemoveMenuItemFromCart(int cartId, int menuItemId);
     }
 }
