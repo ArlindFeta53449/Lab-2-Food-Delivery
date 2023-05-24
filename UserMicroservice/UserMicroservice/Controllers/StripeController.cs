@@ -17,7 +17,7 @@ namespace UserMicroservice.Controllers
         {
             _stripeService = stripeService;
         }
-        [HttpPost]
+       /* [HttpPost]
         public async Task<ActionResult<Customer>> AddStripeCustomer(
            [FromBody] User customer,
            CancellationToken ct)
@@ -38,7 +38,7 @@ namespace UserMicroservice.Controllers
                 ct);
 
             return StatusCode(StatusCodes.Status200OK, createdPayment);
-        }
+        }*/
 
     }
 }

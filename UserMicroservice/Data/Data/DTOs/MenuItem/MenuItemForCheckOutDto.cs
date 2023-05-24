@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace Data.DTOs.MenuItem
 {
-    public class MenuItemForCartCreateDto
+    public class MenuItemForCheckOutDto
     {
-        public int? Id { get; set; }
-        public int? CartId { get; set; }
-        public int MenuItemId { get; set; }
-
+        public int? MenuItemId { get; set; }
         public int Quantity { get; set; }
+
+        public float Price { get; set; }
     }
 }

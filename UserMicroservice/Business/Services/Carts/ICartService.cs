@@ -14,5 +14,8 @@ namespace Business.Services.Carts
         ApiResponse<CartDto> AddToCart(CartCreateDto cart);
         ApiResponse<string> RemoveOfferFromCart(int cartId, int offerItemId);
         ApiResponse<string> RemoveMenuItemFromCart(int cartId, int menuItemId);
+        ApiResponse<CartDto> UpdateCartState(CartCreateDto cart);
+        ApiResponse<int> GetNumberOfItemsInCart(string userId);
+        ApiResponse<int> CalculateCartTotalForCheckout(string userId);
     }
 }

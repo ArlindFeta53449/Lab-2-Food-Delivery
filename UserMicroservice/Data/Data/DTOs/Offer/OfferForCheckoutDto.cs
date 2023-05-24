@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace Data.DTOs.Offer
 {
-    public class OfferForCartCreateDto
+    public class OfferForCheckoutDto
     {
-        public int? Id { get; set; }
-        public int? CartId { get; set; }
-        public int OfferId { get; set; }
+        public int? OfferId { get; set; }
 
         public int Quantity { get; set; }
+        public float Price { get; set; }
     }
 }

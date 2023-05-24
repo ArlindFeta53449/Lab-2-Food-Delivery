@@ -31,7 +31,9 @@ namespace Data.Entities
 
         public IList<Order> Orders { get; set; }
 
-        public AddStripeCard CreditCard { get; set; }
+        public string? StripeCustomerId { get; set; }
+
+
 
     }
 }

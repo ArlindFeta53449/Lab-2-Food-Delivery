@@ -40,5 +40,24 @@ namespace UserMicroservice.Controllers
             var response = _cartService.RemoveOfferFromCart(cartId, offerId);
             return StatusCode((int)response.StatusCode, response);
         }
+        [HttpPut]
+        public IActionResult UpdateCartState(CartCreateDto cart)
+        {
+            var response = _cartService.UpdateCartState(cart);
+            return StatusCode((int)response.StatusCode, response);
+        }
+        [HttpGet("{id}")]
+        public IActionResult GetNumberOfItemsInCart(string id)
+        {
+            var response = _cartService.GetNumberOfItemsInCart(id);
+            return StatusCode((int)response.StatusCode, response);
+        }
+        [HttpGet("{id}")]
+        public IActionResult CalculateCartTotalForCheckout(string id)
+        {
+            var response = _cartService.CalculateCartTotalForCheckout(id);
+            return StatusCode((int)response.StatusCode, response);
+        }
+
     }
 }

@@ -28,6 +28,8 @@ namespace Repositories.EntityConfigurations
                 .IsUnique();
             builder.Property(x => x.Email)
                 .IsRequired();
+            builder.Property(x => x.StripeCustomerId)
+                .IsRequired(false);
         }
     }
 }

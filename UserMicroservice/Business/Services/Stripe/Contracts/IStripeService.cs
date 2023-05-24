@@ -1,4 +1,5 @@
-﻿using Data.Entities;
+﻿using Data.DTOs.Payment;
+using Data.Entities;
 using Data.Entities.StripeEntities;
 using Stripe;
 using System;
@@ -11,7 +12,7 @@ namespace Business.Services.Stripe.Contracts
 {
     public interface IStripeService
     {
-        Task<Customer> AddStripeCustomerAsync(User customer, CancellationToken ct);
-        Task<StripePayment> AddStripePaymentAsync(AddStripePayment payment, CancellationToken ct);
+        string AddStripeCustomer(StripeCustomer customer);
+        Payment AddStripePaymentIntent(PaymentDto payment);
     }
 }

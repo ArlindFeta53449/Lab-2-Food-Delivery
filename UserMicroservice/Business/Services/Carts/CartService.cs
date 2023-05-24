@@ -1,12 +1,16 @@
 ﻿using AutoMapper;
 using Business.Services.FileHandling;
+using Business.Services.Stripe.Contracts;
 using Data.DTOs;
 using Data.DTOs.Cart;
+using Data.DTOs.Checkout;
 using Data.Entities;
+using Microsoft.VisualBasic;
 using Repositories.Repositories.CartMenuItems;
 using Repositories.Repositories.CartOffers;
 using Repositories.Repositories.Carts;
 using Repositories.Repositories.MenusItems;
+using Repositories.Repositories.Users;
 using Repository.Repositories.MenusItems;
 using Serilog;
 using System;
@@ -26,19 +30,25 @@ namespace Business.Services.Carts
         private readonly IFileHandlingService _fileHandlingService;
         private readonly ICartMenuItemRepository _cartMenuItemRepository;
         private readonly ICartOfferRepository _cartOfferRepository;
-
+        private readonly IUserRepository _userRepository;
+        private readonly IStripeService _stripeService;
         public CartService(
             ICartRepository cartRepository,
             IMapper mapper,
             IFileHandlingService fileHandlingService,
             ICartMenuItemRepository cartMenuItemRepository,
-            ICartOfferRepository cartOfferRepository)
+            ICartOfferRepository cartOfferRepository,
+            IUserRepository userRepository,
+            IStripeService stripeService
+            )
         {
             _cartRepository = cartRepository;
             _mapper = mapper;
             _fileHandlingService = fileHandlingService;
             _cartMenuItemRepository = cartMenuItemRepository;
             _cartOfferRepository = cartOfferRepository;
+            _userRepository = userRepository;
+            _stripeService = stripeService;
         }
         public ApiResponse<CartDto> GetCartByUserId(string userId)
         {
@@ -150,6 +160,35 @@ namespace Business.Services.Carts
                         Errors = new List<string>() { "The user's cart was not found" }
                     };
                 }
+                if (cart.CartMenuItems != null)
+                {
+                    foreach (var menuItem in cart.CartMenuItems)
+                    {
+                        var menuItemInCart = _cartMenuItemRepository.GetMenuItemInCart(cart.Id, menuItem.MenuItemId);
+                        if (menuItemInCart != null)
+                        {
+                            menuItem.Id = menuItemInCart.Id;
+                            menuItem.CartId = cart.Id;
+                            menuItem.Quantity += menuItemInCart.Quantity;
+                        }
+                    }
+                }
+
+                if (cart.CartOffers != null)
+                {
+                    foreach (var offer in cart.CartOffers)
+                    {
+                        var offerInCart = _cartOfferRepository.GetOfferInCart(cart.Id, offer.OfferId);
+                        if (offerInCart != null)
+                        {
+                            offer.Id = offerInCart.Id;
+                            offer.Quantity += offerInCart.Quantity;
+                            offer.CartId = cart.Id;
+
+                        }
+                    }
+                }
+
                 _mapper.Map(cart, cartInDb);
                 
                 if (_cartRepository.Update(cartInDb))
@@ -158,7 +197,9 @@ namespace Business.Services.Carts
                     return new ApiResponse<CartDto>()
                     {
                         StatusCode = HttpStatusCode.OK,
-                        Data =cartToReturn
+                        Data =cartToReturn,
+                        Message = "The item was added to the cart."
+
                     };
                 }
                 return new ApiResponse<CartDto>()
@@ -176,6 +217,140 @@ namespace Business.Services.Carts
                     Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
                 };
             }
+        }
+        public ApiResponse<CartDto> UpdateCartState(CartCreateDto cart)
+        {
+            try
+            {
+                var cartInDb = _cartRepository.Get(cart.Id);
+                if (cart == null)
+                {
+                    return new ApiResponse<CartDto>()
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string>() { "The user's cart was not found" }
+                    };
+                }
+                var menuItemsInCart = _cartMenuItemRepository.GetMenuItemsInCartByCartId(cart.Id);
+                if(menuItemsInCart != null)
+                {
+                    _cartMenuItemRepository.RemoveRange(menuItemsInCart);
+                }
+                var offersInCart = _cartOfferRepository.GetOffersInCartByCartId(cart.Id);
+                if(offersInCart != null)
+                {
+                    _cartOfferRepository.RemoveRange(offersInCart);
+                }
+                _mapper.Map(cart, cartInDb);
+
+                _cartRepository.Update(cartInDb);
+                
+                    var cartToReturn = _cartRepository.GetCartByUserId(cartInDb.UserId);
+                    return new ApiResponse<CartDto>()
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        Data = cartToReturn,
+
+                    };
+                
+                /*return new ApiResponse<CartDto>()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Errors = new List<string>() { "The cart was not updated. Please try again." }
+                };*/
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<CartDto>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+        }
+        public ApiResponse<int> GetNumberOfItemsInCart(string userId)
+        {
+            try
+            {
+                var numberOfMenuItems = _cartMenuItemRepository.GetNumberOfMenuItemsInCartByUserId(userId);
+                var numberOfOffers = _cartOfferRepository.GetNumberOfOffersInCartByUserId(userId);
+
+                return new ApiResponse<int>()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Data = numberOfMenuItems + numberOfOffers,
+
+                }; 
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<int>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+        }
+        public ApiResponse<int> CalculateCartTotalForCheckout(string userId)
+        {
+            try
+            {
+                if(userId != null)
+                {
+                    var menuItems = _cartMenuItemRepository.GetMenuItemsForTotalCalculation(userId);
+                    var offers = _cartOfferRepository.GetOffersForTotalCalculation(userId);
+                    var total = 0;
+
+                    foreach (var menuItem in menuItems)
+                    {
+                        total += menuItem.Quantity * (int)menuItem.Price;
+                    }
+                    foreach (var offer in offers)
+                    {
+                        total += offer.Quantity * (int)offer.Price;
+                    }
+                    return new ApiResponse<int>()
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        Data = total,
+
+                    };
+                }
+                return new ApiResponse<int>()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Errors = new List<string>() { "The user does not exist"},
+
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<int>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+
+        }
+        public ApiResponse<string> CheckoutProcess(CheckoutDto checkout)
+        {
+            var user = _userRepository.GetUserById(checkout.userId);
+            if(user != null && user.StripeCustomerId == null && checkout.StripeCustomer !=null) {
+                user.StripeCustomerId = _stripeService.AddStripeCustomer(checkout.StripeCustomer);
+                _userRepository.Update(user);
+            }
+            var payment = _stripeService.AddStripePaymentIntent(checkout.PaymentIntent);
+            _paymentRepository.Create(payment);
+            return new ApiResponse<string>()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Message = "The payment was processed"
+            };
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Data.Entities;
+﻿using Data.DTOs.Offer;
+using Data.Entities;
 using Repositories.Repositories.GenericRepository;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,8 @@ namespace Repositories.Repositories.CartOffers
     public interface ICartOfferRepository:IRepository<CartOffer>
     {
         CartOffer GetOfferInCart(int cartId, int offerId);
+        IList<CartOffer> GetOffersInCartByCartId(int cartId);
+        int GetNumberOfOffersInCartByUserId(string userId);
+        IList<OfferForCheckoutDto> GetOffersForTotalCalculation(string userId);
     }
 }
