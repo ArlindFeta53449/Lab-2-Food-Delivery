@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Business.Services.FileHandling;
-using Business.Services.Stripe.Contracts;
+using Business.Services.Stripe;
 using Data.DTOs;
 using Data.DTOs.Cart;
 using Data.DTOs.Checkout;
@@ -10,6 +10,7 @@ using Repositories.Repositories.CartMenuItems;
 using Repositories.Repositories.CartOffers;
 using Repositories.Repositories.Carts;
 using Repositories.Repositories.MenusItems;
+using Repositories.Repositories.Payments;
 using Repositories.Repositories.Users;
 using Repository.Repositories.MenusItems;
 using Serilog;
@@ -32,6 +33,8 @@ namespace Business.Services.Carts
         private readonly ICartOfferRepository _cartOfferRepository;
         private readonly IUserRepository _userRepository;
         private readonly IStripeService _stripeService;
+        private readonly IPaymentRepository _paymentRepository;
+
         public CartService(
             ICartRepository cartRepository,
             IMapper mapper,
@@ -39,7 +42,8 @@ namespace Business.Services.Carts
             ICartMenuItemRepository cartMenuItemRepository,
             ICartOfferRepository cartOfferRepository,
             IUserRepository userRepository,
-            IStripeService stripeService
+            IStripeService stripeService,
+            IPaymentRepository paymentRepository
             )
         {
             _cartRepository = cartRepository;
@@ -49,6 +53,7 @@ namespace Business.Services.Carts
             _cartOfferRepository = cartOfferRepository;
             _userRepository = userRepository;
             _stripeService = stripeService;
+            _paymentRepository = paymentRepository;
         }
         public ApiResponse<CartDto> GetCartByUserId(string userId)
         {
@@ -314,7 +319,7 @@ namespace Business.Services.Carts
                     return new ApiResponse<int>()
                     {
                         StatusCode = HttpStatusCode.OK,
-                        Data = total,
+                        Data = total*100,
 
                     };
                 }
@@ -338,18 +343,44 @@ namespace Business.Services.Carts
         }
         public ApiResponse<string> CheckoutProcess(CheckoutDto checkout)
         {
-            var user = _userRepository.GetUserById(checkout.userId);
-            if(user != null && user.StripeCustomerId == null && checkout.StripeCustomer !=null) {
-                user.StripeCustomerId = _stripeService.AddStripeCustomer(checkout.StripeCustomer);
-                _userRepository.Update(user);
-            }
-            var payment = _stripeService.AddStripePaymentIntent(checkout.PaymentIntent);
-            _paymentRepository.Create(payment);
-            return new ApiResponse<string>()
+            try
             {
-                StatusCode = HttpStatusCode.OK,
-                Message = "The payment was processed"
-            };
+                var user = _userRepository.GetUserById(checkout.userId);
+                if (user != null && user.StripeCustomerId == null && checkout.StripeCustomer != null)
+                {
+                    checkout.StripeCustomer.Name = user.Name;
+                    checkout.StripeCustomer.Email = user.Email;
+                    user.StripeCustomerId = _stripeService.AddStripeCustomer(checkout.StripeCustomer);
+                    _userRepository.Update(user);
+                }
+                checkout.PaymentIntent.StripeCustomerId = user.StripeCustomerId;
+                if(checkout.StripeCustomer.CardToken != null)
+                {
+                    checkout.PaymentIntent.PaymentMethod = checkout.StripeCustomer.CardToken;
+                }
+                else
+                {
+                    checkout.PaymentIntent.PaymentMethod = _stripeService.GetCardTokenForCustomer(checkout.userId);
+                }
+
+                var payment = _stripeService.AddStripePaymentIntent(checkout.PaymentIntent);
+                _paymentRepository.Add(payment);
+                return new ApiResponse<string>()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Message = "The payment was processed"
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<string>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+
 
         }
     }

@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Services\Stripe\Application\**" />
+    <EmbeddedResource Remove="Services\Stripe\Application\**" />
+    <None Remove="Services\Stripe\Application\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Data\Data\Data.csproj" />
     <ProjectReference Include="..\Repositories\Repositories.csproj" />
   </ItemGroup>
@@ -22,7 +28,6 @@
 
   <ItemGroup>
     <Folder Include="Services\01 Mailing\HTMLTemplates\" />
-    <Folder Include="Services\Stripe\Application\" />
   </ItemGroup>
 
 </Project>

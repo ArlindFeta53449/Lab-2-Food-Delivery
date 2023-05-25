@@ -24,5 +24,7 @@ namespace Data.DTOs.Users
         public bool IsEmailVerified { get; set; }
 
         public string AccountVerificationToken { get; set; }
+
+        public string? StripeCustomerId { get; set; }
     }
 }

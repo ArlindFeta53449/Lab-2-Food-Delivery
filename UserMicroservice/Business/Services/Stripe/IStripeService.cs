@@ -8,11 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.Services.Stripe.Contracts
+namespace Business.Services.Stripe
 {
     public interface IStripeService
     {
         string AddStripeCustomer(StripeCustomer customer);
         Payment AddStripePaymentIntent(PaymentDto payment);
+        string GetCardTokenForCustomer(string customerId);
     }
 }

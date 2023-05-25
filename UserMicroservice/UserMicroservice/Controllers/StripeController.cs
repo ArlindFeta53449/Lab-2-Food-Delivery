@@ -1,5 +1,5 @@
 ﻿
-using Business.Services.Stripe.Contracts;
+using Business.Services.Stripe;
 using Data.Entities;
 using Data.Entities.StripeEntities;
 using Microsoft.AspNetCore.Mvc;

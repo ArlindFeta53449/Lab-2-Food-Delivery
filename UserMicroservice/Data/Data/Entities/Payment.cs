@@ -14,9 +14,8 @@ namespace Data.Entities
         public long Amount { get; set; }
         public string Currency { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
         public string DeliveryAddress { get; set; }
         public string StripeCustomerId { get; set; }
-        public string PaymentMethodId { get; set; }
     }
 }

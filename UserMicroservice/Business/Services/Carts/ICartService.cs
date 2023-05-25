@@ -1,4 +1,5 @@
 ﻿using Data.DTOs.Cart;
+using Data.DTOs.Checkout;
 using Data.Entities;
 using System;
 using System.Collections.Generic;
@@ -17,5 +18,6 @@ namespace Business.Services.Carts
         ApiResponse<CartDto> UpdateCartState(CartCreateDto cart);
         ApiResponse<int> GetNumberOfItemsInCart(string userId);
         ApiResponse<int> CalculateCartTotalForCheckout(string userId);
+        ApiResponse<string> CheckoutProcess(CheckoutDto checkout);
     }
 }

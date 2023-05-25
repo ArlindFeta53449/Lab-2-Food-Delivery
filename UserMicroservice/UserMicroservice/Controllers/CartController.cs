@@ -1,6 +1,7 @@
 ﻿using Business.Services.Carts;
 using Business.Services.MenuItems;
 using Data.DTOs.Cart;
+using Data.DTOs.Checkout;
 using Microsoft.AspNetCore.Mvc;
 
 namespace UserMicroservice.Controllers
@@ -58,6 +59,11 @@ namespace UserMicroservice.Controllers
             var response = _cartService.CalculateCartTotalForCheckout(id);
             return StatusCode((int)response.StatusCode, response);
         }
-
+        [HttpPost]
+        public IActionResult ProcessPayment(CheckoutDto checkout)
+        {
+            var response = _cartService.CheckoutProcess(checkout);
+            return StatusCode((int)response.StatusCode, response);
+        }
     }
 }

@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TokenService = Stripe.TokenService;
 
-namespace Business.Services.Stripe.Contracts
+namespace Business.Services.Stripe
 {
     public class StripeService : IStripeService
     {
@@ -32,6 +32,23 @@ namespace Business.Services.Stripe.Contracts
             _customerService = customerService;
             _tokenService = tokenService;
             _paymentIntentService = paymentIntentService;
+        }
+        public string GetCardTokenForCustomer(string customerId) {
+            try
+            {
+                var customer = _customerService.Get(customerId);
+                if(customer == null)
+                {
+                    return null;
+                }
+                return customer.DefaultSource.Id;
+               
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return "A problem occured while creating the customer's account in Stripe";
+            }
         }
         public string AddStripeCustomer(StripeCustomer customer)
         {
@@ -63,10 +80,10 @@ namespace Business.Services.Stripe.Contracts
                 Metadata = new Dictionary<string, string>
                 {
                     { "DeliveryAddress", payment.DeliveryAddress },
-             
+
                 },
-                PaymentMethod = payment.PaymentMethodId, 
-                Customer = payment.StripeCustomerId 
+                Customer = payment.StripeCustomerId,
+                PaymentMethod = payment.PaymentMethod,
             };
             var paymentIntent = _paymentIntentService.Create(options);
 
@@ -76,8 +93,7 @@ namespace Business.Services.Stripe.Contracts
                 Currency = paymentIntent.Currency,
                 Description = paymentIntent.Description,
                 DeliveryAddress = payment.DeliveryAddress,
-                StripeCustomerId = payment.StripeCustomerId,
-                PaymentMethodId = payment.PaymentMethodId,
+                StripeCustomerId = payment.StripeCustomerId
             };
         }
     }

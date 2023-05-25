@@ -15,8 +15,8 @@ namespace Data.DTOs.Payment
 
         public string DeliveryAddress { get; set; }
 
-        public string PaymentMethodId { get; set; }
-
         public string StripeCustomerId { get; set; }
+
+        public string? PaymentMethod { get; set; }
     }
 }

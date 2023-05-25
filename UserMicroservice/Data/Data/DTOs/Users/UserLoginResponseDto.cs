@@ -16,5 +16,7 @@ namespace Data.DTOs.Users
         public string Role { get; set; }
 
         public string Token { get; set; }
+
+        public string? StripeCustomerId { get; set; }
     }
 }

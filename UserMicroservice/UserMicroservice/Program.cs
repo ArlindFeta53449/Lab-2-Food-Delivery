@@ -28,9 +28,10 @@ using Repositories.Repositories.Carts;
 using Business.Services.Carts;
 using Repositories.Repositories.CartMenuItems;
 using Repositories.Repositories.CartOffers;
-using Business.Services.Stripe.Contracts;
 using Stripe;
 using Stripe.TestHelpers;
+using Repositories.Repositories.Payments;
+using Business.Services.Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,7 +79,8 @@ builder.Services.AddScoped<IStripeService, StripeService>();
 builder.Services.AddScoped<Stripe.CustomerService>();
 builder.Services.AddScoped<ChargeService>();
 builder.Services.AddScoped<Stripe.TokenService>();
-
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<Stripe.PaymentIntentService>();
 StripeConfiguration.ApiKey = builder.Configuration.GetValue<string>("StripePrivateKey");
 
 //builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();

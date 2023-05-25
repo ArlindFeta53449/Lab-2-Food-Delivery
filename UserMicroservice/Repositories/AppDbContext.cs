@@ -43,6 +43,7 @@ namespace Repositories
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartMenuItem> CartMenuItems { get; set; }
         public DbSet<CartOffer> CartOffers{ get; set; }
+        public DbSet<Payment> Payments { get; set; }
 
     }
 }
