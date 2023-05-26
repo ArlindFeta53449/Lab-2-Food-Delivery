@@ -122,6 +122,26 @@ namespace Business.Services.Carts
                 };
             }
         }
+        private void EmptyCart(int cartId)
+        {
+            try
+            {
+                var menuItems = _cartMenuItemRepository.GetMenuItemsInCartByCartId(cartId);
+                var offers = _cartOfferRepository.GetOffersInCartByCartId(cartId);
+                if(menuItems != null)
+                {
+                    _cartMenuItemRepository.RemoveRange(menuItems);
+                }
+                if(offers != null)
+                {
+                    _cartOfferRepository.RemoveRange(offers);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+            }
+        }
         public ApiResponse<string> RemoveOfferFromCart(int cartId,int offerItemId)
         {
             try
@@ -346,6 +366,7 @@ namespace Business.Services.Carts
             try
             {
                 var user = _userRepository.GetUserById(checkout.userId);
+                var cart = _cartRepository.GetCartByUserId(user.Id);
                 if (user != null && user.StripeCustomerId == null && checkout.StripeCustomer != null)
                 {
                     checkout.StripeCustomer.Name = user.Name;
@@ -368,6 +389,7 @@ namespace Business.Services.Carts
                 var paymentConfirmResponse = _stripeService.ConfirmPayment(paymentIntentRepsonse.PaymentIntentId);
                 if(paymentConfirmResponse.Status == "succeeded") { 
                 _paymentRepository.CreatePayment(paymentIntentRepsonse);
+                    this.EmptyCart(cart.Id);
                     return new ApiResponse<string>()
                     {
                         StatusCode = HttpStatusCode.OK,
