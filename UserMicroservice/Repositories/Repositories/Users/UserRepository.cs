@@ -43,7 +43,8 @@ namespace Repositories.Repositories.Users
                     Surname = x.Surname,
                     Email = x.Email,
                     Role = x.Role.Name,
-                    IsEmailVerified = x.IsEmailVerified
+                    IsEmailVerified = x.IsEmailVerified,
+                    StripeCustomerId = x.StripeCustomerId
                 }).ToList();
         }
         public UserEditDto GetUserByIdForEdit(string id)
@@ -70,7 +71,8 @@ namespace Repositories.Repositories.Users
                     Surname = x.Surname,
                     Email = x.Email,
                     Role = x.Role.Name,
-                    IsEmailVerified = x.IsEmailVerified
+                    IsEmailVerified = x.IsEmailVerified,
+                    StripeCustomerId = x.StripeCustomerId
                 }).FirstOrDefault(x => x.Id == id);
         }
         public UserForDashbooardDto GetUserStatisticsForDashboard()

@@ -79,6 +79,7 @@ builder.Services.AddScoped<IStripeService, StripeService>();
 builder.Services.AddScoped<Stripe.CustomerService>();
 builder.Services.AddScoped<ChargeService>();
 builder.Services.AddScoped<Stripe.TokenService>();
+builder.Services.AddScoped<Stripe.PaymentMethodService>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<Stripe.PaymentIntentService>();
 StripeConfiguration.ApiKey = builder.Configuration.GetValue<string>("StripePrivateKey");

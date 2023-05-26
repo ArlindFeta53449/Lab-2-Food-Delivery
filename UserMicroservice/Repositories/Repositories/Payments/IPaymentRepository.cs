@@ -1,4 +1,5 @@
-﻿using Data.Entities;
+﻿using Data.DTOs.Payment;
+using Data.Entities;
 using Repositories.Repositories.GenericRepository;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,6 @@ namespace Repositories.Repositories.Payments
 {
     public interface IPaymentRepository: IRepository<Payment>
     {
-
+        bool CreatePayment(PaymentIntentResponse paymentIntentResponse);
     }
 }

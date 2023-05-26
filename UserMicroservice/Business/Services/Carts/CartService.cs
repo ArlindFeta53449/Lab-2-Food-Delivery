@@ -354,22 +354,35 @@ namespace Business.Services.Carts
                     _userRepository.Update(user);
                 }
                 checkout.PaymentIntent.StripeCustomerId = user.StripeCustomerId;
-                if(checkout.StripeCustomer.CardToken != null)
+                if(!string.IsNullOrEmpty(checkout.StripeCustomer.CardToken))
                 {
                     checkout.PaymentIntent.PaymentMethod = checkout.StripeCustomer.CardToken;
                 }
                 else
                 {
-                    checkout.PaymentIntent.PaymentMethod = _stripeService.GetCardTokenForCustomer(checkout.userId);
+                    var paymentMethodId = _stripeService.GetCardTokenForCustomer(user.StripeCustomerId);
+                    checkout.PaymentIntent.PaymentDefaultSource = paymentMethodId.InvoiceSettings.DefaultPaymentMethodId;
                 }
 
-                var payment = _stripeService.AddStripePaymentIntent(checkout.PaymentIntent);
-                _paymentRepository.Add(payment);
-                return new ApiResponse<string>()
+                var paymentIntentRepsonse = _stripeService.AddStripePaymentIntent(checkout.PaymentIntent);
+                var paymentConfirmResponse = _stripeService.ConfirmPayment(paymentIntentRepsonse.PaymentIntentId);
+                if(paymentConfirmResponse.Status == "succeeded") { 
+                _paymentRepository.CreatePayment(paymentIntentRepsonse);
+                    return new ApiResponse<string>()
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        Message = "The payment was confirmed. Thank you"
+                    };
+                }
+                else
                 {
-                    StatusCode = HttpStatusCode.OK,
-                    Message = "The payment was processed"
-                };
+                    return new ApiResponse<string>()
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string> { "The payment did not go through. Something happened" }
+                    };
+                }
+                
             }
             catch (Exception ex)
             {

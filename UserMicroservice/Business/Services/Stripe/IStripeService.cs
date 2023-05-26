@@ -13,7 +13,8 @@ namespace Business.Services.Stripe
     public interface IStripeService
     {
         string AddStripeCustomer(StripeCustomer customer);
-        Payment AddStripePaymentIntent(PaymentDto payment);
-        string GetCardTokenForCustomer(string customerId);
+        PaymentIntentResponse AddStripePaymentIntent(PaymentDto payment);
+        Customer GetCardTokenForCustomer(string customerId);
+        PaymentIntent ConfirmPayment(string paymentMethodId);
     }
 }
