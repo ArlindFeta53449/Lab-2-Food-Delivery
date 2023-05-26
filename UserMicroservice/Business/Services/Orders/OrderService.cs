@@ -2,7 +2,6 @@
 using Data.DTOs;
 using Data.DTOs.Order;
 using Data.Entities;
-using Repository.Repositories.OrderItems;
 using Repository.Repositories.Orders;
 using System;
 using System.Collections.Generic;

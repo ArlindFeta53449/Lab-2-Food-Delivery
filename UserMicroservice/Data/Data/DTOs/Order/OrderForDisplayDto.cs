@@ -1,5 +1,4 @@
-﻿using Data.DTOs.OrderItem;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +11,6 @@ namespace Data.DTOs.Order
         public int Id { get; set; }
 
         public string User { get; set; }
-
-        public IList<OrderItemForOrderDisplayDto> OrderItems { get; set; }
 
         public float Total { get; set; }
     }

@@ -389,6 +389,8 @@ namespace Business.Services.Carts
                 var paymentConfirmResponse = _stripeService.ConfirmPayment(paymentIntentRepsonse.PaymentIntentId);
                 if(paymentConfirmResponse.Status == "succeeded") { 
                 _paymentRepository.CreatePayment(paymentIntentRepsonse);
+
+                    //var cartDetails = _cartRepository.GetCartDetailsForOrder(user.Id);
                     this.EmptyCart(cart.Id);
                     return new ApiResponse<string>()
                     {

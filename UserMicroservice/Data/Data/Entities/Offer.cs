@@ -21,5 +21,6 @@ namespace Data.Entities
         public Restaurant Restaurant { get; set; }
         public virtual IList<MenuItemOffer> MenuItemOffers { get; set; }
         public virtual IList<CartOffer> CartOffers { get; set;}
+        public virtual IList<OrderOffer> OrderOffers { get; set; }
     }
 }

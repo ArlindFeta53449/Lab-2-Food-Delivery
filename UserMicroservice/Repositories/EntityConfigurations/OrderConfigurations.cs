@@ -16,8 +16,14 @@ namespace Repositories.EntityConfigurations
                 .WithMany(x => x.Orders)
                 .HasForeignKey(x => x.UserId)
                 .IsRequired();
-            builder.HasMany(x => x.OrderItems)
-                .WithOne(x => x.Order);
+            builder.HasMany(x => x.OrderMenuItems)
+                .WithOne(x => x.Order)
+                .HasForeignKey(x => x.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(x => x.OrderOffers)
+               .WithOne(x => x.Order)
+               .HasForeignKey(x => x.OrderId)
+               .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

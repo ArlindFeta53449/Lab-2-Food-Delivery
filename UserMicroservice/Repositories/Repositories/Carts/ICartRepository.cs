@@ -14,5 +14,6 @@ namespace Repositories.Repositories.Carts
         void CreateCart(string userId);
         void DeleteCart(string userId);
         CartDto GetCartByUserId(string userId);
+        //CartForOrderDto GetCartDetailsForOrder(string userId);
     }
 }

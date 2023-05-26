@@ -1,6 +1,5 @@
 ﻿using Data.DTOs;
 using Data.DTOs.Order;
-using Data.DTOs.OrderItem;
 using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -22,16 +21,11 @@ namespace Repository.Repositories.Orders
         }
         public IList<OrderForDisplayDto> getAllOrdersWithOrderItems()
         {
-            return Context.Set<Order>().Include(x => x.OrderItems).Include(x=>x.User)
+            return Context.Set<Order>().Include(x=>x.User)
                 .Select(x => new OrderForDisplayDto()
                 {
                     Id = x.Id,
                     User = x.User.Name + " " + x.User.Surname,
-                    OrderItems = x.OrderItems.Select(y => new OrderItemForOrderDisplayDto()
-                    {
-                        OrderItemName = y.MenuItem.Name,
-                        Quantity = y.Quantity
-                    }).ToList(),
                     Total = x.Total,
 
 

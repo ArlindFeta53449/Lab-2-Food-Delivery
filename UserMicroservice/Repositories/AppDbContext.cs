@@ -20,7 +20,6 @@ namespace Repositories
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new RestaurantConfiguration());
-            modelBuilder.ApplyConfiguration(new OrderItemConfigurations());
             modelBuilder.ApplyConfiguration(new OrderConfigurations());
             modelBuilder.ApplyConfiguration(new OfferConfiguration());
             modelBuilder.ApplyConfiguration(new MenuItemConfiguration());
@@ -29,6 +28,9 @@ namespace Repositories
             modelBuilder.ApplyConfiguration(new CartConfiguration());
             modelBuilder.ApplyConfiguration(new CartOfferConfiguration());
             modelBuilder.ApplyConfiguration(new CartMenuItemConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderMenuItemConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderOfferConfiguration());
+            
 
         }
         public DbSet<User> Users { get; set; }
@@ -37,13 +39,15 @@ namespace Repositories
         public DbSet<MenuItem> MenuItems { get; set; }
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<Offer> Offers { get; set; }
-        public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Order> Order { get; set; }
         public DbSet<MenuItemOffer> MenuItemOffers { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartMenuItem> CartMenuItems { get; set; }
         public DbSet<CartOffer> CartOffers{ get; set; }
         public DbSet<Payment> Payments { get; set; }
+        public DbSet<OrderMenuItem> OrderMenuItems{ get; set; }
+        public DbSet<OrderOffer> OrderOffers { get; set; }
+
 
     }
 }

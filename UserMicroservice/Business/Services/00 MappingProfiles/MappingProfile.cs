@@ -6,11 +6,7 @@ using Data.DTOs.Offer;
 using Data.DTOs.Roles;
 using Data.DTOs.Users;
 using Data.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Business.Services._00_MappingProfiles
 {
@@ -50,11 +46,6 @@ namespace Business.Services._00_MappingProfiles
             CreateMap<RestaurantDto, Restaurant>();
             CreateMap<Restaurant, RestaurantCreateDto>();
             CreateMap<RestaurantCreateDto, Restaurant>();
-
-            CreateMap<OrderItem, OrderItemDto>();
-            CreateMap<OrderItemDto, OrderItem>();
-            CreateMap<OrderItem, OrderItemCreateDto>();
-            CreateMap<OrderItemCreateDto, OrderItem>();
 
             CreateMap<Order, OrderDto>();
             CreateMap<OrderDto, Order>();

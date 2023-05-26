@@ -4,16 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data.DTOs
+namespace Data.DTOs.MenuItem
 {
-    public class OrderItemDto
+    public class MenuItemForOrderDto
     {
         public int Id { get; set; }
-
-        public int MenuItemId { get; set; }
-
+        public string Name { get; set; }
         public int Quantity { get; set; }
-
-        //public int OrderId { get; set; }
+        public float Price { get; set; }
     }
 }

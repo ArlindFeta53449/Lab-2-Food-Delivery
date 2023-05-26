@@ -38,6 +38,39 @@ namespace Repositories.Repositories.Carts
                 Context.SaveChanges();
             }
         }
+        /*public CartForOrderDto GetCartDetailsForOrder(string userId)
+        {
+          var menuItems = Context.Set<CartMenuItem>()
+          .Where(x => x.Cart.UserId == userId)
+          .Include(x => x.MenuItem)
+          .Select(x => new MenuItemForOrderDto()
+          {
+              Id = x.MenuItem.Id,
+              Name = x.MenuItem.Name,            
+              Price = x.MenuItem.Price,
+              Quantity = x.Quantity
+          })
+          .ToList();
+
+         var offers = Context.Set<CartOffer>()
+             .Where(x => x.Cart.UserId == userId)
+             .Include(x => x.Offer)
+             .Select(x => new OfferForOrderDto()
+              {
+                Id = x.Offer.Id,
+                Name = x.Offer.Name,
+                Price = x.Offer.Price,
+                Quantity = x.Quantity
+              })
+             .ToList();
+            return new CartForOrderDto()
+            {
+                Id = Context.Set<Cart>().Where(x => x.UserId == userId).Select(x => x.Id).FirstOrDefault(),
+                UserId = userId,
+                MenuItems = menuItems,
+                Offers = offers
+            };
+        }*/
         public CartDto GetCartByUserId(string userId)
         {
             var menuItems = Context.Set<CartMenuItem>()
@@ -68,7 +101,7 @@ namespace Repositories.Repositories.Carts
                 })
                 .ToList();
 
-            var cart = new CartDto()
+            return new CartDto()
             {
                 Id = Context.Set<Cart>().Where(x=>x.UserId == userId).Select(x => x.Id).FirstOrDefault(),
                 UserId = userId,
@@ -76,7 +109,6 @@ namespace Repositories.Repositories.Carts
                 Offers = offers
             };
 
-            return cart;
         }
         
         
