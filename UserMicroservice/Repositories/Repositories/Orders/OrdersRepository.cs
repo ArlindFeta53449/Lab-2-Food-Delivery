@@ -1,5 +1,7 @@
 ﻿using Data.DTOs;
+using Data.DTOs.Cart;
 using Data.DTOs.Order;
+using Data.DTOs.Payment;
 using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -15,7 +17,7 @@ using System.Threading.Tasks;
 namespace Repository.Repositories.Orders
 {
     public class OrdersRepository : Repository<Order>, IOrdersRepository
-    {
+    { 
         public OrdersRepository(AppDbContext context) : base(context)
         {
         }
@@ -32,6 +34,17 @@ namespace Repository.Repositories.Orders
                 })
                 .ToList();
         }
-        
+       /* public void CreateOrder(CartForOrderDto cart,long amount)
+        {
+            var order = new OrderCreateDto
+            {
+                UserId = cart.UserId,
+                OrderMenuItems = cart.OrderMenuItems,
+                OrderOffers = cart.OrderOffers,
+                Total = amount
+            };
+            var mappedOrder = _mapper.Map<Order>(order);
+            Context.Set<Order>().Add(mappedOrder);
+        }*/
     }
 }

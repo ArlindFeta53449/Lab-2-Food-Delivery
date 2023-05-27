@@ -13,6 +13,7 @@ using Repositories.Repositories.MenusItems;
 using Repositories.Repositories.Payments;
 using Repositories.Repositories.Users;
 using Repository.Repositories.MenusItems;
+using Repository.Repositories.Orders;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,7 @@ namespace Business.Services.Carts
         private readonly IUserRepository _userRepository;
         private readonly IStripeService _stripeService;
         private readonly IPaymentRepository _paymentRepository;
+        private readonly IOrdersRepository _orderRepositroy;
 
         public CartService(
             ICartRepository cartRepository,
@@ -43,7 +45,8 @@ namespace Business.Services.Carts
             ICartOfferRepository cartOfferRepository,
             IUserRepository userRepository,
             IStripeService stripeService,
-            IPaymentRepository paymentRepository
+            IPaymentRepository paymentRepository,
+            IOrdersRepository orderRepository
             )
         {
             _cartRepository = cartRepository;
@@ -54,6 +57,7 @@ namespace Business.Services.Carts
             _userRepository = userRepository;
             _stripeService = stripeService;
             _paymentRepository = paymentRepository;
+            _orderRepositroy = orderRepository;
         }
         public ApiResponse<CartDto> GetCartByUserId(string userId)
         {
@@ -390,7 +394,16 @@ namespace Business.Services.Carts
                 if(paymentConfirmResponse.Status == "succeeded") { 
                 _paymentRepository.CreatePayment(paymentIntentRepsonse);
 
-                    //var cartDetails = _cartRepository.GetCartDetailsForOrder(user.Id);
+                    var cartDetails = _cartRepository.GetCartDetailsForOrder(user.Id);
+                    var order = new OrderCreateDto
+                    {
+                        UserId = cartDetails.UserId,
+                        OrderMenuItems = cartDetails.OrderMenuItems,
+                        OrderOffers = cartDetails.OrderOffers,
+                        Total = paymentIntentRepsonse.Amount
+                    };
+                    var mappedOrder = _mapper.Map<Order>(order);
+                    _orderRepositroy.Add(mappedOrder);
                     this.EmptyCart(cart.Id);
                     return new ApiResponse<string>()
                     {

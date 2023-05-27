@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Data.DTOs.MenuItem
 {
-    internal class MenuItemForOrderCreateDto
+    public class MenuItemForOrderCreateDto
     {
+        public int MenuItemId { get; set; }
+        public int Quantity { get; set; }
     }
 }
