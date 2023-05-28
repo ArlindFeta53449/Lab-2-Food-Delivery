@@ -58,5 +58,19 @@ namespace UserMicroservice.Controllers
             _orderService.DeleteOrder(id);
             return Ok("Order Item has been deleted succesfully! ");
         }
+
+
+        [HttpGet("TopSellingOrders")]
+        public IActionResult GetTopSellingOrders()
+        {
+            var topSellingOrders = _orderService.GetTopSellingOrders();
+
+            if (topSellingOrders == null || topSellingOrders.Count == 0)
+            {
+                return NotFound("No top selling orders available.");
+            }
+
+            return Ok(topSellingOrders);
+        }
     }
 }
