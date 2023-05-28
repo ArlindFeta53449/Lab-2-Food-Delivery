@@ -13,5 +13,6 @@ namespace Repository.Repositories.Orders
     {
         IList<OrderForDisplayDto> getAllOrdersWithOrderItems();
 
+        IList<Order> GetTopSellingOrders();
     }
 }

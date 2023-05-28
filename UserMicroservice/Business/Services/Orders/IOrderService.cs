@@ -17,5 +17,7 @@ namespace Business.Services.Orders
         bool UpdateOrder(OrderDto orderDto);
         bool DeleteOrder(int id);
         IList<OrderForDisplayDto> GetAllOrdersWithOrderItems();
+        IList<OrderDto> GetTopSellingOrders();
+
     }
 }

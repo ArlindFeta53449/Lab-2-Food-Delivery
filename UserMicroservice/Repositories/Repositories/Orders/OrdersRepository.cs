@@ -34,17 +34,30 @@ namespace Repository.Repositories.Orders
                 })
                 .ToList();
         }
-       /* public void CreateOrder(CartForOrderDto cart,long amount)
+
+        public IList<Order> GetTopSellingOrders()
         {
-            var order = new OrderCreateDto
-            {
-                UserId = cart.UserId,
-                OrderMenuItems = cart.OrderMenuItems,
-                OrderOffers = cart.OrderOffers,
-                Total = amount
-            };
-            var mappedOrder = _mapper.Map<Order>(order);
-            Context.Set<Order>().Add(mappedOrder);
-        }*/
+            var topSellingOrders = Context.Set<Order>()
+                .Include(o => o.OrderMenuItems)
+                    .ThenInclude(omi => omi.MenuItem)
+                .OrderByDescending(o => o.OrderMenuItems.Sum(omi => omi.Quantity))
+                .Take(10)
+                .ToList();
+
+            return topSellingOrders;
+        }
+
+        /* public void CreateOrder(CartForOrderDto cart,long amount)
+         {
+             var order = new OrderCreateDto
+             {
+                 UserId = cart.UserId,
+                 OrderMenuItems = cart.OrderMenuItems,
+                 OrderOffers = cart.OrderOffers,
+                 Total = amount
+             };
+             var mappedOrder = _mapper.Map<Order>(order);
+             Context.Set<Order>().Add(mappedOrder);
+         }*/
     }
 }

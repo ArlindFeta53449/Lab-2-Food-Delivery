@@ -63,5 +63,13 @@ namespace Business.Services.Orders
             return _ordersRepository.getAllOrdersWithOrderItems();
             
         }
+
+        public IList<OrderDto> GetTopSellingOrders()
+        {
+            var topSellingOrders = _ordersRepository.GetTopSellingOrders();
+
+            return _mapper.Map<IList<OrderDto>>(topSellingOrders);
+        }
+
     }
 }
