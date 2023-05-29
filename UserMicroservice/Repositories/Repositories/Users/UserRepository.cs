@@ -18,7 +18,7 @@ namespace Repositories.Repositories.Users
         }
         public User GetUserById(string id)
         {
-            return Context.Set<User>().Find(id);
+            return Context.Set<User>().Include(x=>x.Role).Where(x=>x.Id == id).FirstOrDefault();
         }
         public User GetUserByEmail(string email)
         {
@@ -72,7 +72,8 @@ namespace Repositories.Repositories.Users
                     Email = x.Email,
                     Role = x.Role.Name,
                     IsEmailVerified = x.IsEmailVerified,
-                    StripeCustomerId = x.StripeCustomerId
+                    StripeCustomerId = x.StripeCustomerId,
+                    AgentHasOrder = x.AgentHasOrder
                 }).FirstOrDefault(x => x.Id == id);
         }
         public UserForDashbooardDto GetUserStatisticsForDashboard()

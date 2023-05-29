@@ -33,7 +33,7 @@ namespace Data.Entities
 
         public string? StripeCustomerId { get; set; }
 
-
+        public bool AgentHasOrder { get; set; } = false;
 
     }
 }

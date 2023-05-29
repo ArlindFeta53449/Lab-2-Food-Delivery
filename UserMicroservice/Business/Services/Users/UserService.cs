@@ -412,7 +412,8 @@ namespace Business.Services.Users
                             Role = userExists.Role.Name,
                             Email = userExists.Email,
                             Token = _tokenService.CreateToken(userExists),
-                            StripeCustomerId = userExists.StripeCustomerId
+                            StripeCustomerId = userExists.StripeCustomerId,
+                            AgentHasOrder = userExists.AgentHasOrder
                         }
 
                     };

@@ -400,7 +400,9 @@ namespace Business.Services.Carts
                         UserId = cartDetails.UserId,
                         OrderMenuItems = cartDetails.OrderMenuItems,
                         OrderOffers = cartDetails.OrderOffers,
-                        Total = paymentIntentRepsonse.Amount
+                        Total = paymentIntentRepsonse.Amount,
+                        DeliveryAddress = checkout.PaymentIntent.DeliveryAddress,
+                        OrderStatus = 0
                     };
                     var mappedOrder = _mapper.Map<Order>(order);
                     _orderRepositroy.Add(mappedOrder);

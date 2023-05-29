@@ -11,8 +11,11 @@ namespace Repository.Repositories.Orders
 {
     public interface IOrdersRepository : IRepository<Order>
     {
-        IList<OrderForDisplayDto> getAllOrdersWithOrderItems();
+        IList<OrderForDisplayDto> GetAllOrders();
 
         IList<Order> GetTopSellingOrders();
+
+        OrderForDisplayDto GetOrderById(int orderId);
+        OrderForDisplayDto GetActiveOrderForAgent(string agentId);
     }
 }

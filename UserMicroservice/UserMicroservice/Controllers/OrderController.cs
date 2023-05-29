@@ -6,7 +6,7 @@ using Data.Entities;
 
 namespace UserMicroservice.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class OrderController : ControllerBase
     {
@@ -18,23 +18,27 @@ namespace UserMicroservice.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAllOrders()
         {
-            var orders = _orderService.GetAllOrdersWithOrderItems();
-            return Ok(orders);
+            var response = _orderService.GetAllOrders();
+            return StatusCode((int)response.StatusCode, response);
         }
-
-        [HttpGet("{id}", Name = "GetOrderById")]
+        [HttpPut]
+        public IActionResult AcceptOrder(int orderId, string userId)
+        {
+            var response = _orderService.AcceptOrder(orderId, userId);
+            return StatusCode((int)response.StatusCode, response);
+        }
+        [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var order = _orderService.GetOrderById(id);
-
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(order);
+            var response = _orderService.GetOrderById(id);
+            return StatusCode((int)response.StatusCode, response);
+        }
+        [HttpGet("{agentId}")]
+        public IActionResult GetActiveOrderForAgent(string agentId) {
+            var response = _orderService.GetActiveOrderForAgent(agentId);
+            return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpPost]

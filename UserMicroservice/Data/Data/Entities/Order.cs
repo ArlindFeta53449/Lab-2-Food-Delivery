@@ -1,4 +1,5 @@
 ﻿using Data.DTOs.Offer;
+using Data.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace Data.Entities
         public float Total { get; set; }
         public string UserId { get; set; }
         public string? AgentId { get; set; }
-        public string? OrderStatus { get; set; }
+        public OrderStatuses? OrderStatus { get; set; }
         public string DeliveryAddress { get; set; }
         public string? PhoneNumber { get; set; }
         public User User { get; set; }

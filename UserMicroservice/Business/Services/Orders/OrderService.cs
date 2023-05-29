@@ -1,11 +1,16 @@
 ﻿using AutoMapper;
 using Data.DTOs;
+using Data.DTOs.MenuItem;
 using Data.DTOs.Order;
 using Data.Entities;
+using Data.Enums;
+using Repositories.Repositories.Users;
 using Repository.Repositories.Orders;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,25 +21,151 @@ namespace Business.Services.Orders
     {
         private readonly IOrdersRepository _ordersRepository;
         private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepository;
 
-        public OrderService(IOrdersRepository ordersRepository, IMapper mapper)
+        public OrderService(
+            IOrdersRepository ordersRepository,
+            IMapper mapper,
+            IUserRepository userRepository
+            )
         {
             _ordersRepository = ordersRepository;
             _mapper = mapper;
+            _userRepository = userRepository;
         }
 
-        public OrderDto GetOrderById(int id)
+        public ApiResponse<OrderForDisplayDto> GetOrderById(int id)
         {
-            var order = _ordersRepository.Get(id);
-            return _mapper.Map<OrderDto>(order);
-        }
+           
+            try
+            {
+                var order = _ordersRepository.GetOrderById(id);
+                if (order == null)
+                {
+                    return new ApiResponse<OrderForDisplayDto>()
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string>() { "The menu item was not found" }
+                    };
+                }
+               
+                return new ApiResponse<OrderForDisplayDto>()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Data = _mapper.Map<OrderForDisplayDto>(order)
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<OrderForDisplayDto>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
 
-        public IEnumerable<OrderDto> GetAllOrders()
+        }
+        public ApiResponse<OrderForDisplayDto> GetActiveOrderForAgent(string agentId)
         {
-            var orders = _ordersRepository.GetAll();
-            return _mapper.Map<IEnumerable<OrderDto>>(orders);
+
+            try
+            {
+                var order = _ordersRepository.GetActiveOrderForAgent(agentId);
+                if (order == null)
+                {
+                    return new ApiResponse<OrderForDisplayDto>()
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string>() { "You need to accept an order first" }
+                    };
+                }
+
+                return new ApiResponse<OrderForDisplayDto>()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Data = _mapper.Map<OrderForDisplayDto>(order)
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<OrderForDisplayDto>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+
         }
 
+        public ApiResponse<IList<OrderForDisplayDto>> GetAllOrders()
+        {
+            try
+            {
+                var orders = _ordersRepository.GetAllOrders();
+                
+                return new ApiResponse<IList<OrderForDisplayDto>>()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Data = orders
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<IList<OrderForDisplayDto>>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+        }
+        public ApiResponse<string> AcceptOrder(int orderId, string userId)
+        {
+            try
+            {
+                var order = _ordersRepository.Get(orderId);
+                var user = _userRepository.GetUserById(userId);
+                if(order != null && user != null && user.Role.Name == "Agent" && user.AgentHasOrder == false)
+                {
+                    order.AgentId = user.Id;
+                    order.OrderStatus = OrderStatuses.OrderSelected;
+                    user.AgentHasOrder = true;
+                    if (_ordersRepository.Update(order) && _userRepository.Update(user))
+                    {
+                        return new ApiResponse<string>()
+                        {
+                            StatusCode = HttpStatusCode.OK,
+                            Message = "You have accepted the order"
+                        };
+                    }
+                    else
+                    {
+                        return new ApiResponse<string>()
+                        {
+                            StatusCode = HttpStatusCode.BadRequest,
+                            Errors = new List<string>() { "There was a problem with accepting the order. Please try again."}
+                        };
+                    }
+
+                }
+                return new ApiResponse<string>()
+                {
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Errors = new List<string>() { "You can not accept the order" }
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<string>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+        }
         public IEnumerable<OrderDto> GetOrdersByCustomerId(string userId)
         {
             var orders = _ordersRepository.Find(o => o.UserId == userId);
@@ -58,11 +189,7 @@ namespace Business.Services.Orders
             var order = _ordersRepository.Get(id);
             return _ordersRepository.Remove(order);
         }
-        public IList<OrderForDisplayDto> GetAllOrdersWithOrderItems()
-        {
-            return _ordersRepository.getAllOrdersWithOrderItems();
-            
-        }
+        
 
         public IList<OrderDto> GetTopSellingOrders()
         {

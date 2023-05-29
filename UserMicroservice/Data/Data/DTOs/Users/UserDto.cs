@@ -26,5 +26,6 @@ namespace Data.DTOs.Users
         public string AccountVerificationToken { get; set; }
 
         public string? StripeCustomerId { get; set; }
+        public bool AgentHasOrder { get; set; }
     }
 }

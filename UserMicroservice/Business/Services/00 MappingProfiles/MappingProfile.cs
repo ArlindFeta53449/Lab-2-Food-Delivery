@@ -90,6 +90,11 @@ namespace Business.Services._00_MappingProfiles
             CreateMap<OfferForCartCreateDto, CartOffer>();
             CreateMap<CartOffer, OfferForCartCreateDto>();
 
+            CreateMap<MenuItemForOrderCreateDto, OrderMenuItem>();
+            CreateMap<OrderMenuItem, MenuItemForOrderCreateDto>();
+
+            CreateMap<OrderOffer, OfferForOrderDto>();
+            CreateMap<OfferForOrderDto, OrderOffer>();
         }
     }
 }

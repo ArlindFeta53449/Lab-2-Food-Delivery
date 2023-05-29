@@ -9,7 +9,6 @@ namespace Data.DTOs
        public int? OfferId {get;set;}
 
        public int? Quantity {get;set;}
-
        public MenuItemDto MenuItemDto{get;set;}
        public OfferDto OfferDto {get;set;}
     }

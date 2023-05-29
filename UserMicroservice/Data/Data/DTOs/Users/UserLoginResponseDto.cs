@@ -18,5 +18,7 @@ namespace Data.DTOs.Users
         public string Token { get; set; }
 
         public string? StripeCustomerId { get; set; }
+
+        public bool AgentHasOrder { get; set; }
     }
 }
