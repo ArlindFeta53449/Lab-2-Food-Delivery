@@ -20,6 +20,7 @@ namespace Business.Services.Orders
         IList<OrderDto> GetTopSellingOrders();
         ApiResponse<string> AcceptOrder(int orderId, string userId);
         ApiResponse<OrderForDisplayDto> GetActiveOrderForAgent(string agentId);
+        ApiResponse<OrderForDisplayDto> UpdateOrderStatus(int orderId, int orderStatus);
 
     }
 }

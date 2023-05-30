@@ -4,6 +4,7 @@ using Data.DTOs.MenuItem;
 using Data.DTOs.Order;
 using Data.Entities;
 using Data.Enums;
+using Microsoft.AspNetCore.Http;
 using Repositories.Repositories.Users;
 using Repository.Repositories.Orders;
 using Serilog;
@@ -160,6 +161,47 @@ namespace Business.Services.Orders
             {
                 Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
                 return new ApiResponse<string>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
+        }
+
+        public ApiResponse<OrderForDisplayDto> UpdateOrderStatus(int orderId,int orderStatus)
+        {
+            try
+            {
+                var order = _ordersRepository.Get(orderId);
+                if(order == null)
+                {
+                    return new ApiResponse<OrderForDisplayDto>
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Errors = new List<string>() { "The order does not exist"}
+                    };
+                }
+                order.OrderStatus = (OrderStatuses)orderStatus;
+                if (_ordersRepository.Update(order))
+                {
+                    return new ApiResponse<OrderForDisplayDto>()
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        Data = _ordersRepository.GetOrderById(orderId),
+                        Message = "The order status is updated"
+                    };
+                }
+                return new ApiResponse<OrderForDisplayDto>() {
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Errors = new List<string>() { "Something went wrong. Please try again"}
+                
+                };
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<OrderForDisplayDto>
                 {
                     StatusCode = HttpStatusCode.InternalServerError,
                     Errors = new List<string> { "An error occurred while processing your request. Please try again later." }

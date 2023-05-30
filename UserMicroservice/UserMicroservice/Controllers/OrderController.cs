@@ -40,6 +40,16 @@ namespace UserMicroservice.Controllers
             var response = _orderService.GetActiveOrderForAgent(agentId);
             return StatusCode((int)response.StatusCode, response);
         }
+        [HttpPut("{orderId}/{orderStatus}")]
+        public IActionResult UpdateOrderStatus(int orderId, int orderStatus)
+        {
+            var response = _orderService.UpdateOrderStatus(orderId,orderStatus);
+            return StatusCode((int)response.StatusCode, response);
+        }
+
+
+
+
 
         [HttpPost]
         public IActionResult CreateOrder([FromBody] OrderCreateDto orderCreateDto)
