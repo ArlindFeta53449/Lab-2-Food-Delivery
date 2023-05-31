@@ -39,7 +39,7 @@ namespace Repository.Repositories.Orders
             {
                 var menuItems = _orderMenuItemsRepository.GetMenuItemsForOrderDisplay(orderId);
                 var offers = _orderOffersRepository.GetMenuItemsForOrderDisplay(orderId);
-                return Context.Set<Order>().Include(x => x.User).Where(x => x.Id == orderId)
+                return Context.Set<Order>().Include(x => x.User).Where(x => x.Id == orderId )
                     .Select(x => new OrderForDisplayDto()
                     {
                         Id = orderId,
@@ -49,7 +49,8 @@ namespace Repository.Repositories.Orders
                         User = x.User.Name + " " + x.User.Surname,
                         DeliveryAddress = x.DeliveryAddress,
                         Agent = Context.Set<User>().Where(y=>y.Id == x.AgentId).Select(y=>y.Name + " " + y.Surname).FirstOrDefault(),
-                        OrderStatus =x.OrderStatus
+                        OrderStatus =x.OrderStatus,
+                        IsDelivered = x.IsDelivered
 
                     }).FirstOrDefault();
             }
@@ -63,6 +64,7 @@ namespace Repository.Repositories.Orders
                 .ThenInclude(x => x.Offer)
                 .Include(x => x.OrderMenuItems)
                 .ThenInclude(x => x.MenuItem)
+                .Where(x=>x.IsDelivered == false)
                 .Select(x => new OrderForDisplayDto()
                 {
                     Id = x.Id,
@@ -84,14 +86,15 @@ namespace Repository.Repositories.Orders
                     User = x.User.Name + " " + x.User.Surname,
                     DeliveryAddress = x.DeliveryAddress,
                     Agent = Context.Set<User>().Where(b => b.Id == x.AgentId).Select(b => b.Name + " " + b.Surname).FirstOrDefault(),
-                    OrderStatus = x.OrderStatus
+                    OrderStatus = x.OrderStatus,
+                    IsDelivered = x.IsDelivered
 
                 }).ToList();
         }
         public OrderForDisplayDto GetActiveOrderForAgent(string agentId)
         {
             var order = Context.Set<Order>().Include(x => x.User)
-                .Where(x => x.AgentId == agentId && (x.OrderStatus != OrderStatuses.OrderSelected || x.OrderStatus != OrderStatuses.OrderIsDelivered))
+                .Where(x => x.AgentId == agentId && (x.OrderStatus != OrderStatuses.OrderNotSelected && x.OrderStatus != OrderStatuses.OrderIsDelivered))
                     .Select(x => new OrderForDisplayDto()
                     {
                         Id = x.Id,
@@ -113,7 +116,8 @@ namespace Repository.Repositories.Orders
                         User = x.User.Name + " " + x.User.Surname,
                         DeliveryAddress = x.DeliveryAddress,
                         Agent = Context.Set<User>().Where(y => y.Id == x.AgentId).Select(y => y.Name + " " + y.Surname).FirstOrDefault(),
-                        OrderStatus = x.OrderStatus
+                        OrderStatus = x.OrderStatus,
+                        IsDelivered = x.IsDelivered
 
                     }).FirstOrDefault();
             if (order == null)

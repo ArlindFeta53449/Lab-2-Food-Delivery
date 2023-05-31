@@ -23,6 +23,7 @@ namespace Data.DTOs.Order
 
         public string Agent { get; set; }
         public string? DeliveryAddress { get;set;}
+        public bool IsDelivered { get; set; }
         public OrderStatuses? OrderStatus { get; set; }
     }
 }

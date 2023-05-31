@@ -46,7 +46,14 @@ namespace UserMicroservice.Controllers
             var response = _orderService.UpdateOrderStatus(orderId,orderStatus);
             return StatusCode((int)response.StatusCode, response);
         }
+        [HttpGet("{orderId}/{distance}")]
+        public IActionResult SendOrderStatusToCustomer(int orderId, float distance)
+        {
 
+            _orderService.SendOrderStatusToCustomer(orderId, distance);
+
+            return Ok();
+        }
 
 
 

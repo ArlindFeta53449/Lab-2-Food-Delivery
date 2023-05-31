@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Business.Services._01_Mailing;
 using Data.DTOs;
 using Data.DTOs.MenuItem;
 using Data.DTOs.Order;
@@ -23,16 +24,19 @@ namespace Business.Services.Orders
         private readonly IOrdersRepository _ordersRepository;
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
+        private readonly IMailService _mailService;
 
         public OrderService(
             IOrdersRepository ordersRepository,
             IMapper mapper,
-            IUserRepository userRepository
+            IUserRepository userRepository,
+            IMailService mailService
             )
         {
             _ordersRepository = ordersRepository;
             _mapper = mapper;
             _userRepository = userRepository;
+            _mailService = mailService; 
         }
 
         public ApiResponse<OrderForDisplayDto> GetOrderById(int id)
@@ -128,13 +132,15 @@ namespace Business.Services.Orders
             {
                 var order = _ordersRepository.Get(orderId);
                 var user = _userRepository.GetUserById(userId);
-                if(order != null && user != null && user.Role.Name == "Agent" && user.AgentHasOrder == false)
+                if(order != null && user != null && user.Role.Name == "Agent" && user.AgentHasOrder == false && order.IsDelivered ==false)
                 {
                     order.AgentId = user.Id;
                     order.OrderStatus = OrderStatuses.OrderSelected;
                     user.AgentHasOrder = true;
                     if (_ordersRepository.Update(order) && _userRepository.Update(user))
                     {
+                        var orderForEmail = _ordersRepository.GetOrderById(orderId);
+                        _mailService.SendEmailToCustomerWhenOrderAcceptedAsync(user,orderForEmail);
                         return new ApiResponse<string>()
                         {
                             StatusCode = HttpStatusCode.OK,
@@ -182,12 +188,36 @@ namespace Business.Services.Orders
                     };
                 }
                 order.OrderStatus = (OrderStatuses)orderStatus;
+                var orderToReturn = _ordersRepository.GetOrderById(orderId);
+                var user = _userRepository.GetUserById(order.UserId);
+                switch (orderStatus)
+                {
+                    case 2:
+                        _mailService.SendEmailToCustomerWhenOrderOnItsWayAsync(user, orderToReturn);
+                        break;
+                    case 3:
+                        _mailService.SendEmailToCustomerWhenOrderHasArrivedAsync(user, orderToReturn);
+                        break;
+                    case 4:
+                        var agent = _userRepository.GetUserById(order.AgentId);
+                        if (agent != null)
+                        {
+                            agent.AgentHasOrder = false;
+                            order.IsDelivered = true;
+                            _userRepository.Update(agent);
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
                 if (_ordersRepository.Update(order))
                 {
+                   
                     return new ApiResponse<OrderForDisplayDto>()
                     {
                         StatusCode = HttpStatusCode.OK,
-                        Data = _ordersRepository.GetOrderById(orderId),
+                        Data = orderToReturn,
                         Message = "The order status is updated"
                     };
                 }
@@ -207,6 +237,28 @@ namespace Business.Services.Orders
                     Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
                 };
             }
+        }
+        public void SendOrderStatusToCustomer(int orderId,float distance) {
+            var order = _ordersRepository.Get(orderId);
+            
+            if(order != null)
+            {
+                var customer = _userRepository.GetUserById(order.UserId);
+                if(distance <=500 && distance > 20)
+                {
+                    order.Total = order.Total / 100;
+                    _mailService.SendOrderStatusEmailToCustomerAsync(customer, order, distance);
+                }
+                if(distance <= 20) {
+                    order.OrderStatus = OrderStatuses.OrderHasArrived;
+                    if (_ordersRepository.Update(order))
+                    {
+                        order.Total = order.Total / 100;
+                        _mailService.SendOrderStatusEmailToCustomerAsync(customer,order,distance);
+                    }
+                }
+            }
+
         }
         public IEnumerable<OrderDto> GetOrdersByCustomerId(string userId)
         {

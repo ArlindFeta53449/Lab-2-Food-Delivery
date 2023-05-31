@@ -19,6 +19,7 @@ namespace Data.Entities
         public OrderStatuses? OrderStatus { get; set; }
         public string DeliveryAddress { get; set; }
         public string? PhoneNumber { get; set; }
+        public bool IsDelivered { get; set; } = false;
         public User User { get; set; }
 
     }

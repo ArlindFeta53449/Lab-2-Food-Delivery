@@ -21,6 +21,7 @@ namespace Business.Services.Orders
         ApiResponse<string> AcceptOrder(int orderId, string userId);
         ApiResponse<OrderForDisplayDto> GetActiveOrderForAgent(string agentId);
         ApiResponse<OrderForDisplayDto> UpdateOrderStatus(int orderId, int orderStatus);
+        void SendOrderStatusToCustomer(int orderId, float distance);
 
     }
 }
