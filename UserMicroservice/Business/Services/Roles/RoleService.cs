@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Business.Services.RabitMQ;
 using Data.DTOs.Roles;
 using Data.Entities;
 using Repositories.Repositories.Roles;
@@ -16,11 +17,12 @@ namespace Business.Services.Roles
     {
         private readonly IRolesRepository _rolesRepository;
         private readonly IMapper _mapper;
-
-        public RoleService(IRolesRepository rolesRepository,IMapper mapper)
+        private readonly IRabitMQProducer _rabitMQProducer;
+        public RoleService(IRolesRepository rolesRepository,IMapper mapper, IRabitMQProducer rabitMQProducer)
         {
             _rolesRepository = rolesRepository;
             _mapper = mapper;
+            _rabitMQProducer = rabitMQProducer;
         }
 
         public ApiResponse<IList<RoleDto>> GetAll()
@@ -117,11 +119,19 @@ namespace Business.Services.Roles
             try
             {
                 var mappedRole = _mapper.Map<Role>(role);
-                _rolesRepository.Add(mappedRole);
+                if (_rolesRepository.Add(mappedRole))
+                {
+                    _rabitMQProducer.SendMessage<Role>("roles", mappedRole);
+                    return new ApiResponse<RoleDto>()
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        Data = _mapper.Map<RoleDto>(mappedRole)
+                    };
+                }
                 return new ApiResponse<RoleDto>()
                 {
-                    StatusCode = HttpStatusCode.OK,
-                    Data = _mapper.Map<RoleDto>(mappedRole)
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Errors = new List<string> { "An error occurred while processing your request." }
                 };
             }
             catch (Exception ex)

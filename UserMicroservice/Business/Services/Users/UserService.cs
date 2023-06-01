@@ -15,7 +15,7 @@ using Repositories.Repositories.Users;
 using Serilog;
 using System;
 using System.Net;
-
+using RabbitMQ.Client;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -31,7 +31,6 @@ namespace Business.Services.Users
         private readonly IAuthentificationService _authentificationService;
         private readonly IRolesRepository _rolesRepository;
         private readonly ICartRepository _cartRepository;
-
 
 
         public UserService(IUserRepository userRepository, 
