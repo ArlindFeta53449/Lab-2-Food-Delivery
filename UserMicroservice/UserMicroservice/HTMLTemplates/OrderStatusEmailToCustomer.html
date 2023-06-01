@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Status</title>
+    <style>
+        /* Inline Styles */
+        html, body {
+            height: 900px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(22, 101, 52);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        p {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .order-details {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+        }
+
+        .order-details p {
+            margin: 0;
+        }
+
+        .highlight {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Order Status</h1>
+        <p>Dear {{user.name}},</p>
+        <p>Your order with number <span class="highlight">{{order.id}}</span> has status: <b>{{order.status}}</b></p>
+        <p><span class="highlight">Total Amount:</span> {{order.totalAmount}} $</p>
+        <p><span class="highlight">Your order is approximately:</span> {{distance}}<span> meters away. Please be at the address you have sent us.</span></p>
+        <p>Thank you for shopping with us!</p>
+    </div>
+</body>
+</html>
