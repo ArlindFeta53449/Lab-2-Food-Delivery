@@ -42,6 +42,7 @@ namespace UserMicroservice.Controllers
             var response =  _roleService.CreateRole(role);
             return StatusCode((int)response.StatusCode, response);
         }
+
         [HttpPut]
         public IActionResult EditRole(RoleDto role)
         {

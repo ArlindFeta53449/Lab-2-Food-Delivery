@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,5 +32,38 @@ namespace Business.Services.RabitMQ
             //put the data on to the product queue
             channel.BasicPublish(exchange: "", routingKey: queue, body: body);
         }
-    }
+        /*public T ConsumeMessage<T>(string queue)
+        {
+            var factory = new ConnectionFactory
+            {
+                HostName = "localhost",
+                Port = 5672
+            };
+
+            using (var connection = factory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                channel.QueueDeclare(queue, exclusive: false);
+
+                var consumer = new EventingBasicConsumer(channel);
+                T receivedMessage = default(T); // Default value if no message is received
+                consumer.Received += (sender, args) =>
+                {
+                    var body = args.Body.ToArray();
+                    var json = Encoding.UTF8.GetString(body);
+                    receivedMessage = JsonConvert.DeserializeObject<T>(json);
+
+                    channel.BasicAck(args.DeliveryTag, multiple: false);
+                };
+
+                channel.BasicConsume(queue, autoAck: false, consumer);
+
+                // Keep the consumer running until it receives a message or is explicitly stopped
+                while (receivedMessage == default(T)) { }
+
+                channel.BasicCancel(consumer.ConsumerTags[0]);
+
+                return receivedMessage;
+            }*/
+        }
 }

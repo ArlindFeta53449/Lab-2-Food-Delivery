@@ -9,5 +9,7 @@ namespace Business.Services.RabitMQ
     public interface IRabitMQProducer
     {
         void SendMessage<T>(string queue, T message);
+
+        //T ConsumeMessage<T>(string queue);
     }
 }
