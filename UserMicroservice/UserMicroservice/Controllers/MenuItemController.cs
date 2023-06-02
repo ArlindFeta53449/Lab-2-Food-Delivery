@@ -35,7 +35,7 @@ namespace Menu.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteMenu(int id)
+        public IActionResult DeleteMenuItem(int id)
         {
             var response = _menuItemService.DeleteMenuItem(id);
             return StatusCode((int)response.StatusCode, response);

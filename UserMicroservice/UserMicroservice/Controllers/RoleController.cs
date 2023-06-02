@@ -1,4 +1,5 @@
 ﻿using Business.Services.Roles;
+using Business.Services.ZSyncDataServices.Http;
 using Data.DTOs.Roles;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,14 @@ namespace UserMicroservice.Controllers
     public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;
+        private readonly INotificationDataClient _notificationDataClient;
 
-        public RoleController(IRoleService roleService)
+        public RoleController(
+            IRoleService roleService,
+            INotificationDataClient notificationDataClient)
         {
             _roleService = roleService;
+            _notificationDataClient = notificationDataClient;
         }
 
         [HttpGet]

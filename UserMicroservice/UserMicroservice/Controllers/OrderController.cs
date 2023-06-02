@@ -81,7 +81,7 @@ namespace UserMicroservice.Controllers
         }
 
 
-        [HttpGet("TopSellingOrders")]
+        [HttpGet]
         public IActionResult GetTopSellingOrders()
         {
             var topSellingOrders = _orderService.GetTopSellingOrders();

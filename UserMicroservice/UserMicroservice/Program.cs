@@ -31,6 +31,7 @@ using Business.Services.Stripe;
 using Repositories.Repositories.OrderMenuItems;
 using Repositories.Repositories.OrderOffers;
 using Business.Services.RabitMQ;
+using Business.Services.ZSyncDataServices.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,6 +80,8 @@ builder.Services.AddScoped<IOrderMenuItemsRepository, OrderMenuItemsRepository>(
 builder.Services.AddScoped<IOrderOffersRepository, OrderOffersRepository>();
 builder.Services.AddScoped<IRabitMQProducer, RabitMQProducer>();
 
+
+builder.Services.AddHttpClient<INotificationDataClient, NotificationDataClient>();
 StripeConfiguration.ApiKey = builder.Configuration.GetValue<string>("StripePrivateKey");
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddTransient<IMailService,MailService>();

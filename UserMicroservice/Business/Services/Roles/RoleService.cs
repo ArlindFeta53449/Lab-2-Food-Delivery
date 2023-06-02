@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Services.RabitMQ;
+using Business.Services.ZSyncDataServices.Http;
 using Data.DTOs.Roles;
 using Data.Entities;
 using Repositories.Repositories.Roles;
@@ -17,12 +18,14 @@ namespace Business.Services.Roles
     {
         private readonly IRolesRepository _rolesRepository;
         private readonly IMapper _mapper;
-        private readonly IRabitMQProducer _rabitMQProducer;
-        public RoleService(IRolesRepository rolesRepository,IMapper mapper, IRabitMQProducer rabitMQProducer)
+        private readonly INotificationDataClient _notificationDataClient;
+        public RoleService(IRolesRepository rolesRepository,
+            IMapper mapper,
+            INotificationDataClient notificationDataClient)
         {
             _rolesRepository = rolesRepository;
             _mapper = mapper;
-            _rabitMQProducer = rabitMQProducer;
+            _notificationDataClient = notificationDataClient;
         }
 
         public ApiResponse<IList<RoleDto>> GetAll()
@@ -121,7 +124,7 @@ namespace Business.Services.Roles
                 var mappedRole = _mapper.Map<Role>(role);
                 if (_rolesRepository.Add(mappedRole))
                 {
-                    _rabitMQProducer.SendMessage<Role>("roles", mappedRole);
+                    _notificationDataClient.SendPlatformToCommand(_mapper.Map<RoleDto>(mappedRole));
                     return new ApiResponse<RoleDto>()
                     {
                         StatusCode = HttpStatusCode.OK,
