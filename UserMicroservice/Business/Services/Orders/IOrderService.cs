@@ -17,7 +17,7 @@ namespace Business.Services.Orders
         bool CreateOrder(OrderCreateDto orderDto);
         bool UpdateOrder(OrderDto orderDto);
         bool DeleteOrder(int id);
-        IList<OrderDto> GetTopSellingOrders();
+        ApiResponse<IList<OrderForDisplayDto>> GetTopSellingOrders();
         ApiResponse<string> AcceptOrder(int orderId, string userId);
         ApiResponse<OrderForDisplayDto> GetActiveOrderForAgent(string agentId);
         ApiResponse<OrderForDisplayDto> UpdateOrderStatus(int orderId, int orderStatus);

@@ -283,14 +283,31 @@ namespace Business.Services.Orders
             var order = _ordersRepository.Get(id);
             return _ordersRepository.Remove(order);
         }
-        
 
-        public IList<OrderDto> GetTopSellingOrders()
+
+        public ApiResponse<IList<OrderForDisplayDto>> GetTopSellingOrders()
         {
-            var topSellingOrders = _ordersRepository.GetTopSellingOrders();
+            try
+            {
+                var topSellingOrders = _ordersRepository.GetTopSellingOrders();
 
-            return _mapper.Map<IList<OrderDto>>(topSellingOrders);
+                return new ApiResponse<IList<OrderForDisplayDto>>()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Data = _mapper.Map<IList<OrderForDisplayDto>>(topSellingOrders)
+                };
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message, "An error occurred: {ErrorMessage}", ex.Message);
+                return new ApiResponse<IList<OrderForDisplayDto>>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Errors = new List<string> { "An error occurred while processing your request. Please try again later." }
+                };
+            }
         }
+
 
     }
 }
