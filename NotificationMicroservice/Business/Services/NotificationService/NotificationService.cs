@@ -15,13 +15,13 @@ namespace Business.Services.NotificationService
             _notificationRepository = notificationRepository;
         }
 
-        public IList<Notification> GetNotifications()
+        public IList<Notification> GetNotifications(string userId)
         {
-            return _notificationRepository.GetNotifications();
+            return _notificationRepository.GetNotifications(userId);
         }
-        public Notification GetNotificationById(string id)
+        public Notification GetNotificationById(string id,string userId)
         {
-            return _notificationRepository.GetNotificationById(id);
+            return _notificationRepository.GetNotificationById(id,userId);
         }
         public Notification CreateNotification(Notification notification)
         {

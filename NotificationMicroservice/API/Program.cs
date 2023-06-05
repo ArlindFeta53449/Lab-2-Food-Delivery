@@ -1,9 +1,11 @@
 using Business.Services.NotificationService;
+using Business.Services.UserService;
 using Data.Entities;
 using Data.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Repository.NotificationsRepository;
+using Repository.UserRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,7 @@ var databaseName = "NotificationDatabase";
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddSwaggerGen();
 builder.Services.Configure<NotificationDatabaseSettings>(
                     builder.Configuration.GetSection(nameof(NotificationDatabaseSettings)));
@@ -24,6 +27,8 @@ builder.Services.AddSingleton<IMongoClient>(s =>
 
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<INotificationService,NotificationService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

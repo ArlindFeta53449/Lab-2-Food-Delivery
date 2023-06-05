@@ -17,14 +17,14 @@ namespace NotificationMicroservice.Controllers
         }
         
         [HttpGet]
-        public IActionResult GetNotifications()
+        public IActionResult GetNotifications(string userId)
         {
-            return StatusCode(200, _notificationService.GetNotifications());
+            return StatusCode(200, _notificationService.GetNotifications(userId));
         }
         [HttpGet("{id}")]
-        public IActionResult GetNotificationById(string id)
+        public IActionResult GetNotificationById(string id,string userId)
         {
-            var notification = _notificationService.GetNotificationById(id);
+            var notification = _notificationService.GetNotificationById(id,userId);
 
             if(notification == null)
             {
@@ -39,8 +39,8 @@ namespace NotificationMicroservice.Controllers
             return Ok(notification);
         }
         [HttpPut("{id}")]
-        public IActionResult UpdateNotification(string id,[FromBody]Notification notification) {
-            var notificationInDb = _notificationService.GetNotificationById(id);
+        public IActionResult UpdateNotification(string id,string userId,[FromBody]Notification notification) {
+            var notificationInDb = _notificationService.GetNotificationById(id,userId);
 
             if(notificationInDb == null)
             {
@@ -50,9 +50,9 @@ namespace NotificationMicroservice.Controllers
             return Ok();
         }
         [HttpDelete("{id}")]
-        public IActionResult DeleteNotification(string id)
+        public IActionResult DeleteNotification(string id,string userId)
         {
-            var notification = _notificationService.GetNotificationById(id);
+            var notification = _notificationService.GetNotificationById(id, userId);
             if(notification == null)
             {
                 return NotFound("The notification was not found");

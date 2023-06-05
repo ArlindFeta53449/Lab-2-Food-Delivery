@@ -25,6 +25,9 @@ namespace Data.Entities
         public DateTime Created { get; set; } = DateTime.Now;
 
         [BsonElement("link")]
-        public string? Link { get; set; } 
+        public string? Link { get; set; }
+
+        [BsonElement("userIds")]
+        public List<string> UserIds { get; set; }
     }
 }

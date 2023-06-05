@@ -30,8 +30,8 @@ using Repositories.Repositories.Payments;
 using Business.Services.Stripe;
 using Repositories.Repositories.OrderMenuItems;
 using Repositories.Repositories.OrderOffers;
-using Business.Services.RabitMQ;
 using Business.Services.ZSyncDataServices.Http;
+using Business.Services.XAsyncDataService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,8 +78,7 @@ builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<Stripe.PaymentIntentService>();
 builder.Services.AddScoped<IOrderMenuItemsRepository, OrderMenuItemsRepository>();
 builder.Services.AddScoped<IOrderOffersRepository, OrderOffersRepository>();
-builder.Services.AddScoped<IRabitMQProducer, RabitMQProducer>();
-
+builder.Services.AddSingleton<IMessageBusClient, MessageBusClient>();
 
 builder.Services.AddHttpClient<INotificationDataClient, NotificationDataClient>();
 StripeConfiguration.ApiKey = builder.Configuration.GetValue<string>("StripePrivateKey");

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Business.Services.RabitMQ;
 using Business.Services.ZSyncDataServices.Http;
 using Data.DTOs.Roles;
 using Data.Entities;

@@ -10,8 +10,8 @@ namespace Repository.NotificationsRepository
     public interface INotificationRepository
     {
         Notification Create(Notification notification);
-        IList<Notification> GetNotifications();
-        Notification GetNotificationById(string id);
+        IList<Notification> GetNotifications(string userId);
+        Notification GetNotificationById(string id, string userId);
         void Remove(string id);
         void Update(string id, Notification notification);
     }

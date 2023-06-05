@@ -23,13 +23,13 @@ namespace Repository.NotificationsRepository
             _notifications.InsertOne(notification);
             return notification;
         }
-        public IList<Notification> GetNotifications()
+        public IList<Notification> GetNotifications(string userId)
         {
-            return _notifications.Find(notification => true).ToList();
+            return _notifications.Find(x=>x.UserIds.Contains(userId)).ToList();
         }
-        public Notification GetNotificationById(string id)
+        public Notification GetNotificationById(string id,string userId)
         {
-            return _notifications.Find(notification => notification.Id == id).FirstOrDefault();
+            return _notifications.Find(notification => notification.Id == id && notification.UserIds.Contains(userId)).FirstOrDefault();
         }
         public void Remove(string id)
         {
