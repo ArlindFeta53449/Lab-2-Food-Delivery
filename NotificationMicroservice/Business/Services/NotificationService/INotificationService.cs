@@ -1,4 +1,5 @@
-﻿using Data.Entities;
+﻿using Data.DTOs;
+using Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,11 @@ namespace Business.Services.NotificationService
 {
     public interface INotificationService
     {
-        IList<Notification> GetNotifications(string userId);
+        ApiResponse<IList<NotificationForDisplayDto>> GetNotifications(string userId);
+        Task<ApiResponse<string>> ClearAllNotificationsForUser(string userId);
+        Task<ApiResponse<string>> MarkNotificationAsRead(string notificationId, string userId);
+        Task<ApiResponse<string>> MarkAllNotificationAsRead(string userId);
         Notification GetNotificationById(string id, string userId);
-        Notification CreateNotification(Notification notification);
         void UpdateNotification(string id, Notification notification);
         void DeleteNotification(string id);
     }

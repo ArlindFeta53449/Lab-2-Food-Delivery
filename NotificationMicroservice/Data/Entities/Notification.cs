@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Data.DTOs;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
@@ -22,12 +23,13 @@ namespace Data.Entities
         public string Message { get; set; }
 
         [BsonElement("created")]
-        public DateTime Created { get; set; } = DateTime.Now;
+        public string Created { get; set; }
 
         [BsonElement("link")]
         public string? Link { get; set; }
 
-        [BsonElement("userIds")]
-        public List<string> UserIds { get; set; }
+        [BsonElement("users")]
+        public List<UserForNotificationDto> Users { get; set; }
+
     }
 }

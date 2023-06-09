@@ -90,6 +90,9 @@ namespace Repositories.Repositories.Users
             };
 
         }
-
+        public IList<string> GetAllAgentIds()
+        {
+            return Context.Set<User>().Include(x => x.Role).Where(x => x.Role.Name == "Agent" && x.IsEmailVerified == true).Select(x => x.Id).ToList();
+        }
     }
 }

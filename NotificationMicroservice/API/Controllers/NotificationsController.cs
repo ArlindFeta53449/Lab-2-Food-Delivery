@@ -16,10 +16,11 @@ namespace NotificationMicroservice.Controllers
             _notificationService = notificationService;
         }
         
-        [HttpGet]
-        public IActionResult GetNotifications(string userId)
+        [HttpGet("{id}")]
+        public IActionResult GetNotifications(string id)
         {
-            return StatusCode(200, _notificationService.GetNotifications(userId));
+            var response = _notificationService.GetNotifications(id);
+            return StatusCode((int)response.StatusCode, response);
         }
         [HttpGet("{id}")]
         public IActionResult GetNotificationById(string id,string userId)
@@ -32,23 +33,24 @@ namespace NotificationMicroservice.Controllers
             }
             return Ok(notification);
         }
-        [HttpPost]
-        public IActionResult CreateNotification([FromBody]Notification notification)
+        [HttpPut("{notificationId}/{userId}")]
+        public async Task<IActionResult> MarkNotificationAsRead(string notificationId,string userId) {
+            var response = await _notificationService.MarkNotificationAsRead(notificationId, userId);
+            return StatusCode((int)response.StatusCode, response);
+        }
+        [HttpPut("{userId}")]
+        public async Task<IActionResult> MarkAllNotificationsAsRead(string userId)
         {
-            _notificationService.CreateNotification(notification);
-            return Ok(notification);
+            var response = await _notificationService.MarkAllNotificationAsRead(userId);
+            return StatusCode((int)response.StatusCode, response);
         }
-        [HttpPut("{id}")]
-        public IActionResult UpdateNotification(string id,string userId,[FromBody]Notification notification) {
-            var notificationInDb = _notificationService.GetNotificationById(id,userId);
+        [HttpPut("{userId}")]
+        public async Task<IActionResult> ClearAllNotificationsForUser(string userId)
+        {
+            var response =await _notificationService.ClearAllNotificationsForUser(userId);
+            return StatusCode((int)response.StatusCode, response);
+        }
 
-            if(notificationInDb == null)
-            {
-                return NotFound("The notification was not found");
-            }
-            _notificationService.UpdateNotification(id,notification);
-            return Ok();
-        }
         [HttpDelete("{id}")]
         public IActionResult DeleteNotification(string id,string userId)
         {

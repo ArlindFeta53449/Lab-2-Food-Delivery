@@ -10,5 +10,7 @@ namespace Business.Services.XAsyncDataService
     public interface IMessageBusClient
     {
         void PublishNewUser(UserPublishedDto user);
+        void PublishOrderStatus(OrderPublishedDto order);
+        void PublishMessage<T>(T message);
     }
 }

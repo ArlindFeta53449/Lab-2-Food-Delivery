@@ -13,5 +13,6 @@ namespace Repository.UserRepository
         User CreateUser(User user);
         bool UserExists(string externalId);
         void DeleteUser(string userId);
+
     }
 }

@@ -99,6 +99,11 @@ namespace Business.Services._00_MappingProfiles
 
             CreateMap<UserPublishedDto,User> ();
             CreateMap<User, UserPublishedDto>();
+
+            CreateMap<Order, OrderPublishedDto>();
+            CreateMap<OrderPublishedDto, Order>();
+            CreateMap<Order, OrderCreatedDto>();
+            CreateMap<OrderCreatedDto, Order>();
         }
     }
 }

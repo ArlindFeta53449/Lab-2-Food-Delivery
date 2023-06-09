@@ -456,10 +456,6 @@ namespace Business.Services.Users
                     userInDb.AccountVerificationToken = "";
                     if (_userRepository.Update(userInDb))
                     {
-                        // _notificationDataClient.SendUserToNotificationMicroservice(userInDb);
-                        var userPublishedDto = _mapper.Map<UserPublishedDto>(userInDb);
-                        userPublishedDto.Event = "User_Created";
-                        _messageBusClient.PublishNewUser(userPublishedDto);
                         return new ApiResponse<string>()
                         {
                             StatusCode = HttpStatusCode.OK,

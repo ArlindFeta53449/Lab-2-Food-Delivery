@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace Data.DTOs
 {
-    public class UserDto
+    public class UserPublishedDto
     {
         public string ExternalId { get; set; }
+
         public string Name { get; set; }
+
         public string Email { get; set; }
-        public string Role { get; set; }
+
+        public string Event { get; set; }
     }
 }

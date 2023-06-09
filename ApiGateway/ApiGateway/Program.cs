@@ -1,5 +1,6 @@
 using Ocelot.Cache.CacheManager;
 using Ocelot.DependencyInjection;
+using Ocelot.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,8 +27,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
+// Configure CORS
+app.UseCors(options =>
+{
+    options.AllowAnyOrigin();
+    options.AllowAnyHeader();
+    options.AllowAnyMethod();
+});
+app.UseOcelot().Wait();
 app.UseAuthorization();
 
 app.MapControllers();

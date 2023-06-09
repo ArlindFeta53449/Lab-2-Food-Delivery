@@ -15,6 +15,10 @@ namespace Business.Services._00MappingProfile
         {
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>();
+            CreateMap<UserPublishedDto, User>();
+            CreateMap<User, UserPublishedDto>();
+            CreateMap<NotificationForDisplayDto, Notification>();
+            CreateMap<Notification, NotificationForDisplayDto>();
         }
     }
 }

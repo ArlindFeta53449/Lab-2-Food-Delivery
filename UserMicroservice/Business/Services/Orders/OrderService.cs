@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Business.Services._01_Mailing;
+using Business.Services.XAsyncDataService;
 using Data.DTOs;
 using Data.DTOs.MenuItem;
 using Data.DTOs.Order;
+using Data.DTOs.RabbitMQ;
 using Data.Entities;
 using Data.Enums;
 using Microsoft.AspNetCore.Http;
@@ -25,18 +27,20 @@ namespace Business.Services.Orders
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
         private readonly IMailService _mailService;
-
+        private readonly IMessageBusClient _messageBusClient;
         public OrderService(
             IOrdersRepository ordersRepository,
             IMapper mapper,
             IUserRepository userRepository,
-            IMailService mailService
+            IMailService mailService,
+            IMessageBusClient messageBusClient
             )
         {
             _ordersRepository = ordersRepository;
             _mapper = mapper;
             _userRepository = userRepository;
-            _mailService = mailService; 
+            _mailService = mailService;
+            _messageBusClient = messageBusClient;
         }
 
         public ApiResponse<OrderForDisplayDto> GetOrderById(int id)
@@ -140,6 +144,9 @@ namespace Business.Services.Orders
                     if (_ordersRepository.Update(order) && _userRepository.Update(user))
                     {
                         var orderForEmail = _ordersRepository.GetOrderById(orderId);
+                        var orderForNotification = _mapper.Map<OrderPublishedDto>(order);
+                        orderForNotification.Event = "Order_Accepted";
+                        _messageBusClient.PublishMessage<OrderPublishedDto>(orderForNotification);
                         _mailService.SendEmailToCustomerWhenOrderAcceptedAsync(user,orderForEmail);
                         return new ApiResponse<string>()
                         {
@@ -213,7 +220,10 @@ namespace Business.Services.Orders
                 }
                 if (_ordersRepository.Update(order))
                 {
-                   
+                    var mappedOrder = _mapper.Map<OrderPublishedDto>(order);
+                    mappedOrder.Event = "OrderStatus_Changed";
+                    mappedOrder.OrderStatus = order.OrderStatus.ToString();
+                    _messageBusClient.PublishOrderStatus(mappedOrder);
                     return new ApiResponse<OrderForDisplayDto>()
                     {
                         StatusCode = HttpStatusCode.OK,
@@ -269,7 +279,8 @@ namespace Business.Services.Orders
         public bool CreateOrder(OrderCreateDto orderDto)
         {
             var order = _mapper.Map<Order>(orderDto);
-            return _ordersRepository.Add(order);
+          return _ordersRepository.Add(order);
+     
         }
 
         public bool UpdateOrder(OrderDto orderDto)

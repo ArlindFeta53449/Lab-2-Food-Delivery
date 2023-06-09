@@ -46,9 +46,21 @@ namespace Business.Services.XAsyncDataService
             {
                 SendMessage(message);
             }
-            else
+        }
+        public void PublishOrderStatus(OrderPublishedDto order)
+        {
+            var message = JsonSerializer.Serialize(order);
+            if (_connection.IsOpen)
             {
-
+                SendMessage(message);
+            }
+        }
+        public void PublishMessage<T>(T message)
+        {
+            var messageSerialized = JsonSerializer.Serialize(message);
+            if (_connection.IsOpen)
+            {
+                SendMessage(messageSerialized);
             }
         }
         private void SendMessage(string message)
