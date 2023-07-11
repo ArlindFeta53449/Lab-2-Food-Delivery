@@ -18,7 +18,9 @@ using System.Net;
 
 using System.Security.Cryptography;
 using System.Text;
-
+using Business.Services.ZSyncDataServices.Http;
+using Business.Services.XAsyncDataService;
+using Data.DTOs.RabbitMQ;
 
 namespace Business.Services.Users
 {
@@ -31,8 +33,8 @@ namespace Business.Services.Users
         private readonly IAuthentificationService _authentificationService;
         private readonly IRolesRepository _rolesRepository;
         private readonly ICartRepository _cartRepository;
-
-
+        private readonly INotificationDataClient _notificationDataClient;
+        private readonly IMessageBusClient _messageBusClient;
 
         public UserService(IUserRepository userRepository, 
                             IMapper mapper, 
@@ -41,7 +43,9 @@ namespace Business.Services.Users
                             IAuthentificationService authentificationService,
                             ILogger<UserService> logger,
                             IRolesRepository rolesRepository,
-                            ICartRepository cartRepository
+                            ICartRepository cartRepository,
+                            INotificationDataClient notificationDataClient,
+                            IMessageBusClient messageBusClient
                 )
         {
             _userRepository = userRepository;
@@ -51,7 +55,8 @@ namespace Business.Services.Users
             _authentificationService = authentificationService;
             _rolesRepository = rolesRepository;
             _cartRepository = cartRepository;
-
+            _notificationDataClient = notificationDataClient;
+            _messageBusClient = messageBusClient;
         }
         public ApiResponse<IList<UserDto>> GetAll()
         {
@@ -235,6 +240,7 @@ namespace Business.Services.Users
                 if (_userRepository.Remove(user))
                 {
                     _cartRepository.DeleteCart(id);
+                    _notificationDataClient.DeleteUserInNotificationMicroservice(id);
                     return new ApiResponse<string>()
                     {
                         StatusCode = HttpStatusCode.OK,
@@ -311,6 +317,7 @@ namespace Business.Services.Users
                 {
                     _cartRepository.CreateCart(mappedUser.Id);
                     _mailService.SendVerifyAccountEmail(user);
+                    
                     return new ApiResponse<string>() { 
                     StatusCode = HttpStatusCode.OK,
                     Data = mappedUser.AccountVerificationToken

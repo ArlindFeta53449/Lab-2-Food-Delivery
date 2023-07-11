@@ -7,7 +7,6 @@ using Business.Services.Roles;
 using Business.Services.Token;
 using Business.Services.Users;
 using Business.Services.Orders;
-
 using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
@@ -27,11 +26,12 @@ using Business.Services.Carts;
 using Repositories.Repositories.CartMenuItems;
 using Repositories.Repositories.CartOffers;
 using Stripe;
-using Stripe.TestHelpers;
 using Repositories.Repositories.Payments;
 using Business.Services.Stripe;
 using Repositories.Repositories.OrderMenuItems;
 using Repositories.Repositories.OrderOffers;
+using Business.Services.ZSyncDataServices.Http;
+using Business.Services.XAsyncDataService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,11 +40,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
-//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-//builder.Services.AddDbContext<AppDbContext>(options =>
-//{
-//  options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-//});
+
 
 builder.Logging.ClearProviders();
 builder.Logging.AddFile("C:\\Users\\lkrasniqi\\Desktop\\Lab-2-Food-Delivery\\UserMicroservice\\UserMicroservice\\Logs\\file.txt");
@@ -82,12 +78,12 @@ builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<Stripe.PaymentIntentService>();
 builder.Services.AddScoped<IOrderMenuItemsRepository, OrderMenuItemsRepository>();
 builder.Services.AddScoped<IOrderOffersRepository, OrderOffersRepository>();
-StripeConfiguration.ApiKey = builder.Configuration.GetValue<string>("StripePrivateKey");
+builder.Services.AddSingleton<IMessageBusClient, MessageBusClient>();
 
-//builder.Services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddHttpClient<INotificationDataClient, NotificationDataClient>();
+StripeConfiguration.ApiKey = builder.Configuration.GetValue<string>("StripePrivateKey");
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddTransient<IMailService,MailService>();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -95,10 +91,9 @@ builder.Services.AddCors(opt =>
 {
     opt.AddPolicy("CorsPolicy", policy =>
     {
-        policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000").AllowCredentials();
+        policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000","http://localhost:3001").AllowCredentials();
     });
 });
-
 
 var app = builder.Build();
 

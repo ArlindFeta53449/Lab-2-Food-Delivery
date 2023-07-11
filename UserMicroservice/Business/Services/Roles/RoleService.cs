@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Business.Services.ZSyncDataServices.Http;
 using Data.DTOs.Roles;
 using Data.Entities;
 using Repositories.Repositories.Roles;
@@ -16,11 +17,14 @@ namespace Business.Services.Roles
     {
         private readonly IRolesRepository _rolesRepository;
         private readonly IMapper _mapper;
-
-        public RoleService(IRolesRepository rolesRepository,IMapper mapper)
+        private readonly INotificationDataClient _notificationDataClient;
+        public RoleService(IRolesRepository rolesRepository,
+            IMapper mapper,
+            INotificationDataClient notificationDataClient)
         {
             _rolesRepository = rolesRepository;
             _mapper = mapper;
+            _notificationDataClient = notificationDataClient;
         }
 
         public ApiResponse<IList<RoleDto>> GetAll()
@@ -117,11 +121,19 @@ namespace Business.Services.Roles
             try
             {
                 var mappedRole = _mapper.Map<Role>(role);
-                _rolesRepository.Add(mappedRole);
+                if (_rolesRepository.Add(mappedRole))
+                {
+                    _notificationDataClient.SendPlatformToCommand(_mapper.Map<RoleDto>(mappedRole));
+                    return new ApiResponse<RoleDto>()
+                    {
+                        StatusCode = HttpStatusCode.OK,
+                        Data = _mapper.Map<RoleDto>(mappedRole)
+                    };
+                }
                 return new ApiResponse<RoleDto>()
                 {
-                    StatusCode = HttpStatusCode.OK,
-                    Data = _mapper.Map<RoleDto>(mappedRole)
+                    StatusCode = HttpStatusCode.BadRequest,
+                    Errors = new List<string> { "An error occurred while processing your request." }
                 };
             }
             catch (Exception ex)

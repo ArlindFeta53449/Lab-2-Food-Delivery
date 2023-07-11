@@ -3,6 +3,7 @@ using Data.DTOs;
 using Data.DTOs.Cart;
 using Data.DTOs.MenuItem;
 using Data.DTOs.Offer;
+using Data.DTOs.RabbitMQ;
 using Data.DTOs.Roles;
 using Data.DTOs.Users;
 using Data.Entities;
@@ -95,6 +96,14 @@ namespace Business.Services._00_MappingProfiles
 
             CreateMap<OrderOffer, OfferForOrderDto>();
             CreateMap<OfferForOrderDto, OrderOffer>();
+
+            CreateMap<UserPublishedDto,User> ();
+            CreateMap<User, UserPublishedDto>();
+
+            CreateMap<Order, OrderPublishedDto>();
+            CreateMap<OrderPublishedDto, Order>();
+            CreateMap<Order, OrderCreatedDto>();
+            CreateMap<OrderCreatedDto, Order>();
         }
     }
 }

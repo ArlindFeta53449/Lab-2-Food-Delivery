@@ -81,17 +81,11 @@ namespace UserMicroservice.Controllers
         }
 
 
-        [HttpGet("TopSellingOrders")]
+        [HttpGet]
         public IActionResult GetTopSellingOrders()
         {
-            var topSellingOrders = _orderService.GetTopSellingOrders();
-
-            if (topSellingOrders == null || topSellingOrders.Count == 0)
-            {
-                return NotFound("No top selling orders available.");
-            }
-
-            return Ok(topSellingOrders);
+            var response = _orderService.GetTopSellingOrders();
+            return StatusCode((int)response.StatusCode, response);
         }
     }
 }

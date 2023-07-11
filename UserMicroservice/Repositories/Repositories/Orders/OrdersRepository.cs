@@ -129,21 +129,40 @@ namespace Repository.Repositories.Orders
                 return order;
             }
         }
-       
-        
-    
-        public IList<Order> GetTopSellingOrders()
+
+
+
+        public IList<OrderForDisplayDto> GetTopSellingOrders()
         {
             var topSellingOrders = Context.Set<Order>()
                 .Include(o => o.OrderMenuItems)
                     .ThenInclude(omi => omi.MenuItem)
                 .OrderByDescending(o => o.OrderMenuItems.Sum(omi => omi.Quantity))
                 .Take(10)
+                .Select(o => new OrderForDisplayDto
+                {
+                    Id = o.Id,
+                    Total = o.Total / 100,
+                    MenuItems = o.OrderMenuItems.Select(omi => new OrderMenuItemForDisplayDto
+                    {
+                        Name = omi.MenuItem.Name,
+                        Quantity = omi.Quantity,
+                        Price = omi.MenuItem.Price
+                    }).ToList(),
+                    Offers = o.OrderOffers.Select(oo => new OrderOfferForDisplayDto
+                    {
+                        Name = oo.Offer.Name,
+                        Quantity = oo.Quantity,
+                        Price = oo.Offer.Price
+                    }).ToList()
+                })
                 .ToList();
 
             return topSellingOrders;
         }
-       
+
+
+
         /* public void CreateOrder(CartForOrderDto cart,long amount)
          {
              var order = new OrderCreateDto

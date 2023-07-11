@@ -13,7 +13,7 @@ namespace Repository.Repositories.Orders
     {
         IList<OrderForDisplayDto> GetAllOrders();
 
-        IList<Order> GetTopSellingOrders();
+        IList<OrderForDisplayDto> GetTopSellingOrders();
 
         OrderForDisplayDto GetOrderById(int orderId);
         OrderForDisplayDto GetActiveOrderForAgent(string agentId);

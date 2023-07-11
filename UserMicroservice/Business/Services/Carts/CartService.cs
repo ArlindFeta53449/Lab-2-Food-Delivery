@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Business.Services.FileHandling;
 using Business.Services.Stripe;
+using Business.Services.XAsyncDataService;
 using Data.DTOs;
 using Data.DTOs.Cart;
 using Data.DTOs.Checkout;
+using Data.DTOs.RabbitMQ;
 using Data.Entities;
 using Microsoft.VisualBasic;
 using Repositories.Repositories.CartMenuItems;
@@ -36,7 +38,7 @@ namespace Business.Services.Carts
         private readonly IStripeService _stripeService;
         private readonly IPaymentRepository _paymentRepository;
         private readonly IOrdersRepository _orderRepositroy;
-
+        private readonly IMessageBusClient _messageBusClient;
         public CartService(
             ICartRepository cartRepository,
             IMapper mapper,
@@ -46,7 +48,8 @@ namespace Business.Services.Carts
             IUserRepository userRepository,
             IStripeService stripeService,
             IPaymentRepository paymentRepository,
-            IOrdersRepository orderRepository
+            IOrdersRepository orderRepository,
+            IMessageBusClient messageBusClient
             )
         {
             _cartRepository = cartRepository;
@@ -58,6 +61,7 @@ namespace Business.Services.Carts
             _stripeService = stripeService;
             _paymentRepository = paymentRepository;
             _orderRepositroy = orderRepository;
+            _messageBusClient = messageBusClient;
         }
         public ApiResponse<CartDto> GetCartByUserId(string userId)
         {
@@ -405,7 +409,13 @@ namespace Business.Services.Carts
                         OrderStatus = 0
                     };
                     var mappedOrder = _mapper.Map<Order>(order);
-                    _orderRepositroy.Add(mappedOrder);
+                    if (_orderRepositroy.Add(mappedOrder))
+                    {
+                        var orderForNotificationService = _mapper.Map<OrderCreatedDto>(mappedOrder);
+                        orderForNotificationService.Event = "Order_Created";
+                        orderForNotificationService.Agents = _userRepository.GetAllAgentIds();
+                        _messageBusClient.PublishMessage<OrderCreatedDto>(orderForNotificationService);
+                    }
                     this.EmptyCart(cart.Id);
                     return new ApiResponse<string>()
                     {
