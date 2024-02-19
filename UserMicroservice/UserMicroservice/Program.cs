@@ -32,6 +32,20 @@ using Repositories.Repositories.OrderMenuItems;
 using Repositories.Repositories.OrderOffers;
 using Business.Services.ZSyncDataServices.Http;
 using Business.Services.XAsyncDataService;
+using Repositories.Repositories.ParentRepositories;
+using Repositories.Repositories.ChildRepositories;
+using Business.Services.ParentServices;
+using Business.Services.ChildServices;
+using Repositories.Repositories.EmployeeRepositories;
+using Repositories.Repositories.ContractRepositories;
+using Business.Services.ContractServices;
+using Business.Services.EmployeeServices;
+using Business.Services.InterviewNotesServices;
+using Business.Services.InterviewServices;
+using Repositories.Repositories.InterviewRepository;
+using Repositories.Repositories.InterviewNotesRepository;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,12 +92,31 @@ builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<Stripe.PaymentIntentService>();
 builder.Services.AddScoped<IOrderMenuItemsRepository, OrderMenuItemsRepository>();
 builder.Services.AddScoped<IOrderOffersRepository, OrderOffersRepository>();
+
+builder.Services.AddScoped<IParentRepository, ParentRepository>();
+builder.Services.AddScoped<IParentService, ParentService>();
+builder.Services.AddScoped<IChildRepository, ChildRepository>();
+builder.Services.AddScoped<IChildService, ChildService>();
+
+//builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+//builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+//builder.Services.AddScoped<IContractRepository, ContractRepository>();
+//builder.Services.AddScoped<IContractService, ContractService>();
+
+//builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
+//builder.Services.AddScoped<IInterviewService, InterviewService>();
+//builder.Services.AddScoped<IInterviewNotesRepository, InterviewNotesRepository>();
+//builder.Services.AddScoped<IInterviewNotesService, InterviewNotesService>();
+
+
+
+
 builder.Services.AddSingleton<IMessageBusClient, MessageBusClient>();
 
 builder.Services.AddHttpClient<INotificationDataClient, NotificationDataClient>();
 StripeConfiguration.ApiKey = builder.Configuration.GetValue<string>("StripePrivateKey");
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
-builder.Services.AddTransient<IMailService,MailService>();
+builder.Services.AddTransient<IMailService, MailService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -91,7 +124,7 @@ builder.Services.AddCors(opt =>
 {
     opt.AddPolicy("CorsPolicy", policy =>
     {
-        policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000","http://localhost:3001").AllowCredentials();
+        policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000", "http://localhost:3001").AllowCredentials();
     });
 });
 
