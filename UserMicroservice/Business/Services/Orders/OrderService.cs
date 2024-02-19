@@ -289,7 +289,7 @@ namespace Business.Services.Orders
             return _ordersRepository.Update(order);
         }
 
-        public bool DeleteOrder(int id)
+        public bool DeleteOrderForUser(int id)
         {
             var order = _ordersRepository.Get(id);
             return _ordersRepository.Remove(order);
