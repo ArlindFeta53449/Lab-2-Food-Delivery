@@ -81,11 +81,6 @@ namespace UserMicroservice.Controllers
         }
 
 
-        [HttpGet]
-        public IActionResult GetTopSellingOrders()
-        {
-            var response = _orderService.GetTopSellingOrders();
-            return StatusCode((int)response.StatusCode, response);
-        }
+        
     }
 }
