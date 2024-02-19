@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repositories;
 
@@ -11,9 +12,10 @@ using Repositories;
 namespace Repositories.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231211130441_test5")]
+    partial class test5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -106,11 +108,6 @@ namespace Repositories.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Difficulty")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -119,37 +116,14 @@ namespace Repositories.Migrations
                     b.Property<int>("ParentId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("startDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ParentId");
 
                     b.ToTable("Children");
-                });
-
-            modelBuilder.Entity("Data.Entities.Contract", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("Contracts");
                 });
 
             modelBuilder.Entity("Data.Entities.Director", b =>
@@ -173,71 +147,6 @@ namespace Repositories.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Directors");
-                });
-
-            modelBuilder.Entity("Data.Entities.Employee", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Employees");
-                });
-
-            modelBuilder.Entity("Data.Entities.Interview", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("startDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Interviews");
-                });
-
-            modelBuilder.Entity("Data.Entities.InterviewNotes", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("InterviewId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isPassed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("note")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InterviewId");
-
-                    b.ToTable("InterviewsNotes");
                 });
 
             modelBuilder.Entity("Data.Entities.Menu", b =>
@@ -509,10 +418,8 @@ namespace Repositories.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("BirthYear")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -889,28 +796,6 @@ namespace Repositories.Migrations
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("Data.Entities.Contract", b =>
-                {
-                    b.HasOne("Data.Entities.Employee", "Employee")
-                        .WithMany("Contracts")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("Data.Entities.InterviewNotes", b =>
-                {
-                    b.HasOne("Data.Entities.Interview", "Interview")
-                        .WithMany("InterviewNotes")
-                        .HasForeignKey("InterviewId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Interview");
-                });
-
             modelBuilder.Entity("Data.Entities.Menu", b =>
                 {
                     b.HasOne("Data.Entities.Restaurant", "Restaurant")
@@ -1095,16 +980,6 @@ namespace Repositories.Migrations
             modelBuilder.Entity("Data.Entities.Director", b =>
                 {
                     b.Navigation("Movies");
-                });
-
-            modelBuilder.Entity("Data.Entities.Employee", b =>
-                {
-                    b.Navigation("Contracts");
-                });
-
-            modelBuilder.Entity("Data.Entities.Interview", b =>
-                {
-                    b.Navigation("InterviewNotes");
                 });
 
             modelBuilder.Entity("Data.Entities.Menu", b =>

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repositories;
 
@@ -11,9 +12,10 @@ using Repositories;
 namespace Repositories.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240217141755_sarandamigration")]
+    partial class sarandamigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -194,50 +196,6 @@ namespace Repositories.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Employees");
-                });
-
-            modelBuilder.Entity("Data.Entities.Interview", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("startDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Interviews");
-                });
-
-            modelBuilder.Entity("Data.Entities.InterviewNotes", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("InterviewId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isPassed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("note")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InterviewId");
-
-                    b.ToTable("InterviewsNotes");
                 });
 
             modelBuilder.Entity("Data.Entities.Menu", b =>
@@ -900,17 +858,6 @@ namespace Repositories.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("Data.Entities.InterviewNotes", b =>
-                {
-                    b.HasOne("Data.Entities.Interview", "Interview")
-                        .WithMany("InterviewNotes")
-                        .HasForeignKey("InterviewId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Interview");
-                });
-
             modelBuilder.Entity("Data.Entities.Menu", b =>
                 {
                     b.HasOne("Data.Entities.Restaurant", "Restaurant")
@@ -1100,11 +1047,6 @@ namespace Repositories.Migrations
             modelBuilder.Entity("Data.Entities.Employee", b =>
                 {
                     b.Navigation("Contracts");
-                });
-
-            modelBuilder.Entity("Data.Entities.Interview", b =>
-                {
-                    b.Navigation("InterviewNotes");
                 });
 
             modelBuilder.Entity("Data.Entities.Menu", b =>

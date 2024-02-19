@@ -30,7 +30,16 @@ namespace Repositories
             modelBuilder.ApplyConfiguration(new CartMenuItemConfiguration());
             modelBuilder.ApplyConfiguration(new OrderMenuItemConfiguration());
             modelBuilder.ApplyConfiguration(new OrderOfferConfiguration());
-            
+            modelBuilder.ApplyConfiguration(new ParentConfiguration());
+            modelBuilder.ApplyConfiguration(new ChildConfiguration());
+
+            modelBuilder.ApplyConfiguration(new DirectorConfiguration());
+            modelBuilder.ApplyConfiguration(new MovieConfiguration());
+
+            modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+            modelBuilder.ApplyConfiguration(new ContractConfiguration());
+
+
 
         }
         public DbSet<User> Users { get; set; }
@@ -47,6 +56,17 @@ namespace Repositories
         public DbSet<Payment> Payments { get; set; }
         public DbSet<OrderMenuItem> OrderMenuItems{ get; set; }
         public DbSet<OrderOffer> OrderOffers { get; set; }
+        public DbSet<Parent> Parents { get; set; }
+        public DbSet<Child> Children { get; set; }
+
+        //public DbSet<Director> Directors { get; set; }
+        //public DbSet<Movie> Movies { get; set; }
+
+        //public DbSet<Employee> Employees { get; set; }
+        //public DbSet<Contract> Contracts { get; set; }
+
+       // public DbSet<InterviewNotes> InterviewsNotes { get; set; }
+        //public DbSet<Interview> Interviews { get; set; }
 
 
     }

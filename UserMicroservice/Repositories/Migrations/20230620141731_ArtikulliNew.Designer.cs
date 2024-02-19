@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Repositories;
 
@@ -11,9 +12,10 @@ using Repositories;
 namespace Repositories.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230620141731_ArtikulliNew")]
+    partial class ArtikulliNew
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +23,27 @@ namespace Repositories.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("Data.Entities.Artikulli", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Artikulli");
+                });
 
             modelBuilder.Entity("Data.Entities.Cart", b =>
                 {
@@ -96,148 +119,6 @@ namespace Repositories.Migrations
                     b.HasIndex("OfferId");
 
                     b.ToTable("CartOffers");
-                });
-
-            modelBuilder.Entity("Data.Entities.Child", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Difficulty")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<int>("ParentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ParentId");
-
-                    b.ToTable("Children");
-                });
-
-            modelBuilder.Entity("Data.Entities.Contract", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("Contracts");
-                });
-
-            modelBuilder.Entity("Data.Entities.Director", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("BirthYear")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Directors");
-                });
-
-            modelBuilder.Entity("Data.Entities.Employee", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<bool>("isActive")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Employees");
-                });
-
-            modelBuilder.Entity("Data.Entities.Interview", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("startDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Interviews");
-                });
-
-            modelBuilder.Entity("Data.Entities.InterviewNotes", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("InterviewId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isPassed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("note")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InterviewId");
-
-                    b.ToTable("InterviewsNotes");
                 });
 
             modelBuilder.Entity("Data.Entities.Menu", b =>
@@ -333,34 +214,6 @@ namespace Repositories.Migrations
                     b.HasIndex("OfferId");
 
                     b.ToTable("MenuItemOffers");
-                });
-
-            modelBuilder.Entity("Data.Entities.Movie", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("DirectorId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ReleaseYear")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DirectorId");
-
-                    b.ToTable("Movies");
                 });
 
             modelBuilder.Entity("Data.Entities.Offer", b =>
@@ -499,29 +352,6 @@ namespace Repositories.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("OrderOffers");
-                });
-
-            modelBuilder.Entity("Data.Entities.Parent", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("BirthYear")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Parents");
                 });
 
             modelBuilder.Entity("Data.Entities.Payment", b =>
@@ -878,39 +708,6 @@ namespace Repositories.Migrations
                     b.Navigation("Offer");
                 });
 
-            modelBuilder.Entity("Data.Entities.Child", b =>
-                {
-                    b.HasOne("Data.Entities.Parent", "Parent")
-                        .WithMany("Children")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Parent");
-                });
-
-            modelBuilder.Entity("Data.Entities.Contract", b =>
-                {
-                    b.HasOne("Data.Entities.Employee", "Employee")
-                        .WithMany("Contracts")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("Data.Entities.InterviewNotes", b =>
-                {
-                    b.HasOne("Data.Entities.Interview", "Interview")
-                        .WithMany("InterviewNotes")
-                        .HasForeignKey("InterviewId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Interview");
-                });
-
             modelBuilder.Entity("Data.Entities.Menu", b =>
                 {
                     b.HasOne("Data.Entities.Restaurant", "Restaurant")
@@ -950,17 +747,6 @@ namespace Repositories.Migrations
                     b.Navigation("MenuItem");
 
                     b.Navigation("Offer");
-                });
-
-            modelBuilder.Entity("Data.Entities.Movie", b =>
-                {
-                    b.HasOne("Data.Entities.Director", "Director")
-                        .WithMany("Movies")
-                        .HasForeignKey("DirectorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Director");
                 });
 
             modelBuilder.Entity("Data.Entities.Offer", b =>
@@ -1092,21 +878,6 @@ namespace Repositories.Migrations
                     b.Navigation("CartOffers");
                 });
 
-            modelBuilder.Entity("Data.Entities.Director", b =>
-                {
-                    b.Navigation("Movies");
-                });
-
-            modelBuilder.Entity("Data.Entities.Employee", b =>
-                {
-                    b.Navigation("Contracts");
-                });
-
-            modelBuilder.Entity("Data.Entities.Interview", b =>
-                {
-                    b.Navigation("InterviewNotes");
-                });
-
             modelBuilder.Entity("Data.Entities.Menu", b =>
                 {
                     b.Navigation("MenuItems");
@@ -1135,11 +906,6 @@ namespace Repositories.Migrations
                     b.Navigation("OrderMenuItems");
 
                     b.Navigation("OrderOffers");
-                });
-
-            modelBuilder.Entity("Data.Entities.Parent", b =>
-                {
-                    b.Navigation("Children");
                 });
 
             modelBuilder.Entity("Data.Entities.Restaurant", b =>

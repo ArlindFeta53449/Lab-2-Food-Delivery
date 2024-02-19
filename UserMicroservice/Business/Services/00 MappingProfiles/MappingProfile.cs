@@ -7,7 +7,16 @@ using Data.DTOs.RabbitMQ;
 using Data.DTOs.Roles;
 using Data.DTOs.Users;
 using Data.Entities;
+using Data.DTOs.ParentDtos;
+using Data.DTOs.ChildDtos;
 
+using Data.DTOs.DirectorDtos;
+using Data.DTOs.MovieDtos;
+using Data.DTOs.Payment;
+using Data.DTOs.EmployeeDtos;
+using Data.DTOs.ContractDtos;
+using Data.DTOs.InterviewDtos;
+using Data.DTOs.InterviewNotesDtos;
 
 namespace Business.Services._00_MappingProfiles
 {
@@ -104,6 +113,47 @@ namespace Business.Services._00_MappingProfiles
             CreateMap<OrderPublishedDto, Order>();
             CreateMap<Order, OrderCreatedDto>();
             CreateMap<OrderCreatedDto, Order>();
+
+
+            CreateMap<Parent, ParentDto>();
+            CreateMap<ParentDto, Parent>();
+            CreateMap<Parent, ParentCreateDto>();
+            CreateMap<ParentCreateDto, Parent>();
+
+            CreateMap<Child, ChildDto>();
+            CreateMap<ChildDto, Child>();
+            CreateMap<Child, ChildCreateDto>();
+            CreateMap<ChildCreateDto, Child>();
+
+            //CreateMap<Director, DirectorDto>();
+            //CreateMap<DirectorDto, Director>();
+            //CreateMap<Director, DirectorCreateDto>();
+            //CreateMap<DirectorCreateDto, Director>();
+
+            //CreateMap<Movie, MovieDto>();
+            //CreateMap<MovieDto, Movie>();
+            //CreateMap<Movie, MovieCreateDto>();
+            //CreateMap<MovieCreateDto, Movie>();
+
+            //CreateMap<Employee, EmployeeDto>();
+            //CreateMap<EmployeeDto, Employee>();
+            //CreateMap<Employee, EmployeeCreateDto>();
+            //CreateMap<EmployeeCreateDto, Employee>();
+
+            //CreateMap<Contract, ContractDto>();
+            //CreateMap<ContractDto, Contract>();
+            //CreateMap<Contract, ContractCreateDto>();
+            //CreateMap<ContractCreateDto, Contract>();
+
+            //CreateMap<Interview, InterviewDto>();
+            //CreateMap<InterviewDto, Interview>();
+            //CreateMap<Interview, InterviewCreateDto>();
+            //CreateMap<InterviewCreateDto, Interview>();
+
+            //CreateMap<InterviewNotes, InterviewNotesDto>();
+            //CreateMap<InterviewNotesDto, InterviewNotes>();
+            //CreateMap<InterviewNotes, InterviewNotesCreateDto>();
+            //CreateMap<InterviewNotesCreateDto, InterviewNotes>();
         }
     }
 }
