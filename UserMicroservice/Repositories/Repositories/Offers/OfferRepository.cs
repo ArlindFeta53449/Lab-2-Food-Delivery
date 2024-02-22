@@ -20,6 +20,9 @@ namespace Repository.Repositories.Offers
         {
 
         }
+        //Get offers duke bo include edhe restaurantin
+
+
         public IList<OfferForDisplayDto> GetOffersIncludeRestaurants()
         {
             return Context.Set<Offer>().Include(x => x.Restaurant).Select(
@@ -30,7 +33,7 @@ namespace Repository.Repositories.Offers
                     Description = x.Description,
                     Price = x.Price,
                     DiscountPercent = x.DiscountPercent,
-                    StartDate  = x.StartDate,
+                    StartDate = x.StartDate,
                     EndDate = x.EndDate,
                     Image = x.Image,
                     ImagePath = x.ImagePath,
@@ -39,5 +42,6 @@ namespace Repository.Repositories.Offers
 
                 }).ToList();
         }
+        
     }
 }

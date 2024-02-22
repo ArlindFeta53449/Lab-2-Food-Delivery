@@ -20,7 +20,7 @@ namespace Repository.Repositories.MenusItems
         {
 
         }
-
+        
         public IList<MenuItem> SearchMenuItems(string menuitem)
         {
             var menuItems = Context.Set<MenuItem>().Where(m => m.Name.ToLower().Contains(menuitem.ToLower())).ToList();
