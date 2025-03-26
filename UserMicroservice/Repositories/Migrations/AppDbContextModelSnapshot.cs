@@ -106,18 +106,21 @@ namespace Repositories.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Difficulty")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
                     b.Property<int>("ParentId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
@@ -150,6 +153,29 @@ namespace Repositories.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("Contracts");
+                });
+
+            modelBuilder.Entity("Data.Entities.Costumer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Costumers");
                 });
 
             modelBuilder.Entity("Data.Entities.Director", b =>
@@ -231,13 +257,44 @@ namespace Repositories.Migrations
 
                     b.Property<string>("note")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("InterviewId");
 
                     b.ToTable("InterviewsNotes");
+                });
+
+            modelBuilder.Entity("Data.Entities.Loan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CostumerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CostumerId");
+
+                    b.ToTable("Loans");
                 });
 
             modelBuilder.Entity("Data.Entities.Menu", b =>
@@ -519,6 +576,11 @@ namespace Repositories.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Parents");
@@ -553,6 +615,30 @@ namespace Repositories.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("Data.Entities.Planet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Planets");
                 });
 
             modelBuilder.Entity("Data.Entities.Restaurant", b =>
@@ -604,6 +690,32 @@ namespace Repositories.Migrations
                         .IsUnique();
 
                     b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("Data.Entities.Satellite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("PlanetId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanetId");
+
+                    b.ToTable("Satellites");
                 });
 
             modelBuilder.Entity("Data.Entities.User", b =>
@@ -911,6 +1023,17 @@ namespace Repositories.Migrations
                     b.Navigation("Interview");
                 });
 
+            modelBuilder.Entity("Data.Entities.Loan", b =>
+                {
+                    b.HasOne("Data.Entities.Costumer", "Costumer")
+                        .WithMany("Loans")
+                        .HasForeignKey("CostumerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Costumer");
+                });
+
             modelBuilder.Entity("Data.Entities.Menu", b =>
                 {
                     b.HasOne("Data.Entities.Restaurant", "Restaurant")
@@ -1023,6 +1146,17 @@ namespace Repositories.Migrations
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("Data.Entities.Satellite", b =>
+                {
+                    b.HasOne("Data.Entities.Planet", "Planet")
+                        .WithMany("Satellites")
+                        .HasForeignKey("PlanetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Planet");
+                });
+
             modelBuilder.Entity("Data.Entities.User", b =>
                 {
                     b.HasOne("Data.Entities.Role", "Role")
@@ -1092,6 +1226,11 @@ namespace Repositories.Migrations
                     b.Navigation("CartOffers");
                 });
 
+            modelBuilder.Entity("Data.Entities.Costumer", b =>
+                {
+                    b.Navigation("Loans");
+                });
+
             modelBuilder.Entity("Data.Entities.Director", b =>
                 {
                     b.Navigation("Movies");
@@ -1140,6 +1279,11 @@ namespace Repositories.Migrations
             modelBuilder.Entity("Data.Entities.Parent", b =>
                 {
                     b.Navigation("Children");
+                });
+
+            modelBuilder.Entity("Data.Entities.Planet", b =>
+                {
+                    b.Navigation("Satellites");
                 });
 
             modelBuilder.Entity("Data.Entities.Restaurant", b =>

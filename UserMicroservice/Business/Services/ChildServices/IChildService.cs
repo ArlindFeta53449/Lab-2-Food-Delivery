@@ -10,7 +10,7 @@ namespace Business.Services.ChildServices
         Task<ChildDto> UpdateChildAsync(int id, ChildDto childDto);
         Task<bool> DeleteChildAsync(int id);
 
-        Task<IEnumerable<ChildDto>> SearchChildrenByDifficultyAsync(string difficulty);
+        Task<IEnumerable<ChildDto>> SearchChildrenByTypeAsync(string type);
         Task<IEnumerable<ChildDto>> SearchChildrenByParentAsync(string parentName);
 
     }

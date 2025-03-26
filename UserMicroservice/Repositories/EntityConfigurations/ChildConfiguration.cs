@@ -16,8 +16,9 @@ namespace Repositories.EntityConfigurations
         public void Configure(EntityTypeBuilder<Child> builder)
         {
             builder.HasKey(c => c.Id);
+            builder.Property(c => c.Number).IsRequired();
             builder.Property(c => c.Name).IsRequired().HasMaxLength(255);
-            builder.Property(c => c.Difficulty).IsRequired().HasMaxLength(255);
+            builder.Property(c => c.Type).IsRequired().HasMaxLength(255);
 
             builder.HasOne(c => c.Parent)
                 .WithMany(p => p.Children)

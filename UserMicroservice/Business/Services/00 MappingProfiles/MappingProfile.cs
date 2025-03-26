@@ -9,7 +9,6 @@ using Data.DTOs.Users;
 using Data.Entities;
 using Data.DTOs.ParentDtos;
 using Data.DTOs.ChildDtos;
-
 using Data.DTOs.DirectorDtos;
 using Data.DTOs.MovieDtos;
 using Data.DTOs.Payment;
@@ -17,6 +16,10 @@ using Data.DTOs.EmployeeDtos;
 using Data.DTOs.ContractDtos;
 using Data.DTOs.InterviewDtos;
 using Data.DTOs.InterviewNotesDtos;
+using Data.DTOs.SatelliteDtos;
+using Data.DTOs.PlanetDtos;
+using Data.DTOs.CostumerDtos;
+using Data.DTOs.LoanDtos;
 
 namespace Business.Services._00_MappingProfiles
 {
@@ -125,35 +128,57 @@ namespace Business.Services._00_MappingProfiles
             CreateMap<Child, ChildCreateDto>();
             CreateMap<ChildCreateDto, Child>();
 
-            //CreateMap<Director, DirectorDto>();
-            //CreateMap<DirectorDto, Director>();
-            //CreateMap<Director, DirectorCreateDto>();
-            //CreateMap<DirectorCreateDto, Director>();
+            CreateMap<Director, DirectorDto>();
+            CreateMap<DirectorDto, Director>();
+            CreateMap<Director, DirectorCreateDto>();
+            CreateMap<DirectorCreateDto, Director>();
 
-            //CreateMap<Movie, MovieDto>();
-            //CreateMap<MovieDto, Movie>();
-            //CreateMap<Movie, MovieCreateDto>();
-            //CreateMap<MovieCreateDto, Movie>();
+            CreateMap<Movie, MovieDto>();
+            CreateMap<MovieDto, Movie>();
+            CreateMap<Movie, MovieCreateDto>();
+            CreateMap<MovieCreateDto, Movie>();
 
-            //CreateMap<Employee, EmployeeDto>();
-            //CreateMap<EmployeeDto, Employee>();
-            //CreateMap<Employee, EmployeeCreateDto>();
-            //CreateMap<EmployeeCreateDto, Employee>();
+            CreateMap<Employee, EmployeeDto>();
+            CreateMap<EmployeeDto, Employee>();
+            CreateMap<Employee, EmployeeCreateDto>();
+            CreateMap<EmployeeCreateDto, Employee>();
 
-            //CreateMap<Contract, ContractDto>();
-            //CreateMap<ContractDto, Contract>();
-            //CreateMap<Contract, ContractCreateDto>();
-            //CreateMap<ContractCreateDto, Contract>();
+            CreateMap<Contract, ContractDto>();
+            CreateMap<ContractDto, Contract>();
+            CreateMap<Contract, ContractCreateDto>();
+            CreateMap<ContractCreateDto, Contract>();
 
-            //CreateMap<Interview, InterviewDto>();
-            //CreateMap<InterviewDto, Interview>();
-            //CreateMap<Interview, InterviewCreateDto>();
-            //CreateMap<InterviewCreateDto, Interview>();
+            CreateMap<Interview, InterviewDto>();
+            CreateMap<InterviewDto, Interview>();
+            CreateMap<Interview, InterviewCreateDto>();
+            CreateMap<InterviewCreateDto, Interview>();
 
-            //CreateMap<InterviewNotes, InterviewNotesDto>();
-            //CreateMap<InterviewNotesDto, InterviewNotes>();
-            //CreateMap<InterviewNotes, InterviewNotesCreateDto>();
-            //CreateMap<InterviewNotesCreateDto, InterviewNotes>();
+            CreateMap<InterviewNotes, InterviewNotesDto>();
+            CreateMap<InterviewNotesDto, InterviewNotes>();
+            CreateMap<InterviewNotes, InterviewNotesCreateDto>();
+            CreateMap<InterviewNotesCreateDto, InterviewNotes>();
+
+            CreateMap<Satellite, SatelliteDto>();
+            CreateMap<SatelliteDto, Satellite>();
+            CreateMap<Satellite, SatelliteCreateDto>();
+            CreateMap<SatelliteCreateDto, Satellite>();
+
+            CreateMap<Planet, PlanetDto>();
+            CreateMap<PlanetDto, Planet>();
+            CreateMap<Planet, PlanetCreateDto>();
+            CreateMap<PlanetCreateDto, Planet>();
+
+            CreateMap<Costumer, CostumerDto>();
+            CreateMap<CostumerDto, Costumer>();
+            CreateMap<Costumer, CostumerCreateDto>();
+            CreateMap<CostumerCreateDto, Costumer>();
+
+
+            CreateMap<Loan, LoanDto>();
+            CreateMap<LoanDto, Loan>();
+            CreateMap<Loan, LoanCreateDto>();
+            CreateMap<LoanCreateDto, Loan>();
+
         }
     }
 }

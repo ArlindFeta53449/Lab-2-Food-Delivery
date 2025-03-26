@@ -81,10 +81,12 @@ namespace UserMicroservice.Controllers
             return Ok("Child deleted successfully");
         }
 
-        [HttpGet("{difficulty}")]
-        public async Task<ActionResult<IEnumerable<ChildDto>>> SearchChildrenByDifficulty(string difficulty)
+
+
+        [HttpGet("{type}")]
+        public async Task<ActionResult<IEnumerable<ChildDto>>> SearchChildrenByType(string type)
         {
-            var children = await _childService.SearchChildrenByDifficultyAsync(difficulty);
+            var children = await _childService.SearchChildrenByTypeAsync(type);
             return Ok(children);
         }
 

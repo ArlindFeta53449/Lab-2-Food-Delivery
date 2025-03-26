@@ -23,14 +23,12 @@ namespace UserMicroservice.Controllers
             var response = _orderService.GetAllOrders();
             return StatusCode((int)response.StatusCode, response);
         }
-
         [HttpPut]
         public IActionResult AcceptOrder(int orderId, string userId)
         {
             var response = _orderService.AcceptOrder(orderId, userId);
             return StatusCode((int)response.StatusCode, response);
         }
-
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {

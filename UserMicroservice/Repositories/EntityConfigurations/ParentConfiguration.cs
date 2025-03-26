@@ -16,6 +16,7 @@ namespace Repositories.EntityConfigurations
         {
             builder.HasKey(p => p.Id);
             builder.Property(p => p.Name).IsRequired().HasMaxLength(255);
+            builder.Property(p => p.Surname).IsRequired().HasMaxLength(255);
             builder.Property(p => p.BirthYear).IsRequired().HasMaxLength(255);
 
             builder.HasMany(p => p.Children)

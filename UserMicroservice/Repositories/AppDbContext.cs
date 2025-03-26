@@ -39,6 +39,16 @@ namespace Repositories
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
             modelBuilder.ApplyConfiguration(new ContractConfiguration());
 
+            modelBuilder.ApplyConfiguration(new InterviewConfiguration());
+            modelBuilder.ApplyConfiguration(new InterviewNotesConfiguration());
+
+            modelBuilder.ApplyConfiguration(new SatelliteConfiguration());
+            modelBuilder.ApplyConfiguration(new PlanetConfiguration());
+
+            modelBuilder.ApplyConfiguration(new LoanConfiguration());
+            modelBuilder.ApplyConfiguration(new CostumerConfiguration());
+
+
 
 
         }
@@ -52,21 +62,27 @@ namespace Repositories
         public DbSet<MenuItemOffer> MenuItemOffers { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartMenuItem> CartMenuItems { get; set; }
-        public DbSet<CartOffer> CartOffers{ get; set; }
+        public DbSet<CartOffer> CartOffers { get; set; }
         public DbSet<Payment> Payments { get; set; }
-        public DbSet<OrderMenuItem> OrderMenuItems{ get; set; }
+        public DbSet<OrderMenuItem> OrderMenuItems { get; set; }
         public DbSet<OrderOffer> OrderOffers { get; set; }
         public DbSet<Parent> Parents { get; set; }
         public DbSet<Child> Children { get; set; }
 
-        //public DbSet<Director> Directors { get; set; }
-        //public DbSet<Movie> Movies { get; set; }
+        public DbSet<Director> Directors { get; set; }
+        public DbSet<Movie> Movies { get; set; }
 
-        //public DbSet<Employee> Employees { get; set; }
-        //public DbSet<Contract> Contracts { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Contract> Contracts { get; set; }
 
-       // public DbSet<InterviewNotes> InterviewsNotes { get; set; }
-        //public DbSet<Interview> Interviews { get; set; }
+        public DbSet<InterviewNotes> InterviewsNotes { get; set; }
+        public DbSet<Interview> Interviews { get; set; }
+
+        public DbSet<Satellite> Satellites { get; set; }
+        public DbSet<Planet> Planets { get; set; }
+
+        public DbSet<Loan> Loans { get; set; }
+        public DbSet<Costumer> Costumers { get; set; }
 
 
     }

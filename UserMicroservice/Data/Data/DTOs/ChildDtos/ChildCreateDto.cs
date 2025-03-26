@@ -8,8 +8,9 @@ namespace Data.DTOs.ChildDtos
 {
     public class ChildCreateDto
     {
+        public int Number {  get; set; }
         public string Name { get; set; }
-        public string Difficulty { get; set; }
+        public string Type { get; set; }
 
         public int ParentId { get; set; }
     }

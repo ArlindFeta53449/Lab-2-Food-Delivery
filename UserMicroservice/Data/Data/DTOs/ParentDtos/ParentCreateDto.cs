@@ -9,6 +9,7 @@ namespace Data.DTOs.ParentDtos
     public class ParentCreateDto
     {
         public string Name { get; set; }
+        public string Surname { get; set; }
         public string BirthYear { get; set; }
     }
 }

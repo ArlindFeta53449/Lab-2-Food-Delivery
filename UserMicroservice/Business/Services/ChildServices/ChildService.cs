@@ -81,7 +81,7 @@ namespace Business.Services.ChildServices
             return true;
         }
 
-        public async Task<IEnumerable<ChildDto>> SearchChildrenByDifficultyAsync(string parentName)
+        public async Task<IEnumerable<ChildDto>> SearchChildrenByAsync(string parentName)
         {
             var children = await _context.Children
                     .Where(child => child.Parent.Name.Contains(parentName))

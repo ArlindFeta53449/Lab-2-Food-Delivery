@@ -44,6 +44,14 @@ using Business.Services.InterviewNotesServices;
 using Business.Services.InterviewServices;
 using Repositories.Repositories.InterviewRepository;
 using Repositories.Repositories.InterviewNotesRepository;
+using Business.Services.SatelliteServices;
+using Business.Services.PlanetServices;
+using Repositories.Repositories.PlanetRepository;
+using Repositories.Repositories.SatelliteRepository;
+using Business.Services.LoanServices;
+using Business.Services.CostumerServices;
+using Repositories.Repositories.CostumerRepository;
+using Repositories.Repositories.LoanRepository;
 
 
 
@@ -98,17 +106,25 @@ builder.Services.AddScoped<IParentService, ParentService>();
 builder.Services.AddScoped<IChildRepository, ChildRepository>();
 builder.Services.AddScoped<IChildService, ChildService>();
 
-//builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-//builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-//builder.Services.AddScoped<IContractRepository, ContractRepository>();
-//builder.Services.AddScoped<IContractService, ContractService>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IContractRepository, ContractRepository>();
+builder.Services.AddScoped<IContractService, ContractService>();
 
-//builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
-//builder.Services.AddScoped<IInterviewService, InterviewService>();
-//builder.Services.AddScoped<IInterviewNotesRepository, InterviewNotesRepository>();
-//builder.Services.AddScoped<IInterviewNotesService, InterviewNotesService>();
+builder.Services.AddScoped<IInterviewRepository, InterviewRepository>();
+builder.Services.AddScoped<IInterviewService, InterviewService>();
+builder.Services.AddScoped<IInterviewNotesRepository, InterviewNotesRepository>();
+builder.Services.AddScoped<IInterviewNotesService, InterviewNotesService>();
 
+builder.Services.AddScoped<IPlanetRepository, PlanetRepository>();
+builder.Services.AddScoped<IPlanetService, PlanetService>();
+builder.Services.AddScoped<ISatelliteRepository, SatelliteRepository>();
+builder.Services.AddScoped<ISatelliteService, SatelliteService>();
 
+builder.Services.AddScoped<ICostumerRepository, CostumerRepository>();
+builder.Services.AddScoped<ICostumerService, CostumerService>();
+builder.Services.AddScoped<ILoanRepository, LoanRepository>();
+builder.Services.AddScoped<ILoanService, LoanService>();
 
 
 builder.Services.AddSingleton<IMessageBusClient, MessageBusClient>();
